@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Hexi Cloud Application</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- This is the main css file for the default Alta theme -->
+        <link rel="stylesheet" href="css/libs/oj/v2.2.0/alta/oj-alta.css" type="text/css"/>
+
+        <!-- This is where you would add any app specific styling -->
+        <link href="css/hc-common.css" rel="stylesheet" type="text/css"/>
+        <link href="css/hc-login.css" rel="stylesheet" type="text/css"/>
+        <link href="css/hc-csmadmin.css" rel="stylesheet" type="text/css"/>
+        
+        <!-- RequireJS bootstrap file -->
+        <script data-main="js/main" src="js/libs/require/require.js"></script>
+        <script type="text/javascript" src="//sc-ramesh.widget.rightnowdemo.com/euf/rightnow/RightNow.Client.js" ></script>
+    </head>
+    <body class="mainBackGroundImage">
+        <div id="routingContainer" class="oj-flex">
+            <!-- This is where your main page content will be loaded by module -->
+            <div class="oj-sm-12 oj-flex-item" data-bind="ojModule: moduleConfig"></div>
+        </div>
+    </body>
+</html>

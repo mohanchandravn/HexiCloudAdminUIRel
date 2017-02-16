@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<div class="oj-flex" style='background-color: white;'>
+    <div class="page-content oj-sm-12 oj-flex-item">
+        <div id="adminTabsContainer" class="admin-tab-layout">
+            <div id="tabs" data-bind="ojComponent:{component: 'ojTabs', truncation: 'none'}">
+                <!-- tab bar -->
+                <ul>
+                  <li><span>Upload docs for steps</span></li>
+                  <li><span>Upload docs for guided paths</span></li>
+                  <li><span>Manage emails</span></li>
+                </ul>
+
+                <!-- tab contents -->
+                
+                <!-- documents by step tab -->
+                <div id="tabs-steps">
+                    <div class="oj-flex-bar oj-hybrid-padding">
+                        <div class="oj-flex-bar-start">
+                            <label class="selection-label" for="managerListCombobox" data-bind="text: 'Choose a step: '"></label>
+                        </div>
+                        <div class="oj-flex-bar-middle">
+                            <select id="managerListCombobox" class="managerListCombobox"
+                                    data-bind="ojComponent: {
+                                                component: 'ojSelect',
+                                                options: allStepsList,
+                                                value: selectedStepCode,
+                                                placeholder: 'Please select a step..',
+                                                optionChange: updateStepCode,                                   
+                                                rootAttributes: {style:'max-width:20em'}}">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="oj-flex-bar oj-hybrid-padding">
+                        <div class="oj-flex-bar-start">
+                            <label class="selection-label" for="rolelabel" data-bind="text: 'Choose Role: '"></label>
+                        </div>
+                        <div class="oj-flex-bar-middle">
+                            <div id="roleSelection" aria-labelledby="rolelabel"
+                                data-bind="ojComponent: {
+                                                component: 'ojRadioset',
+                                                invalidComponentTracker: tracker,
+                                                required: true,
+                                                value: selectedRole,
+                                                optionChange: updateRole}" >
+                                <span class="oj-choice-row-inline">
+                                    <input id="itAdmin" type="radio" name="rbb" value="itAdmin">
+                                    <label for="itAdmin">IT Admin</label>
+                                </span>
+                                <span class="oj-choice-row-inline">
+                                    <input id="accountAdmin" type="radio" name="rbb" value="accountAdmin">
+                                    <label for="accountAdmin">Account Admin</label>
+                                </span>
+                           </div>
+                        </div>
+                    </div>
+                    <div class="oj-hybrid-padding">
+                        <input type="file" name="uploadDocument" class="oj-margin oj-flex" data-bind="visible: selectedStepCode().length > 0"/>
+                        <table id="table" summary="Department List" aria-label="Departments Table"
+                                data-bind="ojComponent: {component: 'ojTable',
+                                                        display: 'grid',
+                                                        data: datasource,
+                                                        emptyText: 'No data.',
+                                                        columns: [{headerText: 'Step Id',
+                                                                   sortProperty: 'stepId'},
+                                                                  {headerText: 'Document Type',
+                                                                   sortProperty: 'docType'},
+                                                                  {headerText: 'Document Type Entension',
+                                                                   sortProperty: 'docTypeExtn'},
+                                                                  {headerText: 'Document Field Id',
+                                                                   sortProperty: 'docFieldId'},
+                                                                  {headerText: 'Options'}],
+                                                                   rowTemplate: 'docs_row_template'}">
+                        </table>
+<!--                        <table id="table" summary="Department List" aria-label="Departments Table"
+                                data-bind="ojComponent: {component: 'ojTable',
+                                                        display: 'grid',
+                                                        data: datasource,
+                                                        columns: [{headerText: 'Department Id', 
+                                                                   sortProperty: 'DepartmentId'},
+                                                                  {headerText: 'Department Name', 
+                                                                   sortProperty: 'DepartmentName'},
+                                                                  {headerText: 'Location Id', 
+                                                                   sortProperty: 'LocationId'},
+                                                                  {headerText: 'Manager Id', 
+                                                                   sortProperty: 'ManagerId'}],
+                                                                   rowTemplate: 'docs_row_template'}">
+                        </table>-->
+<!--                        <div class="oj-flex" data-bind="foreach: selectedStepCodeMetaDataList">
+                            <div class="oj-sm-12 oj-flex-item oj-margin">
+                                <div class="metadata-content" style="border: 1px dashed pink; width: 600px; height: 100px; box-sizing: border-box;">
+                                    <div class="oj-flex-bar oj-margin">
+                                        <div class="oj-flex-bar-start">
+                                            <div class="oj-flex oj-sm-align-items-center">
+                                                <span data-bind="text: 'Id: ' + id"></span>
+                                            </div>
+                                        </div>
+                                        <div class="oj-flex-bar-end">
+                                            <div class="oj-sm-align-self-center">
+                                                <span data-bind="text: 'Created on: ' + createdOn"></span>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="oj-flex-bar oj-margin">
+                                        <div class="oj-flex-bar-start">
+                                            <div class="oj-flex oj-sm-align-items-center">
+                                                <span data-bind="text: metaData"></span>
+                                            </div>
+                                        </div>
+                                        <div class="oj-flex-bar-end">
+                                            <div class="oj-sm-align-self-center">
+                                                <button id= "deleteBtn"
+                                                        data-bind="click: $parent.deleteMetadata, ojComponent: { component: 'ojButton', label: 'Delete' }">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+                
+                <!-- guided paths tab -->
+                <div id="tabs-guided-paths" class="inner-tab">
+                    <span>Manage <span data-bind="text: loggedInUserRole()"></span> Guided Paths here..</span>
+                </div>
+                
+                <!-- email management tab -->
+                <div id="tabs-emails" class="inner-tab">
+                    <span>Manage <span data-bind="text: loggedInUserRole()"></span> emails here..</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="docs_row_template">
+    <tr>
+        <td data-bind="text: stepId">
+        </td>
+        <td data-bind="text: docType">
+        </td>
+        <td data-bind="text: docTypeExtn">
+        </td>
+        <td data-bind="text: docFieldId">
+        </td>
+        <td>
+            <button id= "deleteBtn" data-bind="click: $parent.viewDocument, ojComponent: { component: 'ojButton', label: 'View' }"></button>
+        </td>
+    </tr>
+</script>
