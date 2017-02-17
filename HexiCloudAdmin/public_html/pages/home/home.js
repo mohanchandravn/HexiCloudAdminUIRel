@@ -7,8 +7,8 @@
 /**
  * home module
  */
-define(['config/serviceConfig'
-], function (service) {
+define(['jquery', 'config/serviceConfig', 'form-data'
+], function ($, service, form-data) {
     /**
      * The view model for the main content view template
      */
@@ -20,6 +20,37 @@ define(['config/serviceConfig'
         
         self.isLoggedinTrue = function() {
             router.go('csmadmin/');
+        };
+        
+        var successCbFn = function(data, status) {
+            console.log(status);
+            console.log(data);
+        };
+        
+        var failCbFn = function(xhr) {
+            console.log(xhr);
+        };
+        
+        self.handleAttached = function() {
+            $("#multiform").submit(function(e) {
+                var formData = $("#fileuploadfield");
+                var file = formData[0].files[0];
+                console.log(file);
+                
+                var form = new FormData();
+                form.append('my_field', 'my value');
+                form.append('my_buffer', new Buffer(10));
+                form.append('my_file', fs.createReadStream('/foo/bar.jpg'));
+                
+                console.log("File name: " + file.fileName);
+                console.log("File size: " + file.fileSize);
+                console.log(e);
+                e.preventDefault();
+                var payload = {
+                    jsonInputParameters: "{'parentID':'FAC27B99B3DBA6A190E7A98BDB81338485D611EEEC77'}", primartFile: file 
+                };
+                service.testFunc(payload).then(successCbFn, failCbFn);
+            });
         };
     }
     

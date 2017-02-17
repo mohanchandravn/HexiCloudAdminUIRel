@@ -99,7 +99,8 @@ define(['knockout',
             if (data.value[0] !== undefined && data.option === "value") {
                 self.displayContentByStepId(data.value[0]);
             } else {
-                self.selectedStepCodeMetaDataList([]);
+                self.deptObservableArray([]);
+                self.datasource(new oj.ArrayTableDataSource(self.deptObservableArray));
             }
         };
         

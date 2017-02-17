@@ -13,6 +13,39 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         var self = this;
         self.router = router;
         
+        self.testFunc = function(payload) {
+            var defer = $.Deferred();
+            console.log(payload);
+            console.log(JSON.stringify(payload));
+            var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/files/data";
+            $.ajax({
+                type: 'POST',
+                data: payload,
+                crossDomain: true,
+                mimeType: "multipart/form-data",
+                contentType:  "multipart/form-data",
+                cache: false,
+                processData: false,
+                xhrFields: {
+                withCredentials: true
+                },
+//                dataType: 'json',
+                beforeSend: function (xhr){
+                xhr.setRequestHeader('Authorization', 'Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl');
+                },
+
+                success: function (data, status) {
+                    console.log('Successfully retrieved details at: ' + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at: " + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
         self.getApplicationSteps = function() {
             var defer = $.Deferred();
             var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/getApplicationSteps";

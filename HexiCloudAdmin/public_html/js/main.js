@@ -18,7 +18,8 @@ requirejs.config({
         'text': 'js/libs/require/text',
         'promise': 'js/libs/es6-promise/es6-promise.min',
         'hammerjs': 'js/libs/hammer/hammer-2.0.8.min',
-        'ojdnd': 'js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min'
+        'ojdnd': 'js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
+        'form-data': 'js/libs/form-data/lib/form_data'
     }
     //endinjector
     ,
