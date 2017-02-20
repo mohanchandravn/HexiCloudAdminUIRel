@@ -13,29 +13,25 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         var self = this;
         self.router = router;
         
-        self.testFunc = function(payload) {
+        self.uploadFile = function(payload) {
             var defer = $.Deferred();
-            console.log(payload);
-            console.log(JSON.stringify(payload));
-            var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/files/data";
+//            var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/files/data";
+            var serverURL = "https://140.86.1.93/hexiCloudUpload/services/rest/uploadStepDocument";
             $.ajax({
                 type: 'POST',
-                data: payload,
-                crossDomain: true,
-                mimeType: "multipart/form-data",
-                contentType:  "multipart/form-data",
-                cache: false,
+                url: serverURL,
                 processData: false,
-                xhrFields: {
-                withCredentials: true
-                },
+                contentType: false,
+                mimeType: "multipart/form-data",
+                data: payload,
 //                dataType: 'json',
-                beforeSend: function (xhr){
-                xhr.setRequestHeader('Authorization', 'Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl');
-                },
+//                beforeSend: function (xhr){
+//                    xhr.setRequestHeader('Authorization', 'Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl');
+//                    xhr.setRequestHeader("cache-control", "no-cache");
+//                },
 
                 success: function (data, status) {
-                    console.log('Successfully retrieved details at: ' + serverURL);
+                    console.log('Successfully uploaded file at: ' + serverURL);
                     defer.resolve(data, status);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {

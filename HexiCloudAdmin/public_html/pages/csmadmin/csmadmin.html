@@ -60,7 +60,16 @@ and open the template in the editor.
                         </div>
                     </div>
                     <div class="oj-hybrid-padding">
-                        <input type="file" name="uploadDocument" class="oj-margin oj-flex" data-bind="visible: selectedStepCode().length > 0"/>
+                        <div class="oj-flex-bar">
+                            <div class="oj-flex-bar-start">
+                                <input type="file" name="fileUploadInput" id="fileUploadInput" class="oj-margin oj-flex" data-bind="visible: selectedStepCode().length > 0"/>
+                                <span id="successCallback" class="oj-margin oj-sm-hide" data-bind="text: 'Files uploaded successfully.'" style="color: green;"></span>
+                                <span id="failCallback" class="oj-margin oj-sm-hide" data-bind="text: 'Files upload failed.'" style="color: red;"></span>
+                            </div>
+                            <div class="oj-flex-bar-end">
+                                <button id= "uploadBtn" data-bind="visible: selectedStepCode().length > 0, click: onUploadFile, ojComponent: { component: 'ojButton', label: 'Upload Files' }"></button>
+                            </div>
+                        </div>
                         <table id="table" summary="Department List" aria-label="Departments Table"
                                 data-bind="ojComponent: {component: 'ojTable',
                                                         display: 'grid',
@@ -75,54 +84,9 @@ and open the template in the editor.
                                                                   {headerText: 'Document Field Id',
                                                                    sortProperty: 'docFieldId'},
                                                                   {headerText: 'Options'}],
-                                                                   rowTemplate: 'docs_row_template'}">
+                                                                   rowTemplate: 'docs_row_template', 
+                                                        rootAttributes: {'style':'min-width: 300px; width: 100%;'}}">
                         </table>
-<!--                        <table id="table" summary="Department List" aria-label="Departments Table"
-                                data-bind="ojComponent: {component: 'ojTable',
-                                                        display: 'grid',
-                                                        data: datasource,
-                                                        columns: [{headerText: 'Department Id', 
-                                                                   sortProperty: 'DepartmentId'},
-                                                                  {headerText: 'Department Name', 
-                                                                   sortProperty: 'DepartmentName'},
-                                                                  {headerText: 'Location Id', 
-                                                                   sortProperty: 'LocationId'},
-                                                                  {headerText: 'Manager Id', 
-                                                                   sortProperty: 'ManagerId'}],
-                                                                   rowTemplate: 'docs_row_template'}">
-                        </table>-->
-<!--                        <div class="oj-flex" data-bind="foreach: selectedStepCodeMetaDataList">
-                            <div class="oj-sm-12 oj-flex-item oj-margin">
-                                <div class="metadata-content" style="border: 1px dashed pink; width: 600px; height: 100px; box-sizing: border-box;">
-                                    <div class="oj-flex-bar oj-margin">
-                                        <div class="oj-flex-bar-start">
-                                            <div class="oj-flex oj-sm-align-items-center">
-                                                <span data-bind="text: 'Id: ' + id"></span>
-                                            </div>
-                                        </div>
-                                        <div class="oj-flex-bar-end">
-                                            <div class="oj-sm-align-self-center">
-                                                <span data-bind="text: 'Created on: ' + createdOn"></span>  
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="oj-flex-bar oj-margin">
-                                        <div class="oj-flex-bar-start">
-                                            <div class="oj-flex oj-sm-align-items-center">
-                                                <span data-bind="text: metaData"></span>
-                                            </div>
-                                        </div>
-                                        <div class="oj-flex-bar-end">
-                                            <div class="oj-sm-align-self-center">
-                                                <button id= "deleteBtn"
-                                                        data-bind="click: $parent.deleteMetadata, ojComponent: { component: 'ojButton', label: 'Delete' }">
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
                     </div>
                 </div>
                 

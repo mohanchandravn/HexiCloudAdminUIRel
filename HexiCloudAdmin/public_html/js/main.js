@@ -18,8 +18,7 @@ requirejs.config({
         'text': 'js/libs/require/text',
         'promise': 'js/libs/es6-promise/es6-promise.min',
         'hammerjs': 'js/libs/hammer/hammer-2.0.8.min',
-        'ojdnd': 'js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
-        'form-data': 'js/libs/form-data/lib/form_data'
+        'ojdnd': 'js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min'
     }
     //endinjector
     ,
@@ -105,6 +104,18 @@ require(['ojs/ojcore',
 
                 self.FailCallBackFn = function (xhr) {
                     console.log(xhr);
+                };
+                
+                self.showPreloader = function() {
+                    $("#preloader").removeClass("oj-sm-hide");
+                    $("#routingContainer").css("pointer-events", "none");
+                    $("#routingContainer").css("opacity", "0.5");
+                };
+                
+                self.hidePreloader = function() {
+                    $("#preloader").addClass("oj-sm-hide");
+                    $("#routingContainer").css("pointer-events", "");
+                    $("#routingContainer").css("opacity", "");
                 };
 
             };

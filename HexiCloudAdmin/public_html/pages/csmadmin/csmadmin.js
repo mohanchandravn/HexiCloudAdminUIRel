@@ -16,7 +16,7 @@ define(['knockout',
     'ojs/ojtabs',
     'ojs/ojtable',
     'ojs/ojarraytabledatasource'],
-    function(ko, service, oj) {
+    function(ko, service, oj, $) {
     
     function csmadminViewModel(params) {
         var self = this;
@@ -45,7 +45,6 @@ define(['knockout',
         self.datasource = ko.observable();
         
         self.selectedRole = ko.observable('itAdmin');
-        self.selectedStepCodeMetaDataList = ko.observableArray([]);
         
         var getApplicationStepsSuccessCbFn = function(data) {
             console.log(data);
@@ -69,6 +68,36 @@ define(['knockout',
             }
         };
         
+        self.updateStepCode = function (event, data) {
+            if (data.value[0] !== undefined && data.option === "value") {
+                self.displayContentByStepId(data.value[0]);
+            } else {
+                self.deptObservableArray([]);
+                self.datasource(new oj.ArrayTableDataSource(self.deptObservableArray));
+            }
+        };
+        
+        self.updateRole = function (event, data) {
+            if (typeof data.value === "string") {
+                // code logic have to write
+            }
+        };
+        
+        var fileUploadSuccessCbFn = function(data, status) {
+            console.log(status);
+            console.log(data);
+            hidePreloader();
+            $("#successCallback").fadeIn();
+            $("#successCallback").fadeOut(3000);
+        };
+        
+        var fileUploadFailCbFn = function(xhr) {
+            console.log(xhr);
+            hidePreloader();
+            $("#failCallback").fadeIn();
+            $("#failCallback").fadeOut(3000);
+        };
+        
         var failCbFn = function(xhr) {
             console.log(xhr);
         };
@@ -83,31 +112,27 @@ define(['knockout',
             self.stepsArray(temp);
         };
         
-        function populateUI(metadata, stepId, stepCode) {
-            var selectedStepMetaData = [];
-            metadata = metadata.stepData;
-            for (var key in metadata) {
-                if (metadata[key].stepId === stepId) {
-                    selectedStepMetaData.push(metadata[key]);
-                }
-            }
+        // for uploading file
+        self.onUploadFile = function() {
+            var fileData = $("#fileUploadInput");
+            var file = fileData[0].files[0];
+            console.log(file);
+//            var stepId = self.selectedStepCode()[0];
+//            var stepCode = "service";
+//            var temp = "{ \"parentID\": \"FAC27B99B3DBA6A190E7A98BDB81338485D611EEEC77\", \"stepId\": \"" + stepId + "\",\"stepCode\" : \"" + stepCode + "\" }";
+//            console.log(temp);
             
-            self.selectedStepCodeMetaDataList(selectedStepMetaData);
-        };
-        
-        self.updateStepCode = function (event, data) {
-            if (data.value[0] !== undefined && data.option === "value") {
-                self.displayContentByStepId(data.value[0]);
-            } else {
-                self.deptObservableArray([]);
-                self.datasource(new oj.ArrayTableDataSource(self.deptObservableArray));
-            }
-        };
-        
-        self.updateRole = function (event, data) {
-            if (typeof data.value === "string") {
-                // code logic have to write
-            }
+//            if (file !== undefined) {
+                showPreloader();
+                var payload = new FormData();
+                var stepId = self.selectedStepCode()[0];
+                var stepCode = "addAdditionalUsers";
+                var temp = "{ \"parentID\": \"FAC27B99B3DBA6A190E7A98BDB81338485D611EEEC77\", \"stepId\": \"" + stepId + "\", \"stepCode\" : \"" + stepCode + "\" }";
+                console.log(temp);
+                payload.append("jsonInputParameters", "{ \"parentID\": \"FAC27B99B3DBA6A190E7A98BDB81338485D611EEEC77\", \"stepId\": \"" + stepId + "\",\"stepCode\" : \"" + stepCode + "\" }");
+                payload.append("primaryFile", "\"D:\\OracleResumes\\test.doc\"");
+                service.uploadFile(payload).then(fileUploadSuccessCbFn, fileUploadFailCbFn);
+//            }
         };
         
         self.displayContentByStepId = function(stepId) {
