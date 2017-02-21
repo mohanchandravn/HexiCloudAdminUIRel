@@ -76,6 +76,7 @@ define(['knockout',
             $("#successCallback").fadeOut(3000);
             console.log(status);
             console.log(data);
+            self.displayContentByStepId(self.selectedStepId()[0]);
         };
         
         var getStepCodeById = function(stepId) {
