@@ -19,20 +19,20 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
             var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/files/data";
 //            var serverURL = "https://140.86.1.93/hexiCloudUpload/services/rest/uploadStepDocument";
             $.ajax({
-                type: 'POST',
+                type: "POST",
                 url: serverURL,
                 processData: false,
                 contentType: false,
                 mimeType: "multipart/form-data",
                 data: payload,
-                dataType: 'json',
+                dataType: "json",
                 beforeSend: function (xhr){
-                    xhr.setRequestHeader('Authorization', 'Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl');
+                    xhr.setRequestHeader("Authorization", "Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl");
                     xhr.setRequestHeader("cache-control", "no-cache");
                 },
 
                 success: function (data, status) {
-                    console.log('Successfully uploaded file at: ' + serverURL);
+                    console.log("Successfully retrieved details at: " + serverURL);
                     defer.resolve(data, status);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -52,7 +52,7 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
                 type: "GET",
                 url: serverURL,
                 success: function (data) {
-                    console.log('Successfully retrieved details at: ' + serverURL);
+                    console.log("Successfully retrieved details at: " + serverURL);
                     defer.resolve(data);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -75,7 +75,7 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
                 type: "GET",
                 url: serverURL,
                 success: function (data, status) {
-                    console.log('Successfully retrieved details at: ' + serverURL);
+                    console.log("Successfully retrieved details at: " + serverURL);
                     defer.resolve(data, status);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -89,15 +89,20 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         // for creating public link
         self.createPublicLink = function(fileId, fileName) {
             var defer = $.Deferred();
-            var serverURL = "https://documents-gse00002841.documents.us2.oraclecloud.com/documents/api/1.1/publiclinks/file/" + fileId;
+            var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/publiclinks/file/" + fileId;
+            console.log("creating public link..");
             $.ajax({
                 type: "POST",
                 url: serverURL,
+                contentType: "application/json",
+                processData: false,
+                data : "{\r\n\t\"assignedUsers\": \"@everybody\",\r\n\t\"role\": \"contributor\"\r\n}",
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl');
+                    xhr.setRequestHeader("Authorization", "Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl");
+                    xhr.setRequestHeader("cache-control", "no-cache");
                 },
                 success: function (data) {
-                    console.log('Successfully retrieved details at: ' + serverURL);
+                    console.log("Successfully retrieved details at: " + serverURL);
                     console.log(data);
                     if (data.id === fileId) {
                         defer.resolve(data.linkID, fileId, fileName);
@@ -114,14 +119,16 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         // for adding step documents
         self.addStepDocument = function(payload) {
             var defer = $.Deferred();
+            console.log(payload);
             var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/addStepDocument/";
             $.ajax({
                 type: "POST",
                 url: serverURL,
-                data: payload,
                 contentType: "application/json",
+                processData: false,
+                data: payload,
                 success: function (data, status) {
-                    console.log('Successfully retrieved details at: ' + serverURL);
+                    console.log("Successfully retrieved details at: " + serverURL);
                     defer.resolve(data, status);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {

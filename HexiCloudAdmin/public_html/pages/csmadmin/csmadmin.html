@@ -63,8 +63,8 @@ and open the template in the editor.
                         <div class="oj-flex-bar">
                             <div class="oj-flex-bar-start">
                                 <input type="file" name="fileUploadInput" id="fileUploadInput" class="oj-margin oj-flex" data-bind="visible: selectedStepId().length > 0"/>
-                                <span id="successCallback" class="oj-margin oj-sm-hide" data-bind="text: 'Files uploaded successfully.'" style="color: green;"></span>
-                                <span id="failCallback" class="oj-margin oj-sm-hide" data-bind="text: 'Files upload failed.'" style="color: red;"></span>
+                                <span id="successCallback" class="oj-margin oj-sm-hide" data-bind="text: successCbText" style="color: green;"></span>
+                                <span id="failCallback" class="oj-margin oj-sm-hide" data-bind="text: failCbText" style="color: red;"></span>
                             </div>
                             <div class="oj-flex-bar-end">
                                 <button id= "uploadBtn" data-bind="visible: selectedStepId().length > 0, click: onUploadFile, ojComponent: { component: 'ojButton', label: 'Upload Files' }"></button>
@@ -74,18 +74,15 @@ and open the template in the editor.
                                 data-bind="ojComponent: {component: 'ojTable',
                                                         display: 'grid',
                                                         data: datasource,
+                                                        scrollPolicy: 'loadMoreOnScroll',
                                                         emptyText: 'No documents to show.',
                                                         columns: [{headerText: 'Step Id',
                                                                    sortProperty: 'stepId'},
-                                                                  {headerText: 'Document Type',
-                                                                   sortProperty: 'docType'},
-                                                                  {headerText: 'Document Type Entension',
-                                                                   sortProperty: 'docTypeExtn'},
-                                                                  {headerText: 'Document Field Id',
-                                                                   sortProperty: 'docFieldId'},
+                                                                  {headerText: 'File Name',
+                                                                   sortProperty: 'fileName'},
                                                                   {headerText: 'Options'}],
                                                                    rowTemplate: 'docs_row_template', 
-                                                        rootAttributes: {'style':'min-width: 300px; width: 100%;'}}">
+                                                        rootAttributes: {'style':'min-width: 300px; width: 100%; max-width: 500px; max-height: 300px;'}}">
                         </table>
                     </div>
                 </div>
@@ -108,13 +105,9 @@ and open the template in the editor.
     <tr>
         <td data-bind="text: stepId">
         </td>
-        <td data-bind="text: docType">
+        <td data-bind="text: fileName">
         </td>
-        <td data-bind="text: docTypeExtn">
-        </td>
-        <td data-bind="text: docFileId">
-        </td>
-        <td>
+        <td style="text-align: center;">
             <button id= "deleteBtn" data-bind="click: $parent.viewDocument, ojComponent: { component: 'ojButton', label: 'View' }"></button>
         </td>
     </tr>

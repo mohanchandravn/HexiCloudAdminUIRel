@@ -30,28 +30,6 @@ html, body, #routingContainer, .responsive-height {
     background-color: #335C62 !important;
 }
 
-.olive-background-panel {
-    background-color: rgba(52, 72, 79, .8); 
-    height: 580px; 
-    min-height: 100%; 
-    min-width: 100%;
-    border: none !important;
-}
-
-.olive-sorround-div {
-    padding-left: 25%; 
-    padding-right: 25%;  
-    position: relative; 
-    top: 35%; 
-    transform: translateY(-35%);
-}
-
-.main-backgroud-opaque-layer {
-    background-color: rgba(54, 25, 25, .2); 
-    min-height: 100%; 
-    min-width: 100%
-}
-
 .standard-button {
     width: 200px;
     height: 50px;
@@ -64,28 +42,6 @@ html, body, #routingContainer, .responsive-height {
 
 .standard-button span{
     margin-top: 15px;
-}
-
-.input-text {
-    height: 3.286rem !important;
-    width: 300px;
-}
-
-.input-color-white {
-    color: white;
-}
-
-.error-message-text {
-    color: red; 
-    font-size: larger;
-}
-
-span.oj-message-content > div.oj-message-summary {
-    display: none;
-}
-
-span.oj-component-icon.oj-message-status-icon.oj-message-error-icon {
-    display: none;
 }
 
 .preloader-container, video#video, iframe#pdf {

@@ -42,9 +42,10 @@ define(['knockout',
         });
         
         self.deptObservableArray = ko.observableArray([]);
-        self.datasource = ko.observable();
-        
+        self.datasource = ko.observable();        
         self.selectedRole = ko.observable('itAdmin');
+        self.successCbText = ko.observable();
+        self.failCbText = ko.observable();
         
         var getApplicationStepsSuccessCbFn = function(data) {
             console.log(data);
@@ -57,7 +58,7 @@ define(['knockout',
                 self.deptObservableArray([]);
                 var array = [];
                 for (var idx = 0; idx < data.length; idx++) {
-                    array.push({stepId: data[idx].stepId, docType: data[idx].docType, docTypeExtn: data[idx].docTypeExtn, docFileId: data[idx].docFileId});
+                    array.push({stepId: data[idx].stepId, fileName: data[idx].fileName});
                 }
                 self.deptObservableArray(array);
                 self.datasource(new oj.ArrayTableDataSource(self.deptObservableArray));
@@ -69,6 +70,10 @@ define(['knockout',
         };
         
         var addStepDocumentSuccessFn = function(data, status) {
+            hidePreloader();
+            self.successCbText('Details has been added to STEP_DOCUMENTS table successfully.');
+            $("#successCallback").fadeIn();
+            $("#successCallback").fadeOut(3000);
             console.log(status);
             console.log(data);
         };
@@ -77,46 +82,56 @@ define(['knockout',
             for (var key in self.stepsArray()) {
                 var value = self.stepsArray()[key];
                 if (stepId === value.stepId) {
+                    console.log(value.stepCode);
                     return value.stepCode;
                 }
             }
         };
         
         var createPublicLinkSuccessFn = function(linkId, fileId, fileName) {
-            console.log("In createPublicLinkSuccessFn function..");
+            console.log("created public link..");
+            hidePreloader();
+            self.successCbText('Public link created successfully.');
+            $("#successCallback").fadeIn();
+            $("#successCallback").fadeOut(3000);
             console.log(linkId);
             console.log(fileId);
             console.log(fileName);
-            console.log(self.selectedStepId());
-            console.log(self.selectedStepId());
+            console.log(self.selectedStepId()[0]);
             var payload =   {
-                "stepId": self.selectedStepId(),
-                "stepCode": getStepCodeById(self.selectedStepCode()),
+                "stepId": self.selectedStepId()[0],
+                "stepCode": getStepCodeById(self.selectedStepId()[0]),
                 "docType": "File",
                 "docTypeExtn": "pdf",
                 "docFileId": fileId,
-                "docMetaData": "meta data for the create service test fdsafdsfdsaf",
+                "docMetaData": "meta data for the create service test",
                 "fileName": fileName,
                 "publicLinkId": linkId
             };
-            service.addStepDocument(payload).then(addStepDocumentSuccessFn, failCbFn);
+            showPreloader();
+            console.log(payload);
+            service.addStepDocument(JSON.stringify(payload)).then(addStepDocumentSuccessFn, failCbFn);
         };
         
         var fileUploadSuccessCbFn = function(data, status) {
+            console.log("File uploaded..");
             console.log(status);
             console.log(data);
             var fileId = data.id;
             var filename = data.name;
             var fileName = filename.split(".");
-            service.createPublicLink(fileId, fileName).then(createPublicLinkSuccessFn, failCbFn);
             hidePreloader();
+            self.successCbText('Files uploaded successfully.');
             $("#successCallback").fadeIn();
             $("#successCallback").fadeOut(3000);
+            showPreloader();
+            service.createPublicLink(fileId, fileName[0]).then(createPublicLinkSuccessFn, failCbFn);
         };
         
         var fileUploadFailCbFn = function(xhr) {
             console.log(xhr);
             hidePreloader();
+            self.failCbText('File upload failed.');
             $("#failCallback").fadeIn();
             $("#failCallback").fadeOut(3000);
         };
@@ -124,6 +139,10 @@ define(['knockout',
         //for normal call fail callbacks
         var failCbFn = function(xhr) {
             console.log(xhr);
+            hidePreloader();
+            self.failCbText('AJAX call failed.');
+            $("#failCallback").fadeIn();
+            $("#failCallback").fadeOut(3000);
         };
         
         self.updateStepCode = function (event, data) {
