@@ -129,7 +129,6 @@ define(['knockout',
         self.updateStepCode = function (event, data) {
             if (data.value[0] !== undefined && data.option === "value") {
                 self.displayContentByStepId(data.value[0]);
-                getStepCodeById(data.value[0]);
             } else {
                 self.deptObservableArray([]);
                 self.datasource(new oj.ArrayTableDataSource(self.deptObservableArray));
@@ -145,9 +144,7 @@ define(['knockout',
         self.displayContentByStepId = function(stepId) {
             service.getFileDetails(stepId).then(getFileDetailsSuccessFn, failCbFn);
         };
-        
-        service.getApplicationSteps().then(getApplicationStepsSuccessCbFn, failCbFn);
-        
+                
         function initializeStepsArray(stepsData) {
             var temp = [];
             for (var step in stepsData) {
@@ -233,6 +230,11 @@ define(['knockout',
 //            console.log("metadata details are: " + ko.toJSON(data));
 //            console.log("----------------------------------------");
 //        };
+
+        // function that will execute automatically after loading of content
+        self.handleAttached = function() {
+            service.getApplicationSteps().then(getApplicationStepsSuccessCbFn, failCbFn);
+        };
     };
     
     return csmadminViewModel;
