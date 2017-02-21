@@ -41,7 +41,7 @@ define(['knockout',
             });
         });
         
-        self.deptObservableArray = ko.observableArray([]);
+        self.stepDetailTableArray = ko.observableArray([]);
         self.datasource = ko.observable();        
         self.selectedRole = ko.observable('itAdmin');
         self.successCbText = ko.observable();
@@ -55,17 +55,25 @@ define(['knockout',
         var getFileDetailsSuccessFn = function(data, status) {
             if (status !== 'nocontent') {
                 console.log(data);
-                self.deptObservableArray([]);
+                self.stepDetailTableArray([]);
                 var array = [];
                 for (var idx = 0; idx < data.length; idx++) {
-                    array.push({stepId: data[idx].stepId, fileName: data[idx].fileName});
+                    array.push({
+                        stepId: data[idx].stepId,
+                        stepCode: data[idx].stepCode,
+                        docType: data[idx].docType,
+                        docTypeExtn: data[idx].docTypeExtn,
+                        fileId: data[idx].docFileId,
+                        docMetaData: data[idx].docMetaData,
+                        fileName: data[idx].fileName,
+                        linkId: data[idx].publicLinkId});
                 }
-                self.deptObservableArray(array);
-                self.datasource(new oj.ArrayTableDataSource(self.deptObservableArray));
+                self.stepDetailTableArray(array);
+                self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
             } else {
                 console.log('Content not available for the selected step');
-                self.deptObservableArray([]);
-                self.datasource(new oj.ArrayTableDataSource(self.deptObservableArray));
+                self.stepDetailTableArray([]);
+                self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
             }
         };
         
@@ -154,8 +162,8 @@ define(['knockout',
             if (data.value[0] !== undefined && data.option === "value") {
                 self.displayContentByStepId(data.value[0]);
             } else {
-                self.deptObservableArray([]);
-                self.datasource(new oj.ArrayTableDataSource(self.deptObservableArray));
+                self.stepDetailTableArray([]);
+                self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
             }
         };
         
