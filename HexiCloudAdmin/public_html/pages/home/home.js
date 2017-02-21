@@ -21,31 +21,6 @@ define(['jquery', 'config/serviceConfig'
         self.isLoggedinTrue = function() {
             router.go('csmadmin/');
         };
-        
-        var successCbFn = function(data, status) {
-            console.log(status);
-            console.log(data);
-        };
-        
-        var failCbFn = function(xhr) {
-            console.log(xhr);
-        };
-        
-        self.handleAttached = function() {
-            // Create a formdata object and add the files
-            var data = new FormData();
-            
-            $("#multiform").submit(function(e) {
-                var formData = $("#fileuploadfield");
-                var file = formData[0].files[0];
-                console.log(file);
-
-                var form = new FormData();
-                form.append("jsonInputParameters", "{ \"parentID\": \"FAC27B99B3DBA6A190E7A98BDB81338485D611EEEC77\" }");
-                form.append("primaryFile", file);
-                service.testFunc(form).then(successCbFn, failCbFn);
-            });
-        };
     }
     
     return homeContentViewModel;

@@ -13,10 +13,11 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         var self = this;
         self.router = router;
         
+        // for uploading a file to DOCS Cloud
         self.uploadFile = function(payload) {
             var defer = $.Deferred();
-//            var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/files/data";
-            var serverURL = "https://140.86.1.93/hexiCloudUpload/services/rest/uploadStepDocument";
+            var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/files/data";
+//            var serverURL = "https://140.86.1.93/hexiCloudUpload/services/rest/uploadStepDocument";
             $.ajax({
                 type: 'POST',
                 url: serverURL,
@@ -24,11 +25,11 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
                 contentType: false,
                 mimeType: "multipart/form-data",
                 data: payload,
-//                dataType: 'json',
-//                beforeSend: function (xhr){
-//                    xhr.setRequestHeader('Authorization', 'Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl');
-//                    xhr.setRequestHeader("cache-control", "no-cache");
-//                },
+                dataType: 'json',
+                beforeSend: function (xhr){
+                    xhr.setRequestHeader('Authorization', 'Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl');
+                    xhr.setRequestHeader("cache-control", "no-cache");
+                },
 
                 success: function (data, status) {
                     console.log('Successfully uploaded file at: ' + serverURL);
@@ -42,6 +43,7 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
             return $.when(defer);
         };
         
+        // for fetching all stepCodes
         self.getApplicationSteps = function() {
             var defer = $.Deferred();
             var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/getApplicationSteps";
@@ -61,10 +63,14 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
             return $.when(defer);
         };
         
-        self.findStepDocsByStepId = function(stepId) {
+        // for fetching file details by stepId/stepCode
+        self.getFileDetails = function(stepDetail) {
             var defer = $.Deferred();
-            var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByStepId/" + stepId;
-//            var serverURL = "jsonData/stepsData.json";
+            if (typeof stepDetail === 'number') {
+                var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByStepId/" + stepDetail;
+            } else {
+                var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByStepCode/" + stepDetail;
+            }
             $.ajax({
                 type: "GET",
                 url: serverURL,
@@ -80,38 +86,43 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
             return $.when(defer);
         };
         
-        self.getFileDetails = function(stepId) {
-            var defer = $.Deferred();
-            var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByStepId/" + stepId;
-            $.ajax({
-                type: "GET",
-                url: serverURL,
-                success: function (data, status) {
-                    console.log('Successfully retrieved details at: ' + serverURL);
-                    defer.resolve(data, status);
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    console.log("Error retrieving service details at: " + serverURL);
-                    defer.reject(xhr);
-                }
-            });
-            return $.when(defer);
-        };
-        
-        self.getLinkId = function(fileId, docType) {
+        // for creating public link
+        self.createPublicLink = function(fileId, fileName) {
             var defer = $.Deferred();
             var serverURL = "https://documents-gse00002841.documents.us2.oraclecloud.com/documents/api/1.1/publiclinks/file/" + fileId;
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: serverURL,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Basic YmFsYS5ndXB0YTpvTHltcGljQDVDbGlw');
+                    xhr.setRequestHeader('Authorization', 'Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl');
                 },
                 success: function (data) {
                     console.log('Successfully retrieved details at: ' + serverURL);
+                    console.log(data);
                     if (data.id === fileId) {
-                        defer.resolve(data.items[0].linkID, fileId, docType);
+                        defer.resolve(data.linkID, fileId, fileName);
                     }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        // for adding step documents
+        self.addStepDocument = function(payload) {
+            var defer = $.Deferred();
+            var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/addStepDocument/";
+            $.ajax({
+                type: "POST",
+                url: serverURL,
+                data: payload,
+                contentType: "application/json",
+                success: function (data, status) {
+                    console.log('Successfully retrieved details at: ' + serverURL);
+                    defer.resolve(data, status);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log("Error retrieving service details at:" + serverURL);
