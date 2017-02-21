@@ -121,6 +121,10 @@ define(['knockout',
             var fileId = data.id;
             var filename = data.name;
             var fileName = filename.split(".");
+            
+            // clearing the file field
+            $("#fileUploadInput").val("");
+            
             hidePreloader();
             self.successCbText('Files uploaded successfully.');
             $("#successCallback").fadeIn();
