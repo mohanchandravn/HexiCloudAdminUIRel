@@ -64,12 +64,14 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         };
         
         // for fetching file details by stepId/stepCode
-        self.getFileDetails = function(stepDetail) {
+        self.getFileDetails = function(stepDetail, subStepCode) {
             var defer = $.Deferred();
-            if (typeof stepDetail === 'number') {
+            if (typeof stepDetail === 'number' && subStepCode == null) {
                 var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByStepId/" + stepDetail;
+            } else if (subStepCode == null) {
+                var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByCode/" + stepDetail;
             } else {
-                var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByStepCode/" + stepDetail;
+                var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByCode/" + stepDetail + "/" + subStepCode;
             }
             $.ajax({
                 type: "GET",

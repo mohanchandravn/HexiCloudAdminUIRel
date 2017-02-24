@@ -36,26 +36,30 @@ and open the template in the editor.
                             </select>
                         </div>
                     </div>
-                    <div class="oj-flex-bar oj-hybrid-padding">
+                    <div class="oj-flex-bar oj-hybrid-padding" data-bind="visible: showSubSteps">
                         <div class="oj-flex-bar-start">
-                            <label class="selection-label" for="rolelabel" data-bind="text: 'Choose Role: '"></label>
+                            <label class="selection-label" for="rolelabel" data-bind="text: 'Select a sub step: '"></label>
                         </div>
                         <div class="oj-flex-bar-middle">
-                            <div id="roleSelection" aria-labelledby="rolelabel"
+                            <div id="subStepSelection" aria-labelledby="rolelabel"
                                 data-bind="ojComponent: {
                                                 component: 'ojRadioset',
                                                 invalidComponentTracker: tracker,
-                                                required: true,
-                                                value: selectedRole,
-                                                optionChange: updateRole}" >
-                                <span class="oj-choice-row-inline">
+                                                value: selectedSubStep}" >
+                                <!-- ko foreach: subStepsArray -->
+                                    <span class="oj-choice-row-inline">
+                                        <input type="radio" name="rbb" data-bind="value: subStepCode, attr:{id:subStepCode}">
+                                        <label data-bind="text: subStepLabel, attr:{for:subStepCode}"></label>
+                                    </span>
+                                <!-- /ko -->
+<!--                                <span class="oj-choice-row-inline">
                                     <input id="itAdmin" type="radio" name="rbb" value="itAdmin">
                                     <label for="itAdmin">IT Admin</label>
                                 </span>
                                 <span class="oj-choice-row-inline">
                                     <input id="accountAdmin" type="radio" name="rbb" value="accountAdmin">
                                     <label for="accountAdmin">Account Admin</label>
-                                </span>
+                                </span>-->
                            </div>
                         </div>
                     </div>
@@ -93,7 +97,7 @@ and open the template in the editor.
         </div>
         
         <!-- Dialog box to upload file-->
-        <div style="display:none" id="uploadDialog" title="Modal Dialog" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
+        <div style="display:none" id="uploadDialog" title="Modal Dialog" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', rootAttributes: {style:'width:500px'}}">
             <div class="oj-dialog-body">
                 <div class="oj-flex-bar">
                     <div class="oj-flex-bar-start">
