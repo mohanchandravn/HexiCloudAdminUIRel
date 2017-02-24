@@ -37,30 +37,41 @@ and open the template in the editor.
                         </div>
                     </div>
                     <div class="oj-flex-bar oj-hybrid-padding" data-bind="visible: showSubSteps">
-                        <div class="oj-flex-bar-start">
-                            <label class="selection-label" for="rolelabel" data-bind="text: 'Select a sub step: '"></label>
+                        <div class="oj-flex-bar-middle">
+                                                    <div class="oj-flex-bar-start">
+                            <label class="selection-label" for="subStepListCombobox" data-bind="text: 'Choose a Sub step: '"></label>
                         </div>
                         <div class="oj-flex-bar-middle">
-                            <div id="subStepSelection" aria-labelledby="rolelabel"
+                            <select id="subStepListCombobox" class="managerListCombobox"
+                                    data-bind="ojComponent: {
+                                                component: 'ojSelect',
+                                                options: subStepsArray,
+                                                value: selectedSubStep,
+                                                placeholder: 'Please select a sub step..',
+                                                optionChange: updatedSubStep,                                   
+                                                rootAttributes: {style:'max-width:20em'}}">
+                            </select>
+                        </div>
+<!--                            <div id="subStepSelection" aria-labelledby="rolelabel"
                                 data-bind="ojComponent: {
                                                 component: 'ojRadioset',
                                                 invalidComponentTracker: tracker,
                                                 value: selectedSubStep}" >
-                                <!-- ko foreach: subStepsArray -->
+                                 ko foreach: subStepsArray 
                                     <span class="oj-choice-row-inline">
                                         <input type="radio" name="rbb" data-bind="value: subStepCode, attr:{id:subStepCode}">
                                         <label data-bind="text: subStepLabel, attr:{for:subStepCode}"></label>
                                     </span>
-                                <!-- /ko -->
-<!--                                <span class="oj-choice-row-inline">
+                                 /ko 
+                                <span class="oj-choice-row-inline">
                                     <input id="itAdmin" type="radio" name="rbb" value="itAdmin">
                                     <label for="itAdmin">IT Admin</label>
                                 </span>
                                 <span class="oj-choice-row-inline">
                                     <input id="accountAdmin" type="radio" name="rbb" value="accountAdmin">
                                     <label for="accountAdmin">Account Admin</label>
-                                </span>-->
-                           </div>
+                                </span>
+                           </div>-->
                         </div>
                     </div>
                     <div class="oj-hybrid-padding">

@@ -121,7 +121,11 @@ define(['knockout',
                         var value = self.stepsArray()[key];
                         if (stepId === value.stepId) {
                             console.log(value.subSteps);
-                            return value.subSteps;
+                            var subStepsArray = [];
+                            for (var idx = 0; idx < value.subSteps.length; idx++) {
+                                subStepsArray.push({value: value.subSteps[idx].subStepCode, label: value.subSteps[idx].subStepLabel});
+                            }
+                            return subStepsArray;
                         }
                     }
                 };
@@ -205,9 +209,12 @@ define(['knockout',
                 };
 
                 self.updatedSubStep = function (event, data) {
-                    debugger;
-                    if (typeof data.value === "string") {
-                        debugger;
+                    if (data.value[0] !== undefined && data.option === "value") {
+                     
+                        self.displayContentByStepCodeAndSubStep(getStepCodeById(self.selectedStepId()[0]),data.value[0]);
+                    } else {
+                        self.stepDetailTableArray([]);
+                        self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
                     }
                 };
 
@@ -323,8 +330,9 @@ define(['knockout',
                     service.getApplicationSteps().then(getApplicationStepsSuccessCbFn, failCbFn);
 
 
-               };
-            };
+                };
+            }
+            ;
 
             return csmadminViewModel;
         });
