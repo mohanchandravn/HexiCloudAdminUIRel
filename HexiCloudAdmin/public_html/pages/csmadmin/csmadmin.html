@@ -60,16 +60,6 @@ and open the template in the editor.
                         </div>
                     </div>
                     <div class="oj-hybrid-padding">
-                        <div class="oj-flex-bar">
-                            <div class="oj-flex-bar-start">
-                                <input type="file" name="fileUploadInput" id="fileUploadInput" class="oj-margin oj-flex" data-bind="visible: selectedStepId().length > 0"/>
-                                <span id="successCallback" class="oj-margin oj-sm-hide" data-bind="text: successCbText" style="color: green;"></span>
-                                <span id="failCallback" class="oj-margin oj-sm-hide" data-bind="text: failCbText" style="color: red;"></span>
-                            </div>
-                            <div>
-                                <button id= "uploadBtn" data-bind="visible: selectedStepId().length > 0, click: onUploadFile, ojComponent: { component: 'ojButton', label: 'Upload Files' }"></button>
-                            </div>
-                        </div>
                         <table id="table" summary="Department List" aria-label="Departments Table"
                                 data-bind="ojComponent: {component: 'ojTable',
                                                         display: 'grid',
@@ -84,6 +74,7 @@ and open the template in the editor.
                                                                    rowTemplate: 'docs_row_template', 
                                                         rootAttributes: {'style':'min-width: 300px; width: 100%; max-width: 500px; max-height: 300px;'}}">
                         </table>
+                        <button id= "uploadBtn" data-bind="visible: selectedStepId().length > 0, click: openDialogForUpload, ojComponent: { component: 'ojButton', label: 'Upload Files' }"></button>
                     </div>
                 </div>
                 
@@ -97,6 +88,33 @@ and open the template in the editor.
                     <span>Manage <span data-bind="text: loggedInUserRole()"></span> emails here..</span>
                 </div>
             </div>
+        </div>
+        
+        <!-- Dialog box to upload file-->
+        <div style="display:none" id="uploadDialog" title="Modal Dialog" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
+            <div class="oj-dialog-body">
+                <div class="oj-flex-bar">
+                    <div class="oj-flex-bar-start">
+                        <input type="file" name="fileUploadInput" id="fileUploadInput" class="oj-margin oj-flex"
+                               accept="application/pdf, video/mp4, image/jpeg, image/png" />
+                        <span id="successCallback" class="oj-margin oj-sm-hide" data-bind="text: successCbText" style="color: green;"></span>
+                        <span id="failCallback" class="oj-margin oj-sm-hide" data-bind="text: failCbText" style="color: red;"></span>
+                    </div>
+                </div>
+                <label for="displayOrder" data-bind="text: 'Display Order: '"></label>
+                <input id="displayOrder" data-bind="ojComponent: {
+                                                            component: 'ojInputNumber',
+                                                            max: '99',
+                                                            min: '1',
+                                                            step: '1',
+                                                            value: displayOrder}"/>
+                <label for="displayLabel" data-bind="text: 'Display Label: '"></label>
+                <input id="displayLabel" type="text" data-bind="ojComponent: {component: 'ojInputText', value: displayLabel}"/>
+            </div>
+            <div class="oj-dialog-footer">
+                <button id="onUploadBtn" data-bind="visible: selectedStepId().length > 0, click: onUploadFile, ojComponent: { component: 'ojButton', label: 'Upload File' }"> </button>
+                <button id="onCancelUploadBtn" data-bind="click: onCancelUpload, ojComponent: {component: 'ojButton', label: 'Cancel'}"> </button>
+             </div>
         </div>
     </div>
 </div>

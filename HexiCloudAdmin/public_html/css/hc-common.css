@@ -44,8 +44,8 @@ html, body, #routingContainer, .responsive-height {
     margin-top: 15px;
 }
 
-.preloader-container, video#video, iframe#pdf {
-    position: absolute;
+.preloader-container {
+    position: fixed;
     left: 0px;
     top: 0px;
     height: 100%;

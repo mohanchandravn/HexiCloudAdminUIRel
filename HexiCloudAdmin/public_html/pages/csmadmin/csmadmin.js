@@ -15,6 +15,9 @@ define(['knockout',
     'ojs/ojselectcombobox',
     'ojs/ojtabs',
     'ojs/ojtable',
+    'ojs/ojdialog',
+    'ojs/ojinputtext',
+    'ojs/ojinputnumber',
     'ojs/ojarraytabledatasource'],
     function(ko, service, oj, $) {
     
@@ -28,6 +31,8 @@ define(['knockout',
         //step codes to detect user in which step he's in
         self.stepsArray = ko.observableArray([]);
         self.selectedStepId = ko.observable('');
+        self.displayOrder = ko.observable();
+        self.displayLabel = ko.observable('');
         
         self.allStepsList = ko.computed( function() {
             var array = [];
@@ -185,13 +190,16 @@ define(['knockout',
             self.stepsArray(temp);
         };
         
+        self.openDialogForUpload = function() {
+            $("#uploadDialog").ojDialog("open");
+        };
+        
         // for uploading file
         self.onUploadFile = function() {
             var fileData = $("#fileUploadInput");
             var file = fileData[0].files[0];
-            console.log(file);
             
-            if (file !== undefined) {
+            if (file !== undefined && (file.type === "application/pdf" || file.type === "video/mp4" || file.type === "image/jpeg" || file.type === "image/png")) {
                 showPreloader();
                 var payload = new FormData();
 //                var stepId = self.selectedStepId()[0];
@@ -201,9 +209,15 @@ define(['knockout',
                 payload.append("jsonInputParameters", "{ \"parentID\": \"FAC27B99B3DBA6A190E7A98BDB81338485D611EEEC77\" }");
                 payload.append("primaryFile", file);
                 service.uploadFile(payload).then(fileUploadSuccessCbFn, fileUploadFailCbFn);
+            } else {
+                alert("Please upload PDF, MP4 Video, JPG/PNG formats only.");
             }
         };
-//        
+        
+        self.onCancelUpload = function() {
+            $("#uploadDialog").ojDialog("close");
+        };
+        
 //        self.downloadContent = function(stepId) {
 //            var fetchedLinkId = "";
 //            
@@ -253,9 +267,12 @@ define(['knockout',
             console.log("----------------------------------------");
             console.log("we can view the document by this id");
             console.log(data);
+            window.open("https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/link/" + data.linkId + "/fileview/" + data.fileId + "/" + data.fileName + "." + data.docTypeExtn);
+            
+            // have to open a new tab
             console.log("----------------------------------------");
         };
-//        
+        
 //        self.deleteContentByStepId= function(data, event) {
 //            console.log("----------------------------------------");
 //            console.log("we can delete the metadata by this id: " + data.id);
@@ -263,7 +280,7 @@ define(['knockout',
 //            console.log("----------------------------------------");
 //        };
 
-        // function that will execute automatically after loading of content
+        // function that will execute automatically after loading the page content
         self.handleAttached = function() {
             service.getApplicationSteps().then(getApplicationStepsSuccessCbFn, failCbFn);
         };

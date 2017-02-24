@@ -115,7 +115,7 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
+                
         // for adding step documents
         self.addStepDocument = function(payload) {
             var defer = $.Deferred();
