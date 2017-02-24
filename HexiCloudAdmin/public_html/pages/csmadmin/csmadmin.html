@@ -60,6 +60,9 @@ and open the template in the editor.
                         </div>
                     </div>
                     <div class="oj-hybrid-padding">
+                        <div class="oj-flex oj-margin">
+                            <button id= "uploadBtn" data-bind="visible: selectedStepId().length > 0, click: openDialogForUpload, ojComponent: { component: 'ojButton', label: 'Upload Files' }"></button>
+                        </div>
                         <table id="table" summary="Department List" aria-label="Departments Table"
                                 data-bind="ojComponent: {component: 'ojTable',
                                                         display: 'grid',
@@ -74,7 +77,6 @@ and open the template in the editor.
                                                                    rowTemplate: 'docs_row_template', 
                                                         rootAttributes: {'style':'min-width: 300px; width: 100%; max-width: 500px; max-height: 300px;'}}">
                         </table>
-                        <button id= "uploadBtn" data-bind="visible: selectedStepId().length > 0, click: openDialogForUpload, ojComponent: { component: 'ojButton', label: 'Upload Files' }"></button>
                     </div>
                 </div>
                 
