@@ -172,8 +172,9 @@ define(['knockout',
                     self.successCbText('Files uploaded successfully.');
                     $("#successCallback").fadeIn();
                     $("#successCallback").fadeOut(3000);
-                    showPreloader();
-                    service.createPublicLink(fileId, fileName[0]).then(createPublicLinkSuccessFn, failCbFn);
+//                    $("#uploadDialog").ojDialog("close");
+                    //showPreloader();
+//                    service.createPublicLink(fileId, fileName[0]).then(createPublicLinkSuccessFn, failCbFn);
                 };
 
                 var fileUploadFailCbFn = function (xhr) {
@@ -194,6 +195,7 @@ define(['knockout',
                 };
 
                 self.updateStepCode = function (event, data) {
+                    self.selectedSubStep('');
                     if (data.value[0] !== undefined && data.option === "value") {
                         if (checkForSubsteps(data.value[0]) == 'Y') {
                             self.showSubSteps(true);
@@ -201,7 +203,7 @@ define(['knockout',
                         } else {
                             self.showSubSteps(false);
                         }
-                        self.displayContentByStepId(data.value[0]);
+                        self.displayContentByStepCodeAndSubStep(data.value[0],null);
                     } else {
                         self.stepDetailTableArray([]);
                         self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
@@ -213,8 +215,7 @@ define(['knockout',
                      
                         self.displayContentByStepCodeAndSubStep(getStepCodeById(self.selectedStepId()[0]),data.value[0]);
                     } else {
-                        self.stepDetailTableArray([]);
-                        self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
+                         self.displayContentByStepCodeAndSubStep(getStepCodeById(self.selectedStepId()[0]),null);
                     }
                 };
 
@@ -240,24 +241,24 @@ define(['knockout',
                 };
 
                 // for uploading file
-                self.onUploadFile = function () {
-                    var fileData = $("#fileUploadInput");
-                    var file = fileData[0].files[0];
-
-                    if (file !== undefined && (file.type === "application/pdf" || file.type === "video/mp4" || file.type === "image/jpeg" || file.type === "image/png")) {
-                        showPreloader();
-                        var payload = new FormData();
-//                var stepId = self.selectedStepId()[0];
-//                var stepCode = "addAdditionalUsers";
-//                var temp = "{ \"parentID\": \"FAC27B99B3DBA6A190E7A98BDB81338485D611EEEC77\", \"stepId\": \"" + stepId + "\", \"stepCode\" : \"" + stepCode + "\" }";
-//                console.log(temp);
-                        payload.append("jsonInputParameters", "{ \"parentID\": \"FAC27B99B3DBA6A190E7A98BDB81338485D611EEEC77\" }");
-                        payload.append("primaryFile", file);
-                        service.uploadFile(payload).then(fileUploadSuccessCbFn, fileUploadFailCbFn);
-                    } else {
-                        alert("Please upload PDF, MP4 Video, JPG/PNG formats only.");
-                    }
-                };
+                self.onUploadFile = function() {
+            var fileData = $("#fileUploadInput");
+            var file = fileData[0].files[0];
+            
+            if (file !== undefined && (file.type === "application/pdf" || file.type === "video/mp4" || file.type === "image/jpeg" || file.type === "image/png")) {
+                showPreloader();
+                var payload = new FormData();
+                var stepId = self.selectedStepId()[0];
+                var stepCode = getStepCodeById(stepId);
+//                var temp = "{ \"parentID\": \"self\", \"stepId\": \"" + stepId + "\", \"stepCode\" : \"" + stepCode + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"displayLabel\" : \"" + self.displayLabel() + "\"  }";
+//                console.log(temp);//selectedSubStep
+                payload.append("jsonInputParameters", "{ \"parentID\": \"self\", \"stepId\": \"" + stepId + "\", \"stepCode\" : \"" + stepCode + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"displayLabel\" : \"" + self.displayLabel() + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"subStepCode\" : \"" + self.selectedSubStep() + "\"  }");
+                payload.append("primaryFile", file);
+                service.uploadFile(payload).then(fileUploadSuccessCbFn, fileUploadFailCbFn);
+            } else {
+                alert("Please upload PDF, MP4 Video, JPG/PNG formats only.");
+            }
+        };
 
                 self.onCancelUpload = function () {
                     $("#uploadDialog").ojDialog("close");
@@ -308,15 +309,15 @@ define(['knockout',
 //            service.getFileDetails(stepId).then(fileDetailsSuccessFn, fileDetailsFailFn);
 //        };
 
-                self.viewDocument = function (data, event) {
-                    console.log("----------------------------------------");
-                    console.log("we can view the document by this id");
-                    console.log(data);
-                    window.open("https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/link/" + data.linkId + "/fileview/" + data.fileId + "/" + data.fileName + "." + data.docTypeExtn);
-
-                    // have to open a new tab
-                    console.log("----------------------------------------");
-                };
+                self.viewDocument= function(data, event) {
+            console.log("----------------------------------------");
+            console.log("we can view the document by this id");
+            console.log(data);
+            window.open("https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/link/" + data.linkId + "/fileview/" + data.fileId + "/" + data.fileName);
+            
+            // have to open a new tab
+            console.log("----------------------------------------");
+        };
 
 //        self.deleteContentByStepId= function(data, event) {
 //            console.log("----------------------------------------");
