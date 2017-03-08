@@ -19,7 +19,8 @@ define(['jquery', 'config/serviceConfig'
         console.log('home page');
         
         self.isLoggedinTrue = function() {
-            router.go('csmadmin/');
+            //router.go('csmadmin/');
+            router.go('landing/');
         };
     }
     

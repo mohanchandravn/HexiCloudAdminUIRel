@@ -209,7 +209,12 @@ define(['knockout',
                         self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
                     }
                 };
-
+                
+                self.backButtonClick = function(data, event){
+                    //self.clickedButton(event.currentTarget.id);
+                    router.go('landing/');
+                }
+                
                 self.updatedSubStep = function (event, data) {
                     if (data.value[0] !== undefined && data.option === "value") {
                      
