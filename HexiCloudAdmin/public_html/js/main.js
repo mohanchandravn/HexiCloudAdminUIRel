@@ -79,7 +79,9 @@ require(['ojs/ojcore',
             router.configure( {
                 'home': {label: 'Home', value: getPath('home'), isDefault: true},
                 'login': {label: 'Login', value: getPath('login')},
-                'csmadmin': {label: 'CSM Admin', value: getPath('csmadmin')}
+                'csmadmin': {label: 'CSM Admin', value: getPath('csmadmin')},
+                'scheduler': {label : 'Scheduler', value: getPath('scheduler')},
+                'landing': {label : 'Landing', value: getPath('landing')},
             });
 
             function viewModel() {
