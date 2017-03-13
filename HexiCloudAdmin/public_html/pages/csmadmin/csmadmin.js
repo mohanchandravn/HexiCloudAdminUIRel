@@ -27,9 +27,23 @@ define(['knockout',
 
                 // this is the invalidComponentTracker on ojRadioset
                 self.tracker = ko.observable();
+                self.userId = ko.observable();
+                self.requestId = ko.observable();
+                self.resolvedStatus = ko.observable();
+                self.selectedRecordResolvedStatus = ko.observable();
+                self.isSelectedRecordResolved = ko.observable(true);
+                self.selectedRecordDescription = ko.observable();
 
                 //step codes to detect user in which step he's in
                 self.stepsArray = ko.observableArray([]);
+                self.allStatusList = ko.observableArray([
+                    {value: 'Y', label: 'Yes'},
+                    {value: 'N', label: 'No'},
+                    {value: 'any', label: 'Any'}
+                ]);
+                self.allResolvedStatusList = ko.observableArray([
+                    {value: 'Y', label: 'Yes'}
+                ]);
                 self.selectedStepId = ko.observable('');
                 self.displayOrder = ko.observable();
                 self.displayLabel = ko.observable('');
@@ -51,7 +65,9 @@ define(['knockout',
                 });
 
                 self.stepDetailTableArray = ko.observableArray([]);
-                self.datasource = ko.observable();
+                self.documentsDatasource = ko.observable();
+                self.recordDetailTableArray = ko.observableArray([]);
+                self.recordsDatasource = ko.observable();
                 self.selectedSubStep = ko.observable();
                 self.successCbText = ko.observable();
                 self.failCbText = ko.observable();
@@ -78,11 +94,11 @@ define(['knockout',
                                 linkId: data[idx].publicLinkId});
                         }
                         self.stepDetailTableArray(array);
-                        self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
+                        self.documentsDatasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
                     } else {
                         console.log('Content not available for the selected step');
                         self.stepDetailTableArray([]);
-                        self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
+                        self.documentsDatasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
                     }
                 };
 
@@ -128,6 +144,32 @@ define(['knockout',
                             return subStepsArray;
                         }
                     }
+                };
+                
+                self.initSearch = function(data, event) {
+                    console.log('searching..!');
+                    var payload;
+                    if (self.userId() !== null) {
+                        payload = 'userId=' + self.userId();
+                    }
+                    if (self.resolvedStatus() !== null) {
+                        payload += '&isResolved=' + self.resolvedStatus();
+                    }
+                    if (self.requestId() !== null) {
+                        payload += '&requestId=' + self.requestId();
+                    }
+                    console.log(payload);
+                };
+                
+                self.submitRecord = function(data, event) {
+                    // need to be work on
+                    console.log('submitting..!');
+                    var payload = {
+                        "srId": self.requestId(),
+                        "isResolved": self.resolvedStatus(),
+                        "resolutionComments": self.selectedRecordDescription()
+                    };
+                    console.log(payload);
                 };
 
                 var createPublicLinkSuccessFn = function (linkId, fileId, fileName) {
@@ -206,7 +248,7 @@ define(['knockout',
                         self.displayContentByStepCodeAndSubStep(data.value[0],null);
                     } else {
                         self.stepDetailTableArray([]);
-                        self.datasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
+                        self.documentsDatasource(new oj.ArrayTableDataSource(self.stepDetailTableArray));
                     }
                 };
                 
@@ -247,23 +289,23 @@ define(['knockout',
 
                 // for uploading file
                 self.onUploadFile = function() {
-            var fileData = $("#fileUploadInput");
-            var file = fileData[0].files[0];
-            
-            if (file !== undefined && (file.type === "application/pdf" || file.type === "video/mp4" || file.type === "image/jpeg" || file.type === "image/png")) {
-                showPreloader();
-                var payload = new FormData();
-                var stepId = self.selectedStepId()[0];
-                var stepCode = getStepCodeById(stepId);
-//                var temp = "{ \"parentID\": \"self\", \"stepId\": \"" + stepId + "\", \"stepCode\" : \"" + stepCode + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"displayLabel\" : \"" + self.displayLabel() + "\"  }";
-//                console.log(temp);//selectedSubStep
-                payload.append("jsonInputParameters", "{ \"parentID\": \"self\", \"stepId\": \"" + stepId + "\", \"stepCode\" : \"" + stepCode + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"displayLabel\" : \"" + self.displayLabel() + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"subStepCode\" : \"" + self.selectedSubStep() + "\"  }");
-                payload.append("primaryFile", file);
-                service.uploadFile(payload).then(fileUploadSuccessCbFn, fileUploadFailCbFn);
-            } else {
-                alert("Please upload PDF, MP4 Video, JPG/PNG formats only.");
-            }
-        };
+                    var fileData = $("#fileUploadInput");
+                    var file = fileData[0].files[0];
+
+                    if (file !== undefined) {
+                        showPreloader();
+                        var payload = new FormData();
+                        var stepId = self.selectedStepId()[0];
+                        var stepCode = getStepCodeById(stepId);
+        //                var temp = "{ \"parentID\": \"self\", \"stepId\": \"" + stepId + "\", \"stepCode\" : \"" + stepCode + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"displayLabel\" : \"" + self.displayLabel() + "\"  }";
+        //                console.log(temp);//selectedSubStep
+                        payload.append("jsonInputParameters", "{ \"parentID\": \"self\", \"stepId\": \"" + stepId + "\", \"stepCode\" : \"" + stepCode + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"displayLabel\" : \"" + self.displayLabel() + "\", \"displayOrder\": \"" + self.displayOrder() + "\", \"subStepCode\" : \"" + self.selectedSubStep() + "\"  }");
+                        payload.append("primaryFile", file);
+                        service.uploadFile(payload).then(fileUploadSuccessCbFn, fileUploadFailCbFn);
+                    } else {
+                        alert("Please select a file to upload.");
+                    }
+                };
 
                 self.onCancelUpload = function () {
                     $("#uploadDialog").ojDialog("close");

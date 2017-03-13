@@ -94,6 +94,10 @@ require(['ojs/ojcore',
                 
                 //screenrange observable for responsive alignment
                 self.screenRange = oj.ResponsiveKnockoutUtils.createScreenRangeObservable();
+                self.viewportSize = ko.computed( function() {
+                    console.log(self.screenRange().toUpperCase());
+                    return self.screenRange().toUpperCase();
+                });
                 self.isLoggedInUser = ko.observable(false);
                 self.wrapperRestEndPoint = ko.observable("https://140.86.1.93/HexiCloudRESTAPI/resources/rest/myservices");
                 

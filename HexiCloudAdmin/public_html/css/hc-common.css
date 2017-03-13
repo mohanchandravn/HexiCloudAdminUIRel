@@ -17,6 +17,10 @@ html, body, #routingContainer, .responsive-height {
     overflow-y: auto;
 }
 
+.admin-page, .landing-page {
+    padding: 10px;
+}
+
 .disable-actions {
     pointer-events: none;
     opacity: 0.5;

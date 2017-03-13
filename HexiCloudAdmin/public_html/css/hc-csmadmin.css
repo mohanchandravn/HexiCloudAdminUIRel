@@ -8,11 +8,11 @@ and open the template in the editor.
     Author     : nyasarap
 */
 
-.admin-tab-layout {
-    padding: 50px;
+.selection-label{
+    min-width: 150px;
 }
 
-.selection-label{
-    width: 100px;
-    margin-right: 10px;
+.heading {
+    font-size: 24px;
+    margin: 15px 0px;
 }
