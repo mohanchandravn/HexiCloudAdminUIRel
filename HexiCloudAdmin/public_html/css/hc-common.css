@@ -14,7 +14,6 @@ html, body, #routingContainer, .responsive-height {
 
 .page-content {
     height: 100vh;
-    overflow-y: auto;
 }
 
 .admin-page, .landing-page {

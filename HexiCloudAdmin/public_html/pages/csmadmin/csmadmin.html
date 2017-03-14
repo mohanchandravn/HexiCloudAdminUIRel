@@ -77,7 +77,7 @@ and open the template in the editor.
                         <div class="oj-flex oj-margin">
                             <button id= "uploadBtn" data-bind="visible: selectedStepId().length > 0, click: openDialogForUpload, ojComponent: { component: 'ojButton', label: 'Upload Files' }"></button>
                         </div>
-                        <table id="table" summary="Department List" aria-label="Departments Table"
+                        <table id="documentsTable" summary="Department List" aria-label="Departments Table"
                                data-bind="ojComponent: {component: 'ojTable',
                                                         display: 'grid',
                                                         data: documentsDatasource,
@@ -89,7 +89,7 @@ and open the template in the editor.
                                                                    sortProperty: 'fileName'},
                                                                   {headerText: 'Options'}],
                                                                    rowTemplate: 'docs_row_template', 
-                                                        rootAttributes: {'style':'min-width: 300px; width: 100%; max-width: 500px; max-height: 300px;'}}">
+                                                        rootAttributes: {'style':'min-width: 300px; width: 100%; max-width: 700px; max-height: 300px;'}}">
                         </table>
                     </div>
                 </div>
@@ -137,8 +137,8 @@ and open the template in the editor.
                             </button>
                         </div>
                     </div>
-                    <div class="oj-margin-lg-top oj-flex">
-                        <table id="table" summary="Department List" aria-label="Departments Table"
+                    <div class="oj-margin-lg-vertical oj-flex">
+                        <table id="recordsTable" summary="Department List" aria-label="Departments Table"
                                    data-bind="ojComponent: {component: 'ojTable',
                                                             display: 'grid',
                                                             data: recordsDatasource,
@@ -153,7 +153,7 @@ and open the template in the editor.
                                                                       {headerText: 'Is Resolved',
                                                                        sortProperty: 'isResolved'}],
                                                                        rowTemplate: 'records_row_template', 
-                                                            rootAttributes: {'style':'min-width: 300px; width: 100%; max-width: 500px; max-height: 300px;'}}">
+                                                            rootAttributes: {'style':'min-width: 300px; width: 100%; max-width: 700px; max-height: 300px;'}}">
                         </table>
                     </div>
                     <div class="oj-flex">
@@ -171,20 +171,33 @@ and open the template in the editor.
                     <div class="oj-flex">
                         <span class="heading oj-sm-12 oj-flex-item">Update Resolutions: </span>
                         <div class="oj-sm-6 oj-md-2 oj-flex-item">
-                            <label class="selection-label" for="resolvedStatusChangeCombobox" data-bind="text: 'Choose a Sub step: '"></label>
+                            <label class="selection-label" for="requestId2" data-bind="text: 'Request Id: '"></label>
+                        </div>
+                        <div class="oj-sm-6 oj-md-10 oj-flex-item">    
+                            <input id="requestId2" type="text" data-bind="ojComponent: {
+                                                                component: 'ojInputText',
+                                                                disabled: isSelectedRecordResolved,
+                                                                value: selectedRecordSrId,
+                                                                readOnly: true
+                                                                
+                            }" />
+                        </div>
+                        <div class="oj-sm-6 oj-md-2 oj-flex-item">
+                            <label class="selection-label" for="resolvedStatusChangeCombobox" data-bind="text: 'Resolved: '"></label>
                         </div>
                         <div class="oj-sm-6 oj-md-10 oj-flex-item">    
                             <select id="resolvedStatusChangeCombobox"
                                     data-bind="ojComponent: {
                                                         component: 'ojSelect',
                                                         options: allResolvedStatusList,
+                                                        disabled: isSelectedRecordResolved,
                                                         value: selectedRecordResolvedStatus,
                                                         placeholder: 'Please select an option..',
                                                         rootAttributes: {style:'max-width:20em'}}">
                             </select>
                         </div>
                         <div class="oj-sm-12 oj-md-2 oj-flex-item">
-                            <label for="disabledDescription" class="selection-label">Description: </label>
+                            <label for="disabledDescription" class="selection-label">Resolution Comments: </label>
                         </div>
                         <div class="oj-sm-12 oj-md-8 oj-flex-item">
                             <textarea id="disabledDescription" style="resize: both;"
@@ -198,7 +211,7 @@ and open the template in the editor.
                         <div class="oj-sm-12 oj-md-10 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-top' : ''">
                             <div class="oj-flex-bar">
                                 <div class="oj-flex-bar-end">
-                                    <button data-bind="click: submitRecord, ojComponent: {
+                                    <button data-bind="disable: isSelectedRecordResolved, click: submitRecord, ojComponent: {
                                                             component: 'ojButton',
                                                             label: 'Submit'
                                         }">
@@ -253,8 +266,8 @@ and open the template in the editor.
 </script>
 
 <script type="text/html" id="records_row_template">
-    <tr>
-        <td data-bind="text: requestId">
+    <tr data-bind="click: $parent.getRecord">
+        <td data-bind="text: srId">
         </td>
         <td data-bind="text: userId">
         </td>

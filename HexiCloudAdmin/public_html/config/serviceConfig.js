@@ -17,7 +17,7 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         self.uploadFile = function(payload) {
             var defer = $.Deferred();
             var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/files/data";
-//            var serverURL = "https://140.86.1.93/hexiCloudUpload/services/rest/uploadStepDocument";
+//            var serverURL = "https://129.152.128.105/hexiCloudUpload/services/rest/uploadStepDocument";
             $.ajax({
                 type: "POST",
                 url: serverURL,
@@ -46,7 +46,7 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         // for fetching all stepCodes
         self.getApplicationSteps = function() {
             var defer = $.Deferred();
-            var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/getApplicationSteps";
+            var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/getApplicationSteps";
 //            var serverURL = "jsonData/stepsData.json";
             $.ajax({
                 type: "GET",
@@ -67,11 +67,11 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         self.getFileDetails = function(stepDetail, subStepCode) {
             var defer = $.Deferred();
             if (typeof stepDetail === 'number' && subStepCode == null) {
-                var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByStepId/" + stepDetail;
+                var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/findStepDocsByStepId/" + stepDetail;
             } else if (subStepCode == null) {
-                var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByCode/" + stepDetail;
+                var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/findStepDocsByCode/" + stepDetail;
             } else {
-                var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/findStepDocsByCode/" + stepDetail + "/" + subStepCode;
+                var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/findStepDocsByCode/" + stepDetail + "/" + subStepCode;
             }
             $.ajax({
                 type: "GET",
@@ -122,7 +122,7 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
         self.addStepDocument = function(payload) {
             var defer = $.Deferred();
             console.log(payload);
-            var serverURL = "https://140.86.1.93/hexiCloudRest/services/rest/addStepDocument/";
+            var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/addStepDocument/";
             $.ajax({
                 type: "POST",
                 url: serverURL,
@@ -135,6 +135,48 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        self.findUserEmails = function(payload) {
+            var defer = $.Deferred();
+            console.log(payload);
+            var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/findUserEmails?" + payload;
+            $.ajax({
+                type: "GET",
+                url: serverURL,
+                contentType: "application/json",
+                success: function (data, status) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        self.submitRecord = function(payload) {
+            var defer = $.Deferred();
+            console.log(payload);
+            var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/updateEmailResolution/";
+            $.ajax({
+                type: "POST",
+                url: serverURL,
+                contentType: "application/json",
+                processData: false,
+                data: payload,
+                success: function (data, status) {
+                    console.log("Successfully created record at: " + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error created record at:" + serverURL);
                     defer.reject(xhr);
                 }
             });

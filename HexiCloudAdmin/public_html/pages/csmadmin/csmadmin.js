@@ -27,12 +27,14 @@ define(['knockout',
 
                 // this is the invalidComponentTracker on ojRadioset
                 self.tracker = ko.observable();
-                self.userId = ko.observable();
-                self.requestId = ko.observable();
-                self.resolvedStatus = ko.observable();
-                self.selectedRecordResolvedStatus = ko.observable();
-                self.isSelectedRecordResolved = ko.observable(true);
-                self.selectedRecordDescription = ko.observable();
+                self.userId = ko.observable('');
+                self.requestId = ko.observable('');
+                self.resolvedStatus = ko.observable('');
+                
+                self.selectedRecordSrId = ko.observable('');
+                self.selectedRecordResolvedStatus = ko.observable('');
+                self.isSelectedRecordResolved = ko.observable(false);
+                self.selectedRecordDescription = ko.observable('');
 
                 //step codes to detect user in which step he's in
                 self.stepsArray = ko.observableArray([]);
@@ -146,30 +148,100 @@ define(['knockout',
                     }
                 };
                 
+                var searchSuccessFn = function(data, status) {
+                    if (status !== 'nocontent') {
+                        console.log(data);
+                        self.recordDetailTableArray([]);
+                        var array = [];
+                        for (var idx = 0; idx < data.length; idx++) {
+                            array.push({
+                                srId: data[idx].srId,
+                                userId: data[idx].userId,
+                                subject: data[idx].subject,
+                                message: data[idx].message,
+                                sentTo: data[idx].sentTo,
+                                sentCC: data[idx].sentCC,
+                                sentBCC: data[idx].sentBCC,
+                                isResolved: data[idx].isResolved,
+                                csmEmailCount: data[idx].csmEmailCount,
+                                resolutionComments: data[idx].resolutionComments,
+                                createdDate: data[idx].createdDate});
+                        }
+                        self.recordDetailTableArray(array);
+                        self.recordsDatasource(new oj.ArrayTableDataSource(self.recordDetailTableArray));
+                    } else {
+                        console.log('Content not available for the selected step');
+                        self.recordDetailTableArray([]);
+                        self.recordsDatasource(new oj.ArrayTableDataSource(self.recordDetailTableArray));
+                    }
+                };
+                
                 self.initSearch = function(data, event) {
-                    console.log('searching..!');
                     var payload;
-                    if (self.userId() !== null) {
+                    console.log(self.userId());
+                    console.log(self.resolvedStatus());
+                    console.log(self.requestId());
+                    if (self.userId() !== '') {
                         payload = 'userId=' + self.userId();
+                        if (self.resolvedStatus().length > 0 && self.resolvedStatus()[0] !== 'any') {
+                            payload += '&isResolved=' + self.resolvedStatus();
+                        }
+                        if (self.requestId() !== '') {
+                            payload += '&requestId=' + self.requestId();
+                        }
+                        console.log(payload);
+                        service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
+                        return;
                     }
-                    if (self.resolvedStatus() !== null) {
-                        payload += '&isResolved=' + self.resolvedStatus();
+                    if (self.resolvedStatus().length > 0 && self.resolvedStatus()[0] !== 'any') {
+                        payload = 'isResolved=' + self.resolvedStatus();
+                        if (self.requestId() !== '') {
+                            payload += '&requestId=' + self.requestId();
+                        }
+                        console.log(payload);
+                        service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
+                        return;
                     }
-                    if (self.requestId() !== null) {
-                        payload += '&requestId=' + self.requestId();
+                    if (self.requestId() !== '') {
+                        payload = 'requestId=' + self.requestId();
                     }
-                    console.log(payload);
+                    if (payload !== undefined) {
+                        console.log(payload);
+                        service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
+                        //some service call..
+                    } else {
+                        console.log('search failed as there is nothing to search for..');
+                    }
+                };
+                
+                self.getRecord = function(data, event) {
+                    console.log(data);
+                    self.selectedRecordSrId(data.srId);
+                    self.selectedRecordResolvedStatus();
+                    self.isSelectedRecordResolved(data.isResolved);
+                    self.selectedRecordDescription(data.resolutionComments);
+                };
+                
+                var submitRecordSuccessFn = function(data, status) {
+                    if (status === 'success') {
+                        console.log('Record updated');
+                        self.initSearch();
+                    }
                 };
                 
                 self.submitRecord = function(data, event) {
-                    // need to be work on
-                    console.log('submitting..!');
-                    var payload = {
-                        "srId": self.requestId(),
-                        "isResolved": self.resolvedStatus(),
-                        "resolutionComments": self.selectedRecordDescription()
-                    };
-                    console.log(payload);
+                    console.log(self.selectedRecordResolvedStatus());
+                    if (self.selectedRecordResolvedStatus().length > 0) {
+                        var payload = {
+                            "srId": self.selectedRecordSrId(),
+                            "isResolved": true,
+                            "resolutionComments": self.selectedRecordDescription()
+                        };
+                        console.log(payload);
+                        service.submitRecord(JSON.stringify(payload)).then(submitRecordSuccessFn, FailCallBackFn);
+                    } else {
+                        alert('Please select the Resolved option..');
+                    }
                 };
 
                 var createPublicLinkSuccessFn = function (linkId, fileId, fileName) {
@@ -280,8 +352,7 @@ define(['knockout',
                         temp.push({'stepId': stepsData[step].stepId, 'stepCode': stepsData[step].stepCode, 'stepLabel': stepsData[step].stepLabel, 'hasSubStep': stepsData[step].hasSubStep, 'subSteps': stepsData[step].subSteps});
                     }
                     self.stepsArray(temp);
-                }
-                ;
+                };
 
                 self.openDialogForUpload = function () {
                     $("#uploadDialog").ojDialog("open");
@@ -357,14 +428,14 @@ define(['knockout',
 //        };
 
                 self.viewDocument= function(data, event) {
-            console.log("----------------------------------------");
-            console.log("we can view the document by this id");
-            console.log(data);
-            window.open("https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/link/" + data.linkId + "/fileview/" + data.fileId + "/" + data.fileName);
-            
-            // have to open a new tab
-            console.log("----------------------------------------");
-        };
+                    console.log("----------------------------------------");
+                    console.log("we can view the document by this id");
+                    console.log(data);
+                    window.open("https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/link/" + data.linkId + "/fileview/" + data.fileId + "/" + data.fileName);
+
+                    // have to open a new tab
+                    console.log("----------------------------------------");
+                };
 
 //        self.deleteContentByStepId= function(data, event) {
 //            console.log("----------------------------------------");
@@ -376,11 +447,8 @@ define(['knockout',
                 // function that will execute automatically after loading the page content
                 self.handleAttached = function () {
                     service.getApplicationSteps().then(getApplicationStepsSuccessCbFn, failCbFn);
-
-
                 };
-            }
-            ;
+            };
 
             return csmadminViewModel;
         });
