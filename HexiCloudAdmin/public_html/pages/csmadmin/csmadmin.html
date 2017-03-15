@@ -110,7 +110,7 @@ and open the template in the editor.
                             }" />
                         </div>
                         <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
-                            <label class="selection-label" for="resolvedStatusCombobox" data-bind="text: 'Choose a Sub step: '"></label>
+                            <label class="selection-label" for="resolvedStatusCombobox" data-bind="text: 'Is Resolved: '"></label>
                             <select id="resolvedStatusCombobox"
                                     data-bind="ojComponent: {
                                                         component: 'ojSelect',
@@ -190,8 +190,8 @@ and open the template in the editor.
                                     data-bind="ojComponent: {
                                                         component: 'ojSelect',
                                                         options: allResolvedStatusList,
-                                                        disabled: isSelectedRecordResolved,
                                                         value: selectedRecordResolvedStatus,
+                                                        disabled: isSelectedRecordResolved,
                                                         placeholder: 'Please select an option..',
                                                         rootAttributes: {style:'max-width:20em'}}">
                             </select>

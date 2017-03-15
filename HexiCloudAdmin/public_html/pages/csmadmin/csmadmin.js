@@ -44,7 +44,8 @@ define(['knockout',
                     {value: 'any', label: 'Any'}
                 ]);
                 self.allResolvedStatusList = ko.observableArray([
-                    {value: 'Y', label: 'Yes'}
+                    {value: 'Y', label: 'Yes'},
+                    {value: 'N', label: 'No'}
                 ]);
                 self.selectedStepId = ko.observable('');
                 self.displayOrder = ko.observable();
@@ -177,10 +178,8 @@ define(['knockout',
                 };
                 
                 self.initSearch = function(data, event) {
+                    self.clearRecord();
                     var payload;
-                    console.log(self.userId());
-                    console.log(self.resolvedStatus());
-                    console.log(self.requestId());
                     if (self.userId() !== '') {
                         payload = 'userId=' + self.userId();
                         if (self.resolvedStatus().length > 0 && self.resolvedStatus()[0] !== 'any') {
@@ -208,18 +207,27 @@ define(['knockout',
                     if (payload !== undefined) {
                         console.log(payload);
                         service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
-                        //some service call..
                     } else {
                         console.log('search failed as there is nothing to search for..');
+                        self.recordDetailTableArray([]);
+                        self.recordsDatasource(new oj.ArrayTableDataSource(self.recordDetailTableArray));
                     }
                 };
                 
                 self.getRecord = function(data, event) {
                     console.log(data);
                     self.selectedRecordSrId(data.srId);
-                    self.selectedRecordResolvedStatus();
+                    var status = data.isResolved ? 'Y' : 'N';
+                    self.selectedRecordResolvedStatus(status);
                     self.isSelectedRecordResolved(data.isResolved);
                     self.selectedRecordDescription(data.resolutionComments);
+                };
+                
+                self.clearRecord = function() {
+                    self.selectedRecordSrId('');
+                    self.selectedRecordResolvedStatus([]);
+                    self.isSelectedRecordResolved(true);
+                    self.selectedRecordDescription('');
                 };
                 
                 var submitRecordSuccessFn = function(data, status) {
