@@ -1,0 +1,21 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 16, 2017, 12:33:08 PM
+    Author     : nithin
+*/
+
+.createuser-page {
+    background-color: #FFFFFF;
+    padding: 10px;
+}
+
+.form-title {
+    font-size: 22px;
+    line-height: 28px;
+    color: #00758f;
+    margin-bottom: 15px !important;
+}

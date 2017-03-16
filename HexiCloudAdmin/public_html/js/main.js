@@ -82,6 +82,7 @@ require(['ojs/ojcore',
                 'csmadmin': {label: 'CSM Admin', value: getPath('csmadmin')},
                 'scheduler': {label : 'Scheduler', value: getPath('scheduler')},
                 'landing': {label : 'Landing', value: getPath('landing')},
+                'createuser': {label : 'Create User', value: getPath('createuser')}
             });
 
             function viewModel() {
