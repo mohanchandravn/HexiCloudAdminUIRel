@@ -16,7 +16,7 @@ and open the template in the editor.
                 </div>
                 <div class="oj-flex">  
                     <div class="oj-flex-item">
-                        <label for="userName">Username</label>
+                        <label for="userName">User Name</label>
                         <input id="userName" maxlength="20" data-bind="ojComponent: { component: 'ojInputText', value: userName, required: true, invalidComponentTracker: tracker }">
                     </div>
                 </div>
@@ -56,7 +56,7 @@ and open the template in the editor.
                         <input id="email" maxlength="50" data-bind="ojComponent: { component: 'ojInputText', value: email, required: true, validators: [{ type: 'regExp', options: { pattern: emailPattern, messageDetail: 'Please enter a valid email.' } }], invalidComponentTracker: tracker }">
                     </div>
                 </div>      
-                <div class="oj-flex">  
+                <div class="oj-flex create-user-button-container">  
                     <div class="oj-flex-item">
                         <div class="oj-form-control-group" aria-labelledby="inputgrouplabel" role="group">
                             <button id="submit" data-bind="ojComponent: { component: 'ojButton', label: 'Submit', disabled: shouldDisableCreate() }, click: onCreateUserClick"></button>
@@ -66,5 +66,16 @@ and open the template in the editor.
                 </div>                
             </div>
         </div>
+        
+        <div style="display:none" id="modalDialogCreateUserStatus" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', cancelBehavior: 'escape'}">
+            <div class="oj-dialog-header" style="height: 0px"></div>
+            <div class="oj-dialog-body">
+                <p data-bind="text: createUserStatus"></p>
+            </div>
+            <div class="oj-dialog-footer" style="margin: auto">
+                <button id="okButton" style="width: 280px " data-bind="ojComponent: {component: 'ojButton', label: 'OK'}"> </button>
+            </div>
+        </div>
+        
     </div>
 </div>

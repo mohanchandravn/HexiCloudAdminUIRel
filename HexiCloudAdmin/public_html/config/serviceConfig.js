@@ -182,6 +182,50 @@ define(['knockout', 'jquery', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
+        
+        // To create a portal user
+        self.createUser = function(payload) {
+            console.log('payload: ' + payload);
+            var defer = $.Deferred();
+            var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/createPortalUser/";
+            $.ajax({
+                type: "POST",
+                url: serverURL,
+                contentType: "application/json",
+                processData: false,
+                data: payload,
+                success: function (data, status) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at: " + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        // Check whether a given user id is available or not
+        self.isUserIdAvailable = function(payload) {
+            console.log('payload: ' + payload);            
+            var defer = $.Deferred();
+            var serverURL = "https://129.152.128.105/hexiCloudRest/services/rest/checkUserIdAvailable/" + payload + '/';
+            $.ajax({
+                type: "GET",
+                url: serverURL,
+                contentType: "application/json",
+                success: function (data, status) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
     };
    
    return new serviceConfig();

@@ -13,7 +13,8 @@ define(['ojs/ojcore',
     'ojs/ojknockout-validation',
     'ojs/ojinputtext',
     'ojs/ojselectcombobox',
-    'ojs/ojbutton'],
+    'ojs/ojbutton',
+    'ojs/ojdialog'],
 
     function (oj, $, ko, service, commonHelper) {
 
@@ -41,6 +42,8 @@ define(['ojs/ojcore',
             ]);
             
             self.emailPattern = commonHelper.emailRegExpPattern;
+            
+            self.createUserStatus = ko.observable('');
                         
             self._showComponentValidationErrors = function (trackerObj) {
                 trackerObj.showMessages();
@@ -77,14 +80,43 @@ define(['ojs/ojcore',
                 }
             };
             
-            self.onCreateUserClick = function (event, data) {
-                // Validations
-                var trackerObj = ko.utils.unwrapObservable(self.tracker);
-                if (!this._showComponentValidationErrors(trackerObj)) {
-                    return;
-                }
+            var openModalDialogCreateUserStatus = function (message) {
+                $("#modalDialogCreateUserStatus").ojDialog("open");
+                self.createUserStatus(message);
+                self.handleOKClose = $("#okButton").click(function () {
+                    $("#modalDialogCreateUserStatus").ojDialog("close");
+                });
+            };
+            
+            var checkIsUserIdAvailable = function () {
+                var isUserIdAvailableSuccessCbFn = function (data, status) {
+                    if (data === true) {
+                        createUser();
+                    } else {
+                        hidePreloader();
+                        openModalDialogCreateUserStatus('Failed to create user. User name already exists.');
+                    }
+                };
                 
-                // Service call
+                var isUserIdAvailableFailCbFn = function (xhr) {
+                    hidePreloader();
+                    openModalDialogCreateUserStatus('Failed to create user.');
+                };
+                
+                service.isUserIdAvailable(self.userName()).then(isUserIdAvailableSuccessCbFn, isUserIdAvailableFailCbFn);
+            };
+            
+            var createUser = function () {
+                var createUserSuccessCbFn = function (data, status) {
+                    hidePreloader();
+                    openModalDialogCreateUserStatus('User created successfully.');
+                };
+                
+                var createUserFailCbFn = function (xhr) {
+                    hidePreloader();
+                    openModalDialogCreateUserStatus('Failed to create user.');
+                };
+
                 var payload = {
                     "userId" : self.userName(),
                     "password" : self.password(),
@@ -93,7 +125,19 @@ define(['ojs/ojcore',
                     "firstName" : self.firstName(),
                     "lastName" : self.lastName()
                 };
-                console.log('payload: ' + JSON.stringify(payload));
+                
+                service.createUser(JSON.stringify(payload)).then(createUserSuccessCbFn, createUserFailCbFn);
+            };
+            
+            self.onCreateUserClick = function (event, data) {
+                // Validations
+                var trackerObj = ko.utils.unwrapObservable(self.tracker);
+                if (!this._showComponentValidationErrors(trackerObj)) {
+                    return;
+                }
+                
+                showPreloader();
+                checkIsUserIdAvailable();
             };
         };
 
