@@ -67,6 +67,10 @@ html, body, #routingContainer, .responsive-height {
     animation: spin 2s linear infinite;
 }
 
+.back-button {
+    padding-bottom: 15px;
+}
+
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }

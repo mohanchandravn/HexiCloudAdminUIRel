@@ -18,9 +18,11 @@ define(['ojs/ojcore',
 
     function (oj, $, ko, service, commonHelper) {
 
-        function createuserViewModel() {
+        function createuserViewModel(params) {
             
             var self = this;
+            
+            var router = params.ojRouter.parentRouter;
             
             self.tracker = ko.observable();
         
@@ -28,7 +30,7 @@ define(['ojs/ojcore',
             self.userName = ko.observable('');
             self.password = ko.observable('');
             self.passwordRepeat = ko.observable('');
-            self.userRole = ko.observable('');
+            self.userRole = ko.observableArray([]);
             self.firstName = ko.observable('');
             self.lastName = ko.observable('');
             self.email = ko.observable('');
@@ -109,6 +111,7 @@ define(['ojs/ojcore',
             var createUser = function () {
                 var createUserSuccessCbFn = function (data, status) {
                     hidePreloader();
+                    resetCreateUserForm();
                     openModalDialogCreateUserStatus('User created successfully.');
                 };
                 
@@ -129,7 +132,7 @@ define(['ojs/ojcore',
                 service.createUser(JSON.stringify(payload)).then(createUserSuccessCbFn, createUserFailCbFn);
             };
             
-            self.onCreateUserClick = function (event, data) {
+            self.onCreateUserButtonClick = function (event, data) {
                 // Validations
                 var trackerObj = ko.utils.unwrapObservable(self.tracker);
                 if (!this._showComponentValidationErrors(trackerObj)) {
@@ -138,6 +141,24 @@ define(['ojs/ojcore',
                 
                 showPreloader();
                 checkIsUserIdAvailable();
+            };
+            
+            self.onResetButtonClick = function (event, data) {
+                resetCreateUserForm();
+            };
+            
+            var resetCreateUserForm = function() {
+                self.userName('');
+                self.password('');
+                self.passwordRepeat('');
+                self.userRole([]);
+                self.firstName('');
+                self.lastName('');
+                self.email('');
+            };
+            
+            self.backButtonClick = function(event, data){
+                router.go('landing');
             };
         };
 

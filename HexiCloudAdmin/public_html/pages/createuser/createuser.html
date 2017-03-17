@@ -7,6 +7,7 @@ and open the template in the editor.
 
 <div class="createuser-page oj-flex">
     <div class="page-content oj-flex-item oj-sm-12">
+        <div class="back-button"><a id="anchor" href="#" data-bind="click: backButtonClick, ojComponent: { component: 'ojButton' }">Back</a></div>
         <div id="createUserFormContainer" class="oj-form-layout">
             <div class="oj-form">
                 <div class="oj-flex">  
@@ -59,8 +60,8 @@ and open the template in the editor.
                 <div class="oj-flex create-user-button-container">  
                     <div class="oj-flex-item">
                         <div class="oj-form-control-group" aria-labelledby="inputgrouplabel" role="group">
-                            <button id="submit" data-bind="ojComponent: { component: 'ojButton', label: 'Submit', disabled: shouldDisableCreate() }, click: onCreateUserClick"></button>
-                            <button id="cancel" data-bind="ojComponent: { component: 'ojButton', label: 'Cancel' }"></button>
+                            <button id="submit" data-bind="ojComponent: { component: 'ojButton', label: 'Submit', disabled: shouldDisableCreate() }, click: onCreateUserButtonClick"></button>
+                            <button id="cancel" data-bind="ojComponent: { component: 'ojButton', label: 'Reset' }, click: onResetButtonClick"></button>
                         </div>                   
                     </div>
                 </div>                
