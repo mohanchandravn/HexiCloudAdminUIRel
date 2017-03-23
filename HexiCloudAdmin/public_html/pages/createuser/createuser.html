@@ -7,7 +7,7 @@ and open the template in the editor.
 
 <div class="createuser-page oj-flex">
     <div class="page-content oj-flex-item oj-sm-12">
-        <div class="back-button"><a id="anchor" href="#" data-bind="click: backButtonClick, ojComponent: { component: 'ojButton' }">Back</a></div>
+<!--        <div class="back-button"><a id="anchor" href="#" data-bind="click: backButtonClick, ojComponent: { component: 'ojButton' }">Back</a></div>-->
         <div id="createUserFormContainer" class="oj-form-layout">
             <div class="oj-form">
                 <div class="oj-flex">  
@@ -21,18 +21,22 @@ and open the template in the editor.
                         <input id="userName" maxlength="20" data-bind="ojComponent: { component: 'ojInputText', value: userName, required: true, invalidComponentTracker: tracker }">
                     </div>
                 </div>
+                <!--ko if: isCreateMode-->
                 <div class="oj-flex">  
                     <div class="oj-flex-item">
                         <label for="password">Password</label>
                         <input id="password" maxlength="20" type="password" data-bind="ojComponent: { component: 'ojInputPassword', value: password, required: true, validators: [minLength], invalidComponentTracker: tracker }">
                     </div>
                 </div>
+                <!--/ko-->
+                 <!--ko if: isCreateMode-->
                 <div class="oj-flex">  
                     <div class="oj-flex-item">
                         <label for="passwordRepeat">Re-enter Password</label>
                         <input id="passwordRepeat" maxlength="20" type="password" data-bind="ojComponent: { component: 'ojInputPassword', value: passwordRepeat, required: true, validators: [equalToPassword], invalidComponentTracker: tracker}">
                     </div>
                 </div>
+                 <!--/ko-->
                 <div class="oj-flex">  
                     <div class="oj-flex-item">
                         <label for="role">Role</label>
@@ -56,12 +60,25 @@ and open the template in the editor.
                         <label for="email">Email</label>
                         <input id="email" maxlength="50" data-bind="ojComponent: { component: 'ojInputText', value: email, required: true, validators: [{ type: 'regExp', options: { pattern: emailPattern, messageDetail: 'Please enter a valid email.' } }], invalidComponentTracker: tracker }">
                     </div>
-                </div>      
+                </div> 
+                <div class="oj-flex oj-lg-5">
+                    <div class="oj-flex-item">
+                        <label for="customer">Customer</label>
+                        <select id="customer" data-bind="ojComponent: {component: 'ojSelect',
+                                                         value: customerId,
+                                                         options: customerList,
+                                                         required: true,
+                                                         invalidComponentTracker: tracker,
+                                                        rootAttributes: {style:'max-width:100%'}
+                                                        }"></select>
+                    </div>
+                </div>
                 <div class="oj-flex create-user-button-container">  
                     <div class="oj-flex-item">
                         <div class="oj-form-control-group" aria-labelledby="inputgrouplabel" role="group">
                             <button id="submit" data-bind="ojComponent: { component: 'ojButton', label: 'Submit', disabled: shouldDisableCreate() }, click: onCreateUserButtonClick"></button>
                             <button id="cancel" data-bind="ojComponent: { component: 'ojButton', label: 'Reset' }, click: onResetButtonClick"></button>
+                            <button id="back" data-bind="ojComponent: { component: 'ojButton', label: 'Back' }, click: onBackButtonClick"></button>
                         </div>                   
                     </div>
                 </div>                

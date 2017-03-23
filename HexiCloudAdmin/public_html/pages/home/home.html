@@ -4,19 +4,53 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 
-<div class="oj-flex responsive-height">
-    <div class="oj-flex-item">
-        <div class="oj-sm-align-items-center oj-sm-flex-direction-column oj-flex">
-            <div class="oj-flex-item">
-                <div style="padding-top: 80%">
+<div class="oj-flex responsive-height mainBackGroundImage">
+    <div class="oj-flex-item oj-lg-6 oj-sm-12 login-panel">
+        <div class="oj-flex  oj-sm-flex-direction-column oj-sm-align-items-center">
+            <div class="oj-flex-item landing-page-logo">
+                <div style="">
                     <img src="img/Landing_Page_logo.png" alt="Landing Page Logo"/>
                 </div>
             </div>
-            <div class="oj-flex-item">
-                <div class="standard-button oj-sm-justify-content-center oj-flex" data-bind="click: isLoggedinTrue">
-                    <span data-bind="text: 'ENTER JOURNEY'">ENTER JOURNEY</span>
-                </div>
+            <div class="oj-flex-item invalidusertextcontainer" data-bind="visible: loginFailureText() !== ''">
+                <span data-bind="text: loginFailureText"></span>
             </div>
+            <div class="oj-flex-item oj-xl-6 oj-lg-12 oj-sm-11 oj-sm-align-items-center">
+
+                <input class="input-text" data-bind="ojComponent: {component: 'ojInputText',
+                                                rootAttributes: {style:'max-width:100%'} ,
+                                                placeholder: 'User Name',
+                                                required: true,
+                                                invalidComponentTracker: tracker,
+                                                 translations: {'required': {
+                                                                         messageDetail: 'Please enter a valid user name'}},
+                                                value: userName}"/>
+            </div>
+            <div class="oj-flex-item oj-xl-6 oj-lg-12 oj-sm-11 oj-sm-align-items-center">
+                <input class="input-text" type="password" data-bind="ojComponent: {component: 'ojInputPassword',
+                                                rootAttributes: {style:'max-width:100%'} ,
+                                                placeholder: 'Password',
+                                                required: true,
+                                                invalidComponentTracker: tracker,
+                                                translations: {'required': {messageDetail: 'Please enter the password'}},
+                                                value: password}"/>
+            </div>
+
+            <div class="oj-flex-item oj-xl-5 oj-lg-12 oj-sm-10">
+                <button class="red-button" type="submit" data-bind="text: 'Login', click: login"></button>
+            </div>
+            <!--                <div class="standard-button oj-sm-justify-content-center oj-flex" data-bind="click: isLoggedinTrue">
+                                <span data-bind="text: 'ENTER JOURNEY'">ENTER JOURNEY</span>
+                            </div>-->
+
+            <!--    <div class="oj-flex-item">
+                    <div class="oj-sm-align-items-center oj-sm-flex-direction-column oj-flex">
+                        <div class="oj-flex-item">
+                            <div style="padding-top: 80%">
+                                <img src="img/Landing_Page_logo.png" alt="Landing Page Logo"/>
+                            </div>
+                        </div>
+                        
+                    </div>-->
+
         </div>
-    </div>
-</div>

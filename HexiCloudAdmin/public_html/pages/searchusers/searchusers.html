@@ -1,0 +1,87 @@
+        <div class="oj-form manageUsersSearchContainer">
+            <div class="oj-flex">
+                <div class="oj-flex-item">
+                    <label for="searchuserid">User ID</label>
+                    <input id="searchuserid" data-bind="ojComponent: {component: 'ojInputText',
+                                                                      value: searchUserId,
+                                                                      placeholder: 'User ID'}"/>
+                </div>
+                <div class="oj-flex-item">
+                    <label for="searchemailid">Email ID</label>
+                    <input id="searchemailid" data-bind="ojComponent: {component: 'ojInputText',
+                                                                      value: searchEmailId,
+                                                                      placeholder: 'Email ID'}"/>
+                </div>
+                <div class="oj-flex-item">
+                    <label for="searchcustomerid">Customer ID</label>
+                    <input id="searchcustomerid" data-bind="ojComponent: {component: 'ojSelect',
+                                                                      value: searchCustomerId,
+                                                                      placeholder: 'Customer ID',
+                                                                      options: customerListArr,
+                                                                      rootAttributes: {style: 'max-width:100%'}
+                                                                      }"/>
+                </div>
+            </div>
+            <div class="oj-flex oj-sm-align-items-center">
+                <div class="oj-flex-item">
+                    <button data-bind="click: onClickSearch, ojComponent: {component: 'ojButton',
+                                                     label: 'Search'}"></button>
+                </div>
+            </div>
+        </div>
+        <div class="oj-flex-bar oj-margin-bottom oj-lg-4">
+            <div class="oj-flex-start">
+                <div class="oj-flex oj-flex-items-pad"> 
+                    <div class="oj-flex-item">               
+                            <button data-bind="click: onCreateUserClick,ojComponent: {component: 'ojButton',
+                                                        label: 'Create'}"></button>
+                        </div>
+                    <div class="oj-flex-item oj-toolbar-separator">               
+                            <button data-bind="click: onUpdateUserClick,ojComponent: {component: 'ojButton',
+                                                                    label: 'Update'}"></button>
+                        </div>
+                </div>
+            </div>
+
+                        
+        </div>
+        <div class="oj-flex">
+            <div class="oj-flex-item">
+                <table data-bind="ojComponent: {component: 'ojTable',
+                                            selectionMode: {row: 'single', column: 'multiple'},
+                                            columns: columnMetaData,
+                                            display: 'grid',
+                                            data: pagingDatasource,
+                                            optionChange: userSelection,
+                                            rowTemplate: 'row_template',
+                                            rootAttributes: {style: 'width: 100%;'}
+                                            }"></table>
+                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: 10}">
+    </div>
+            </div>
+        </div>
+
+<script type="text/html" id="row_template">
+  <tr>
+   <td>
+    <div data-bind="text: userId">
+    </div>
+   </td>
+   <td>
+    <div data-bind="text: email">
+    </div>
+   </td>
+   <td>
+    <div data-bind="text: firstName">
+    </div>
+   </td>
+   <td>
+    <div data-bind="text: lastName">
+    </div>
+   </td>
+   <td>
+    <div data-bind="text: customer">
+    </div>
+   </td>
+  </tr>
+</script>

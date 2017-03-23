@@ -71,6 +71,24 @@ html, body, #routingContainer, .responsive-height {
     padding-bottom: 15px;
 }
 
+.red-button{
+        background-color: #ee4f50 !important;
+   border:none;
+    display: inline-block;
+    text-align: center;
+    height: 54px;
+    border-radius: 27px;
+    margin: 20px 0;
+    background-image: none !important;
+    color: #fff;
+    font-size: 24px;
+    line-height: 3.5rem;
+    cursor: pointer;
+    width: 100%;
+    padding: 0px 20px 0px 20px;
+    z-index: 999;
+}
+
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }
