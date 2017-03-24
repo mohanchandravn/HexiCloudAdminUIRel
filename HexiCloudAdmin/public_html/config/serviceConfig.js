@@ -161,7 +161,11 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
         self.findUserEmails = function(payload) {
             var defer = $.Deferred();
             console.log(payload);
-            var serverURL = self.portalRestHost()+"hexiCloudRestSecured/services/rest/findUserEmails?" + payload;
+            if (payload === null) {
+                var serverURL = self.portalRestHost()+"hexiCloudRestSecured/services/rest/findUserEmails?";
+            } else {
+                var serverURL = self.portalRestHost()+"hexiCloudRestSecured/services/rest/findUserEmails?" + payload;
+            }
             $.ajax({
                 type: "GET",
                 url: serverURL,

@@ -25,6 +25,7 @@ define(['knockout',
         ]);
         self.selectedRecordResolvedStatus = ko.observable('');
         self.isSelectedRecordResolved = ko.observable(false);
+        self.selectedRecordSubject = ko.observable('');
         self.selectedRecordDescription = ko.observable('');
         
          self.clearRecord = function() {
@@ -65,9 +66,7 @@ define(['knockout',
                 console.log(payload);
                 service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
             } else {
-                console.log('search failed as there is nothing to search for..');
-                self.recordDetailTableArray([]);
-                self.recordsDatasource(new oj.ArrayTableDataSource(self.recordDetailTableArray));
+                service.findUserEmails(null).then(searchSuccessFn, FailCallBackFn);
             }
         };
          self.FailCallBackFn = function (xhr) {
@@ -128,6 +127,7 @@ define(['knockout',
                     var status = data.isResolved ? 'Y' : 'N';
                     self.selectedRecordResolvedStatus(status);
                     self.isSelectedRecordResolved(data.isResolved);
+                    self.selectedRecordSubject(data.subject);
                     self.selectedRecordDescription(data.resolutionComments);
                 };
     };
