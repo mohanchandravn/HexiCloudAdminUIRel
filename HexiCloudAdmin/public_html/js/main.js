@@ -89,10 +89,10 @@ require(['ojs/ojcore',
 
             var adminRouter = router.createChildRouter('csmAdminDetails');
             adminRouter.configure({
-                'manageEmails': {label: 'Manage Emails', value: 'pages/manageemails/manageemails'},
+                'manageEmails': {label: 'Manage Emails', value: 'pages/manageemails/manageemails', isDefault: true},
                 'manageUsers': {label: 'Manager Users', value: 'pages/manageusers/manageusers'},
                 'createUser': {label: 'Create User', value: 'pages/createuser/createuser'},
-                'scheduler': {label: 'Scheduler', value: 'pages/scheduler/scheduler', isDefault: true}
+                'scheduler': {label: 'Scheduler', value: 'pages/scheduler/scheduler'}
             });
             self.csmAdminRouter = adminRouter;
 
