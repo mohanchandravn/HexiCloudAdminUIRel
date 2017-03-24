@@ -33,9 +33,14 @@ define(['ojs/ojcore',
                 params: {
                     parent: self,
                     action: 'update',
-                    selectedRecord: selectedRecord
+                    selectedRecord: selectedRecord,
+                    commonService: commonService
                 },
                 lifecycleListener: {
+                    bindingsApplied: function (info)
+                    {
+                        info.viewModel.getCustomers();
+                    },
                     transitionCompleted: function (info) {
                         info.viewModel.afterRender();
                     }
