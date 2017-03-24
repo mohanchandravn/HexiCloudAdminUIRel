@@ -24,11 +24,12 @@ define(['ojs/ojcore',
         self.dataSource = null;
         self.pagingDatasource = ko.observable();
         self.selectedRecord = null;
-        
+
         self.searchUsersMap = {};
         if (params)
         {
             self.parentViewModel = params.parent;
+            self.commonService = params.commonService;
         }
         var buildColumnHeaderProperties = function ()
         {
@@ -59,9 +60,9 @@ define(['ojs/ojcore',
 
         self.onUpdateUserClick = function ()
         {
-            if(!self.selectedRecord)
+            if (!self.selectedRecord)
             {
-                
+
             }
             if (self.parentViewModel)
             {
@@ -86,6 +87,29 @@ define(['ojs/ojcore',
 //        self.modelCollection(new DataCollectionModel());
 //        self.dataSource = new oj.CollectionTableDataSource(self.modelCollection());
 //        self.pagingDatasource = new oj.PagingTableDataSource(self.dataSource);
+
+        self.getCustomers = function () {
+            if (self.commonService)
+            {
+                self.commonService.getCustomerList().then(function (data) {
+                    if (data)
+                    {
+                        data.forEach(function (item) {
+                            self.customerListArr().push({
+                                label: item.label,
+                                value: item.value
+                            });
+                        });
+
+                    }
+
+                }, function (reason) {
+                    console.log("getCustomerList failed:" + reason);
+                });
+            }
+
+
+        };
 
 
         var getSearchResults = function () {
@@ -113,8 +137,8 @@ define(['ojs/ojcore',
                             'customer': item.registryId,
                             'userRole': item.userRole
                         };
-                        
-                        
+
+
 
                     });
                     self.pagingDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(userArr, {idAttribute: 'userId'})));
@@ -185,37 +209,6 @@ define(['ojs/ojcore',
 //            });
 //        };
 
-        var getCustomers = function () {
-            var getCustomerSuccessDn = function (data, xhrStatus)
-            {
-//                    if(xhrStatus.status === 200)
-//                    {
-                if (data)
-                {
-                    data.forEach(function (item) {
-                        self.customerListArr().push({
-                            label: item.customerRegistry,
-                            value: item.registryId
-                        });
-                    });
-
-                }
-                //}
-            };
-            var getCustomerFailureFn = function (xhr)
-            {
-                console.log("failure:" + xhr);
-            };
-            service.getCustomers().then(getCustomerSuccessDn, getCustomerFailureFn);
-//                var dataCollectionModel =  oj.Collection.extend({
-//                    sync: function(method, collection, options)
-//                    {
-//                        service.getCustomers().then(getCustomerSuccessDn, getCustomerFailureFn);
-//                    }
-//                });
-        };
-        getCustomers();
-
 //        self.loadData = function ()
 //        {
 //            read().then(function () {
@@ -230,9 +223,9 @@ define(['ojs/ojcore',
             if (data['option'] === 'currentRow')
             {
                 var selectionObj = data['value'];
-                if(selectionObj)
+                if (selectionObj)
                 {
-                  self.selectedRecord =  self.searchUsersMap[selectionObj.rowKey];
+                    self.selectedRecord = self.searchUsersMap[selectionObj.rowKey];
                 }
             }
         };

@@ -9,6 +9,7 @@ define(['ojs/ojcore',
     'knockout',
     'config/serviceConfig',
     'js/util/commonhelper',
+    'service/CommonService',
     'ojs/ojknockout',
     'ojs/ojknockout-validation',
     'ojs/ojinputtext',
@@ -37,6 +38,7 @@ define(['ojs/ojcore',
                 if (params)
                 {
                     self.parentViewModel = params.parent;
+                    self.commonService = params.commonService;
                     self.action = params.action;
                     self.selectedRecord = params.selectedRecord;
                     if (self.action === 'update')
@@ -137,7 +139,7 @@ define(['ojs/ojcore',
 
                     service.isUserIdAvailable(self.userName()).then(isUserIdAvailableSuccessCbFn, isUserIdAvailableFailCbFn);
                 };
-                
+
                 var updateUser = function () {
                     var updateUserSuccessCbFn = function (data, status) {
                         hidePreloader();
@@ -194,17 +196,16 @@ define(['ojs/ojcore',
                     }
 
                     showPreloader();
-                    if(self.action)
+                    if (self.action)
                     {
-                        if(self.action === 'update')
+                        if (self.action === 'update')
                         {
                             updateUser();
                         }
-                    }
-                    else
+                    } else
                     {
-                    checkIsUserIdAvailable();
-                   }
+                        checkIsUserIdAvailable();
+                    }
                 };
 
                 self.onResetButtonClick = function (event, data) {
@@ -220,24 +221,23 @@ define(['ojs/ojcore',
                     self.lastName('');
                     self.email('');
                     self.customerId([]);
-                    $("#customer").ojSelect("option","value",['']);
+                    $("#customer").ojSelect("option", "value", ['']);
 //                var copy = self.customerList();
 //                self.customerList([]);
 //                self.customerList(copy);
                 };
 
 
-                var getCustomers = function () {
-                    var getCustomerSuccessDn = function (data, xhrStatus)
+                self.getCustomers = function () {
+                    if(self.commonService)
                     {
-//                    if(xhrStatus.status === 200)
-//                    {
+                     self.commonService.getCustomerList().then(function (data) {
                         if (data)
                         {
                             data.forEach(function (item) {
                                 self.customerList().push({
-                                    label: item.customerRegistry,
-                                    value: item.registryId
+                                    label: item.label,
+                                    value: item.value
                                 });
                             });
 
@@ -248,21 +248,14 @@ define(['ojs/ojcore',
                             }
 
                         }
-                        //}
-                    };
-                    var getCustomerFailureFn = function (xhr)
-                    {
-                        console.log("failure:" + xhr);
-                    };
-                    service.getCustomers().then(getCustomerSuccessDn, getCustomerFailureFn);
-//                var dataCollectionModel =  oj.Collection.extend({
-//                    sync: function(method, collection, options)
-//                    {
-//                        service.getCustomers().then(getCustomerSuccessDn, getCustomerFailureFn);
-//                    }
-//                });
+
+                    }, function (reason) {
+                        console.log("getCustomerList failed:" + reason);
+                    });   
+                    }
+                    
+
                 };
-                getCustomers();
 
                 self.onBackButtonClick = function ()
                 {

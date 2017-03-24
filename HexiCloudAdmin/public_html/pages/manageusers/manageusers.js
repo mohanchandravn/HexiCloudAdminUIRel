@@ -2,25 +2,27 @@
 define(['ojs/ojcore',
     'jquery',
     'knockout',
-    'ojs/ojmodule'], function (oj, $, ko) {
+    'service/CommonService',
+    'ojs/ojmodule'], function (oj, $, ko, commonService) {
 
     function manageUsersViewModel(params)
     {
         var self = this;
         self.managerUserCurrentValue = ko.observable();
-        self.managerUserCurrentValue({
-            name: 'pages/searchusers/searchusers',
-            params: {
-                parent: self
-            }
-        });
 
         self.goToCreateUser = function ()
         {
             self.managerUserCurrentValue({
                 name: 'pages/createuser/createuser',
+                lifecycleListener: {
+                    bindingsApplied: function (info)
+                    {
+                        info.viewModel.getCustomers();
+                    }
+                },
                 params: {
-                    parent: self
+                    parent: self,
+                    commonService: commonService
                 }
             });
         };
@@ -35,21 +37,33 @@ define(['ojs/ojcore',
                 },
                 lifecycleListener: {
                     transitionCompleted: function (info) {
-                                info.viewModel.afterRender();
-                            }
+                        info.viewModel.afterRender();
+                    }
+                }
+            });
+        };
+        var goToSearchUsers = function (){
+            self.managerUserCurrentValue({
+                name: 'pages/searchusers/searchusers',
+                lifecycleListener: {
+                    bindingsApplied: function (info)
+                    {
+                        info.viewModel.getCustomers();
+                    }
+                },
+                params: {
+                    parent: self,
+                    commonService: commonService
                 }
             });
         };
 
         self.backToSearchUser = function ()
         {
-            self.managerUserCurrentValue({
-                name: 'pages/searchusers/searchusers',
-                params: {
-                    parent: self
-                }
-            });
+            goToSearchUsers();
         };
+        
+        goToSearchUsers();
     }
     return manageUsersViewModel;
 
