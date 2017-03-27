@@ -89,6 +89,13 @@ html, body, #routingContainer, .responsive-height {
     z-index: 999;
 }
 
+.manageEmailsSearchContainer, .manageUsersSearchContainer {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 2px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }
