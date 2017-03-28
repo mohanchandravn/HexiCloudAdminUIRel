@@ -160,18 +160,18 @@ define(['ojs/ojcore',
                 }
                 if (self.searchCustomerId() && self.searchCustomerId !== '')
                 {
-                    payload += "&customer=" + self.searchCustomerId();
+                    payload += "&customerId=" + self.searchCustomerId();
                 }
             } else if (self.searchEmailId() && self.searchEmailId !== '')
             {
                 payload = "emailId=" + self.searchEmailId();
                 if (self.searchCustomerId() && self.searchCustomerId !== '')
                 {
-                    payload += "&customer=" + self.searchCustomerId();
+                    payload += "&customerId=" + self.searchCustomerId();
                 }
             } else if (self.searchCustomerId() && self.searchCustomerId !== '')
             {
-                payload = "customer=" + self.searchCustomerId();
+                payload = "customerId=" + self.searchCustomerId();
             }
 
             service.searchUsers(payload).then(searchUsersSuccessFn, searchUserFailureFn);

@@ -1,143 +1,146 @@
 
-    <div class="oj-flex">
-        <div class="manageEmailsSearchContainer oj-sm-12 oj-flex-item">
-            <div class="oj-flex">
-                <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
-                    <label class="selection-label" for="userId" data-bind="text: 'User Id: '"></label>
-                    <input id="userId" type="text" data-bind="ojComponent: {
+<div class="oj-flex">
+    <div class="manageEmailsSearchContainer oj-sm-12 oj-flex-item">
+        <div class="oj-flex">
+            <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
+                <label class="selection-label" for="userId" data-bind="text: 'User Id: '"></label>
+                <input id="userId" type="text" data-bind="ojComponent: {
                                                     component: 'ojInputText',
                                                     placeholder: 'User ID',
                                                     value: userId
                 }" />
-                </div>
-                <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
-                    <label class="selection-label" for="resolvedStatusCombobox" data-bind="text: 'Is Resolved: '"></label>
-                    <select id="resolvedStatusCombobox"
-                            data-bind="ojComponent: {
+            </div>
+            <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
+                <label class="selection-label" for="resolvedStatusCombobox" data-bind="text: 'Is Resolved: '"></label>
+                <select id="resolvedStatusCombobox"
+                        data-bind="ojComponent: {
                                             component: 'ojSelect',
                                             options: allStatusList,
                                             value: resolvedStatus,
                                             placeholder: 'Please select an option..',
                                             rootAttributes: {style:'max-width:20em'}}">
-                    </select>
-                </div>
-                <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
-                    <label class="selection-label" for="requestId" data-bind="text: 'Request Id: '"></label>
-                    <input id="requestId" type="text" data-bind="ojComponent: {
+                </select>
+            </div>
+            <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
+                <label class="selection-label" for="requestId" data-bind="text: 'Request Id: '"></label>
+                <input id="requestId" type="text" data-bind="ojComponent: {
                                                     component: 'ojInputText',
                                                     placeholder: 'Request ID',
                                                     value: requestId
                 }" />
-                </div>
             </div>
-            <div class="oj-flex-bar">
-                <div class="oj-flex-bar-start">
-                    <button data-bind="click: initSearch, ojComponent: {
+        </div>
+        <div class="oj-flex-bar">
+            <div class="oj-flex-bar-start">
+                <button data-bind="click: initSearch, ojComponent: {
                                         component: 'ojButton',
                                         label: 'Search'
                     }">
-                    </button>
-                </div>
+                </button>
             </div>
         </div>
     </div>
-    <div class="oj-margin-lg-vertical oj-flex">
-        <table id="recordsTable" summary="Department List" aria-label="Departments Table"
-               data-bind="ojComponent: {component: 'ojTable',
+</div>
+<div class="oj-margin-lg-vertical oj-flex">
+    <table id="recordsTable" summary="Department List" aria-label="Departments Table"
+           data-bind="ojComponent: {component: 'ojTable',
                                         display: 'grid',
                                         data: recordsDatasource,
                                         emptyText: 'No records to display.',
                                         dnd: {reorder: {columns: 'enabled'}},
                                         columns: [{headerText: 'Request Id',
-                                                   style: 'width: 20%',
+                                                   style: 'width: 5%',
                                                    sortProperty: 'requestId'},
                                                   {headerText: 'User Id',
-                                                   style: 'width: 30%',
+                                                   style: 'width: 25%',
                                                    sortProperty: 'userId'},
                                                   {headerText: 'Subject',
-                                                   style: 'width: 40%',
+                                                   style: 'width: 60%',
                                                    sortProperty: 'subject'},
                                                   {headerText: 'Is Resolved',
                                                    style: 'width: 10%',
                                                    sortProperty: 'isResolved'}],
                                                    rowTemplate: 'records_row_template', 
                                         rootAttributes: {'style':'min-width: 300px; width: 100%;'}}">
-        </table>
-        <div data-bind="ojComponent: {component: 'ojPagingControl', data: recordsDatasource, pageSize: 10}"></div>
-    </div>
-    <div class="oj-flex">
-        <div class="oj-sm-12 oj-flex-item">
-            <label for="disabledDescription" class="selection-label">Message: </label>
-            <textarea id="disabledDescription" style="resize: both;"
-                      data-bind="ojComponent: {component: 'ojTextArea', 
+    </table>
+    <div data-bind="ojComponent: {component: 'ojPagingControl', data: recordsDatasource, pageSize: 10}"></div>
+</div>
+<div class="oj-flex">
+    <div class="oj-sm-12 oj-flex-item">
+        <label for="disabledDescription" class="selection-label">Message: </label>
+        <textarea id="disabledDescription" style="resize: both;"
+                  data-bind="ojComponent: {component: 'ojTextArea', 
                                         value: selectedRecordMessage, 
                                         disabled: true,
                                         rootAttributes: {
                                             style:'max-width: 100%'}}">
-            </textarea>
-        </div>
+        </textarea>
     </div>
-    <div class="oj-flex">
-        <span class="heading oj-sm-12 oj-flex-item">Update Resolutions: </span>
-        <div class="oj-sm-6 oj-md-2 oj-flex-item">
-            <label class="selection-label" for="requestId2" data-bind="text: 'Request Id: '"></label>
-        </div>
-        <div class="oj-sm-6 oj-md-10 oj-flex-item">    
-            <input id="requestId2" type="text" data-bind="ojComponent: {
+</div>
+<div class="oj-flex">
+    <span class="heading oj-sm-12 oj-flex-item">Update Resolutions: </span>
+    <div class="oj-sm-6 oj-md-2 oj-flex-item">
+        <label class="selection-label" for="requestId2" data-bind="text: 'Request Id: '"></label>
+    </div>
+    <div class="oj-sm-6 oj-md-10 oj-flex-item">    
+        <input id="requestId2" type="text" data-bind="ojComponent: {
                                             component: 'ojInputText',
                                             disabled: isSelectedRecordResolved,
                                             value: selectedRecordSrId,
                                             readOnly: true
 
         }" />
-        </div>
-        <div class="oj-sm-6 oj-md-2 oj-flex-item">
-            <label class="selection-label" for="resolvedStatusChangeCombobox" data-bind="text: 'Resolved: '"></label>
-        </div>
-        <div class="oj-sm-6 oj-md-10 oj-flex-item">    
-            <select id="resolvedStatusChangeCombobox"
-                    data-bind="ojComponent: {
+    </div>
+    <div class="oj-sm-6 oj-md-2 oj-flex-item">
+        <label class="selection-label" for="resolvedStatusChangeCombobox" data-bind="text: 'Resolved: '"></label>
+    </div>
+    <div class="oj-sm-6 oj-md-10 oj-flex-item">    
+        <select id="resolvedStatusChangeCombobox"
+                data-bind="ojComponent: {
                                     component: 'ojSelect',
                                     options: allResolvedStatusList,
                                     value: selectedRecordResolvedStatus,
                                     disabled: isSelectedRecordResolved,
                                     placeholder: 'Please select an option..',
                                     rootAttributes: {style:'max-width:20em'}}">
-            </select>
-        </div>
-        <div class="oj-sm-12 oj-md-2 oj-flex-item">
-            <label for="disabledDescription" class="selection-label">Resolution Comments: </label>
-        </div>
-        <div class="oj-sm-12 oj-md-8 oj-flex-item">
-            <textarea id="disabledDescription" style="resize: both;"
-                      data-bind="ojComponent: {component: 'ojTextArea', 
+        </select>
+    </div>
+    <div class="oj-sm-12 oj-md-2 oj-flex-item">
+        <label for="disabledDescription" class="selection-label">Resolution Comments: </label>
+    </div>
+    <div class="oj-sm-12 oj-md-8 oj-flex-item">
+        <textarea id="disabledDescription" style="resize: both;"
+                  data-bind="ojComponent: {component: 'ojTextArea', 
                                         value: selectedRecordDescription, 
                                         disabled: isSelectedRecordResolved,
                                         rootAttributes: {
                                             style:'max-width: 100%'}}">
-            </textarea>
-        </div>
-        <div class="oj-sm-12 oj-md-10 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-top' : ''">
-            <div class="oj-flex-bar">
-                <div class="oj-flex-bar-end">
-                    <button data-bind="disable: isSelectedRecordResolved, click: submitRecord, ojComponent: {
+        </textarea>
+    </div>
+    <div class="oj-sm-12 oj-md-10 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-top' : ''">
+        <div class="oj-flex-bar">
+            <div class="oj-flex-bar-end">
+                <button data-bind="disable: isSelectedRecordResolved, click: submitRecord, ojComponent: {
                                         component: 'ojButton',
                                         label: 'Submit'
                     }">
-                    </button>
-                </div>
+                </button>
             </div>
         </div>
     </div>
-    <script type="text/html" id="records_row_template">
-        <tr data-bind="click: $parent.getRecord">
-            <td data-bind="text: srId">
-            </td>
-            <td data-bind="text: userId">
-            </td>
-            <td data-bind="text: subject">
-            </td>
-            <td data-bind="text: isResolved === true ? 'Yes' : 'No'">
-            </td>
-        </tr>
-    </script>
+
+</div>
+<div class="oj-hybrid-padding"></div>
+<div class="oj-hybrid-padding"></div>
+<script type="text/html" id="records_row_template">
+    <tr data-bind="click: $parent.getRecord">
+        <td data-bind="text: srId">
+        </td>
+        <td data-bind="text: userId">
+        </td>
+        <td data-bind="text: subject">
+        </td>
+        <td data-bind="text: isResolved === true ? 'Yes' : 'No'">
+        </td>
+    </tr>
+</script>
