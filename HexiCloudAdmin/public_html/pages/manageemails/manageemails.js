@@ -93,7 +93,6 @@ define(['knockout',
                     "resolutionComments": self.selectedRecordDescription()
                 };
                 console.log(payload);
-            debugger;
                 service.submitRecord(JSON.stringify(payload)).then(submitRecordSuccessFn, FailCallBackFn);
             } else {
                 alert('Please select the Resolved option..');
