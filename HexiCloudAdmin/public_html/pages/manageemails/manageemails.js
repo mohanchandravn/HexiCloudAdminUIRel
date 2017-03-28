@@ -89,10 +89,11 @@ define(['knockout',
             if (self.selectedRecordResolvedStatus().length > 0) {
                 var payload = {
                     "srId": self.selectedRecordSrId(),
-                    "isResolved": true,
+                    "isResolved": self.selectedRecordResolvedStatus()[0] === 'Y' ? true : false,
                     "resolutionComments": self.selectedRecordDescription()
                 };
                 console.log(payload);
+            debugger;
                 service.submitRecord(JSON.stringify(payload)).then(submitRecordSuccessFn, FailCallBackFn);
             } else {
                 alert('Please select the Resolved option..');
