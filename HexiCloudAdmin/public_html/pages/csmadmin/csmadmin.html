@@ -18,6 +18,17 @@ and open the template in the editor.
                                                         
                                                     }"></button>
             </div>-->
+<div class="oj-flex-bar-start">
+            <div class="oj-web-applayout-navbar oj-web-applayout-max-width oj-md-condense oj-lg-justify-content-flex-end oj-md-justify-content-center oj-navigationlist-item-dividers" data-bind="ojComponent: {component: 'ojNavigationList',
+                                      navigationLevel: 'application',
+                                      item: {template: 'navTemplate'},
+                                      data: navDataSource,
+                                      edge: 'top',
+                                      selection: csmAdminRouter.stateId
+                                      }">
+
+        </div>
+</div>
             <div class="oj-flex-bar-middle">
 
             </div>
@@ -36,15 +47,7 @@ and open the template in the editor.
                 </ul>
             </div>
         </div>
-        <div class="oj-web-applayout-navbar oj-web-applayout-max-width oj-md-condense oj-lg-justify-content-flex-end oj-md-justify-content-center oj-navigationlist-item-dividers" data-bind="ojComponent: {component: 'ojNavigationList',
-                                      navigationLevel: 'application',
-                                      item: {template: 'navTemplate'},
-                                      data: navDataSource,
-                                      edge: 'top',
-                                      selection: csmAdminRouter.stateId
-                                      }">
 
-        </div>
     </header>
     
     <div class="oj-web-applayout-max-width oj-margin-lg-top" data-bind="ojModule: childModuleConfig">
