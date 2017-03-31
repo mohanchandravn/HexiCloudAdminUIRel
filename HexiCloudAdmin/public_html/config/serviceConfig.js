@@ -344,12 +344,38 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
+        
         self.updateUser = function(payload) {
             var defer = $.Deferred();
-            console.log("searchUsers:"+payload);
+            console.log("updateUser:"+payload);
             var serverURL = self.portalRestHost()+"hexiCloudRestSecured/services/rest/updateUser/";
             $.ajax({
                 type: "PUT",
+                url: serverURL,
+                contentType: "application/json",
+                 beforeSend: function (request)
+                {
+                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                },
+                data: payload,
+                success: function (data, xhr) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, {status: xhr.status});
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        self.updatePassword = function(payload) {
+            var defer = $.Deferred();
+            console.log("updatePassword:"+payload);
+            var serverURL = self.portalRestHost()+"hexiCloudRestSecured/services/rest/updateUserPassword/";
+            $.ajax({
+                type: "POST",
                 url: serverURL,
                 contentType: "application/json",
                  beforeSend: function (request)

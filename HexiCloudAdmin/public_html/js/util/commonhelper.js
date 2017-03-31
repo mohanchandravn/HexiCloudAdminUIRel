@@ -14,6 +14,8 @@ define([
         var self = this;
 
         self.emailRegExpPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$';
+        self.phoneRegExpPattern = '^[0-9]+$';
+        
     }
 
     return new CommonHelper();

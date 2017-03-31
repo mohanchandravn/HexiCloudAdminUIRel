@@ -12,7 +12,7 @@ and open the template in the editor.
             <div class="oj-form">
                 <div class="oj-flex">  
                     <div class="oj-flex-item form-title">
-                        <span data-bind="text: 'Create User'"></span>
+                        <span data-bind="text: pageTitle"></span>
                     </div>
                 </div>
                 <div class="oj-flex">  
@@ -54,11 +54,17 @@ and open the template in the editor.
                         <label for="lastName">Last Name</label>
                         <input id="lastName" maxlength="60" data-bind="ojComponent: { component: 'ojInputText', value: lastName, required: true, invalidComponentTracker: tracker }">
                     </div>
-                </div>
+                </div>                
                 <div class="oj-flex">  
                     <div class="oj-flex-item">
                         <label for="email">Email</label>
                         <input id="email" maxlength="50" data-bind="ojComponent: { component: 'ojInputText', value: email, required: true, validators: [{ type: 'regExp', options: { pattern: emailPattern, messageDetail: 'Please enter a valid email.' } }], invalidComponentTracker: tracker }">
+                    </div>
+                </div> 
+                <div class="oj-flex">  
+                    <div class="oj-flex-item">
+                        <label for="phone">Phone</label>
+                        <input id="phone" maxlength="20" data-bind="ojComponent: { component: 'ojInputText', value: phone, required: true, validators: [{ type: 'regExp', options: { pattern: phonePattern, messageDetail: 'Please enter a valid phone number.' } }], invalidComponentTracker: tracker }">
                     </div>
                 </div> 
                 <div class="oj-flex oj-lg-5">

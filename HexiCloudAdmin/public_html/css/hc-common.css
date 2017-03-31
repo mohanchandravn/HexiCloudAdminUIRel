@@ -105,3 +105,13 @@ html, body, #routingContainer, .responsive-height {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.margin-right-0px {
+    margin-right: 0px;
+}
+
+.dialog-header {
+    padding: 10px;
+    text-align: center;
+}
+    
