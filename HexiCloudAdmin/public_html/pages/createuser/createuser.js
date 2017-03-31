@@ -25,6 +25,8 @@ define(['ojs/ojcore',
                 self.tracker = ko.observable();
                 self.isCreateMode = ko.observable(true);
 
+                self.pageTitle = ko.observable('Create User');
+                
                 // Create user form fields
                 self.userName = ko.observable('');
                 self.password = ko.observable('');
@@ -33,8 +35,10 @@ define(['ojs/ojcore',
                 self.firstName = ko.observable('');
                 self.lastName = ko.observable('');
                 self.email = ko.observable('');
+                self.phone = ko.observable('');
                 self.customerList = ko.observableArray([]);
                 self.customerId = ko.observable();
+                
                 if (params)
                 {
                     self.parentViewModel = params.parent;
@@ -43,6 +47,8 @@ define(['ojs/ojcore',
                     self.selectedRecord = params.selectedRecord;
                     if (self.action === 'update')
                     {
+                        self.pageTitle('Update User');
+
                         self.isCreateMode(false);
                         if (self.selectedRecord)
                         {
@@ -51,6 +57,7 @@ define(['ojs/ojcore',
                             self.firstName(self.selectedRecord.firstName);
                             self.lastName(self.selectedRecord.lastName);
                             self.email(self.selectedRecord.email);
+                            self.phone(self.selectedRecord.phone);
                             //self.userRole("DBA");
                             // var roleComp = $("#role");
 //                            $("#role").ojSelect({
@@ -76,6 +83,7 @@ define(['ojs/ojcore',
 
 
                 self.emailPattern = commonHelper.emailRegExpPattern;
+                self.phonePattern = commonHelper.phoneRegExpPattern;
 
                 self.createUserStatus = ko.observable('');
 
@@ -154,6 +162,7 @@ define(['ojs/ojcore',
                     var payload = {
                         "userId": self.userName(),
                         "email": self.email(),
+                        "phone": self.phone(),
                         "userRole": self.userRole()[0],
                         "firstName": self.firstName(),
                         "lastName": self.lastName(),
@@ -179,6 +188,7 @@ define(['ojs/ojcore',
                         "userId": self.userName(),
                         "password": self.password(),
                         "email": self.email(),
+                        "phone": self.phone(),
                         "userRole": self.userRole()[0],
                         "firstName": self.firstName(),
                         "lastName": self.lastName(),
@@ -219,6 +229,7 @@ define(['ojs/ojcore',
                     self.userRole([]);
                     self.firstName('');
                     self.lastName('');
+                    self.phone('');
                     self.email('');
                     self.customerId([]);
                     $("#customer").ojSelect("option", "value", ['']);

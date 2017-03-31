@@ -10,7 +10,9 @@ define(['ojs/ojcore',
     'ojs/ojpagingcontrol',
     'ojs/ojarraytabledatasource',
     'ojs/ojpagingtabledatasource',
-    'ojs/ojcollectiontabledatasource'
+    'ojs/ojcollectiontabledatasource',
+    'ojs/ojknockout-validation',
+    'ojs/ojdialog'
 ], function (oj, $, ko, service) {
 
     function searchUsersViewModel(params)
@@ -24,23 +26,35 @@ define(['ojs/ojcore',
         self.dataSource = null;
         self.pagingDatasource = ko.observable();
         self.selectedRecord = null;
+        
+        self.tracker = ko.observable();
+
+        self.newPassword = ko.observable('');
+        self.newPasswordRepeat = ko.observable('');
+        
+        self.selectedUserId = ko.observable('');
+        self.selectedEmail = ko.observable('');
 
         self.searchUsersMap = {};
+        
         if (params)
         {
             self.parentViewModel = params.parent;
             self.commonService = params.commonService;
         }
+        
         var buildColumnHeaderProperties = function ()
         {
             return [
                 {"name": "userId", "label": "User ID"},
                 {"name": "email", label: "Email"},
+                {"name": "phone", label: "Phone"},
                 {"name": "firstName", label: "First Name"},
                 {"name": "lastName", label: "Last Name"},
-                {"name": "customer", label: "Customer"}
+                {"name": "customer", label: "Customer Registry ID"}
             ];
         };
+        
         var columnProperties = buildColumnHeaderProperties() || [];
         if (columnProperties.length > 0)
         {
@@ -50,6 +64,42 @@ define(['ojs/ojcore',
                 });
             });
         }
+          
+        self._showComponentValidationErrors = function (trackerObj) {
+            trackerObj.showMessages();
+            if (trackerObj.focusOnFirstInvalid()) {
+                return false;
+            }
+            return true;
+        };
+
+        self.shouldDisableSubmit = function () {
+            var trackerObj = ko.utils.unwrapObservable(self.tracker),
+                    hasInvalidComponents = trackerObj ? trackerObj["invalidShown"] : false;
+            return hasInvalidComponents;
+        };
+        
+        self.minLength = {
+            validate: function (value) {
+                if (value.length < 8) {
+                    throw new Error('Password length should not be less than 8.');
+                }
+                return true;
+            }
+        };
+        
+        self.equalToPassword = {
+            validate: function (value) {
+                var compareTo = self.newPassword.peek();
+                if (!value && !compareTo) {
+                    return true;
+                } else if (value !== compareTo) {
+                    throw new Error('The passwords must match.');
+                }
+                return true;
+            }
+        };
+                
         self.onCreateUserClick = function ()
         {
             if (self.parentViewModel)
@@ -60,14 +110,58 @@ define(['ojs/ojcore',
 
         self.onUpdateUserClick = function ()
         {
-            if (!self.selectedRecord)
-            {
-
-            }
             if (self.parentViewModel)
             {
                 self.parentViewModel.goToUpdateUser(self.selectedRecord);
             }
+        };
+        
+        self.onUpdatePasswordClick = function ()
+        {
+            self.resetUpdatePasswordForm();
+            
+            if (self.parentViewModel)
+            {
+                $("#modalDialogUpdatePassword").ojDialog("open");
+                
+                self.handleSubmit = $("#submitButton").click(function () {
+                                      
+                    // Validations
+                    var trackerObj = ko.utils.unwrapObservable(self.tracker);
+                    if (!self._showComponentValidationErrors(trackerObj)) {
+                        return;
+                    }
+                    
+                    showPreloader();                    
+                    $("#modalDialogUpdatePassword").ojDialog("close");
+                    
+                    var updatePasswordSuccessCbFn = function (data, status) {
+                        hidePreloader();
+                        // openModalDialogCreateUserStatus('User data updated successfully.');
+                    };
+
+                    var updatePasswordFailCbFn = function (xhr) {
+                        hidePreloader();
+                        // openModalDialogCreateUserStatus('Failed to create user.');
+                    };
+
+                    var payload = {
+                        "userId" : self.selectedRecord.userId,
+                        "password" : self.newPassword()
+                    };
+
+                    service.updatePassword(JSON.stringify(payload)).then(updatePasswordSuccessCbFn, updatePasswordFailCbFn);
+                });
+                
+                self.handleCancel = $("#cancelButton").click(function () {
+                    $("#modalDialogUpdatePassword").ojDialog("close");
+                });
+            }
+        };
+        
+        self.resetUpdatePasswordForm = function() {
+            self.newPassword('');
+            self.newPasswordRepeat('');
         };
 
 //        var DataCollectionModel = oj.Collection.extend({
@@ -124,6 +218,7 @@ define(['ojs/ojcore',
                         userArr.push({
                             'userId': item.userId,
                             'email': item.email,
+                            'phone': item.phone,
                             'firstName': item.firstName,
                             'lastName': item.lastName,
                             'customer': item.registryId
@@ -132,14 +227,12 @@ define(['ojs/ojcore',
                         self.searchUsersMap[item.userId] = {
                             'userId': item.userId,
                             'email': item.email,
+                            'phone': item.phone,
                             'firstName': item.firstName,
                             'lastName': item.lastName,
                             'customer': item.registryId,
                             'userRole': item.userRole
                         };
-
-
-
                     });
                     self.pagingDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(userArr, {idAttribute: 'userId'})));
                     hidePreloader();
@@ -225,10 +318,17 @@ define(['ojs/ojcore',
                 var selectionObj = data['value'];
                 if (selectionObj)
                 {
+                    $( "#updateUser" ).removeProp('disabled');
+                    $( "#updatePassword" ).removeProp('disabled');
+                    $( "#updateUser" ).ojButton( "option", "disabled", false );
+                    $( "#updatePassword" ).ojButton( "option", "disabled", false );
+                    
                     self.selectedRecord = self.searchUsersMap[selectionObj.rowKey];
+                    self.selectedUserId(self.selectedRecord.userId);
+                    self.selectedEmail(self.selectedRecord.email);
                 }
             }
-        };
+        };        
     }
 
 
