@@ -35,6 +35,7 @@ define(['ojs/ojcore',
                 self.firstName = ko.observable('');
                 self.lastName = ko.observable('');
                 self.email = ko.observable('');
+                self.countryCode = ko.observable('');
                 self.phone = ko.observable('');
                 self.customerList = ko.observableArray([]);
                 self.customerId = ko.observable();
@@ -52,12 +53,15 @@ define(['ojs/ojcore',
                         self.isCreateMode(false);
                         if (self.selectedRecord)
                         {
+                            
                             self.userName(self.selectedRecord.userId);
                             $("#userName").ojInputText({"disabled": true});
                             self.firstName(self.selectedRecord.firstName);
                             self.lastName(self.selectedRecord.lastName);
                             self.email(self.selectedRecord.email);
-                            self.phone(self.selectedRecord.phone);
+                            var fullPhoneNum = self.selectedRecord.phone;
+                            self.countryCode(fullPhoneNum.substr(0, fullPhoneNum.indexOf('-')));
+                            self.phone(fullPhoneNum.substr(fullPhoneNum.indexOf('-') + 1));
                             //self.userRole("DBA");
                             // var roleComp = $("#role");
 //                            $("#role").ojSelect({
@@ -162,7 +166,7 @@ define(['ojs/ojcore',
                     var payload = {
                         "userId": self.userName(),
                         "email": self.email(),
-                        "phone": self.phone(),
+                        "phone": self.countryCode() + '-' + self.phone(),
                         "userRole": self.userRole()[0],
                         "firstName": self.firstName(),
                         "lastName": self.lastName(),
@@ -188,7 +192,7 @@ define(['ojs/ojcore',
                         "userId": self.userName(),
                         "password": self.password(),
                         "email": self.email(),
-                        "phone": self.phone(),
+                        "phone": self.countryCode() + '-' + self.phone(),
                         "userRole": self.userRole()[0],
                         "firstName": self.firstName(),
                         "lastName": self.lastName(),

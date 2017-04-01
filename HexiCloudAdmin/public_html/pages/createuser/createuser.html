@@ -63,8 +63,10 @@ and open the template in the editor.
                 </div> 
                 <div class="oj-flex">  
                     <div class="oj-flex-item">
-                        <label for="phone">Phone</label>
-                        <input id="phone" maxlength="20" data-bind="ojComponent: { component: 'ojInputText', value: phone, required: true, validators: [{ type: 'regExp', options: { pattern: phonePattern, messageDetail: 'Please enter a valid phone number.' } }], invalidComponentTracker: tracker }">
+                        <label for="phone">Coutry Code - Phone</label>
+                        <input id="phone" maxlength="4" data-bind="ojComponent: { component: 'ojInputText', value: countryCode, required: true,   rootAttributes: {style:'width:35px'}, validators: [{ type: 'regExp', options: { pattern: phonePattern, messageDetail: 'Please enter a valid country code.' } }], invalidComponentTracker: tracker}">
+                        <span> - </span>
+                        <input id="phone" maxlength="16" data-bind="ojComponent: { component: 'ojInputText', value: phone, required: true, validators: [{ type: 'regExp', options: { pattern: phonePattern, messageDetail: 'Please enter a valid phone number.' } }], invalidComponentTracker: tracker }">
                     </div>
                 </div> 
                 <div class="oj-flex oj-lg-5">

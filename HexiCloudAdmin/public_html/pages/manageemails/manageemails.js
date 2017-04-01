@@ -6,9 +6,10 @@ define(['knockout',
     'ojs/ojpagingcontrol',
     'ojs/ojarraytabledatasource',
     'ojs/ojpagingtabledatasource',
-    'ojs/ojcollectiontabledatasource'
+    'ojs/ojcollectiontabledatasource',
+    'ojs/ojswitch'
 ], function (ko, service, oj) {
-    function manageEmailViewModel ()
+    function manageEmailViewModel()
     {
         var self = this;
         self.userId = ko.observable('');
@@ -31,8 +32,9 @@ define(['knockout',
         self.isSelectedRecordResolved = ko.observable(false);
         self.selectedRecordMessage = ko.observable('');
         self.selectedRecordDescription = ko.observable('');
-        
-        self.clearRecord = function() {
+        self.searchOnlyCallBacks = ko.observable();
+
+        self.clearRecord = function () {
             self.selectedRecordSrId('');
             self.selectedRecordMessage('');
             self.selectedRecordResolvedStatus([]);
@@ -43,32 +45,58 @@ define(['knockout',
         self.initSearch = function (data, event) {
             self.clearRecord();
             var payload;
+
             if (self.userId() !== '') {
                 payload = 'userId=' + self.userId();
-                if (self.resolvedStatus().length > 0 && self.resolvedStatus()[0] !== 'any') {
-                    payload += '&isResolved=' + self.resolvedStatus();
-                }
-                if (self.requestId() !== '') {
-                    payload += '&requestId=' + self.requestId();
-                }
-                console.log(payload);
-                showPreloader();
-                service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
-                return;
             }
             if (self.resolvedStatus().length > 0 && self.resolvedStatus()[0] !== 'any') {
-                payload = 'isResolved=' + self.resolvedStatus();
-                if (self.requestId() !== '') {
-                    payload += '&requestId=' + self.requestId();
+                if (payload !== undefined) {
+                    payload += '&isResolved=' + self.resolvedStatus();
+                } else {
+                    payload = 'isResolved=' + self.resolvedStatus();
                 }
-                console.log(payload);
-                showPreloader();
-                service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
-                return;
             }
             if (self.requestId() !== '') {
-                payload = 'requestId=' + self.requestId();
+                if (payload !== undefined) {
+                    payload += '&requestId=' + self.requestId();
+                } else {
+                    payload = 'requestId=' + self.requestId();
+                }
+
             }
+            if (self.searchOnlyCallBacks()) {
+                if (payload !== undefined) {
+                    payload += '&searchCallBacks=Y';
+                } else {
+                    payload =  'searchCallBacks=Y';
+                }
+            }
+//            if (self.userId() !== '') {
+//                payload = 'userId=' + self.userId();
+//                if (self.resolvedStatus().length > 0 && self.resolvedStatus()[0] !== 'any') {
+//                    payload += '&isResolved=' + self.resolvedStatus();
+//                }
+//                if (self.requestId() !== '') {
+//                    payload += '&requestId=' + self.requestId();
+//                }
+//                console.log(payload);
+//                showPreloader();
+//                service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
+//                return;
+//            }
+//            if (self.resolvedStatus().length > 0 && self.resolvedStatus()[0] !== 'any') {
+//                payload = 'isResolved=' + self.resolvedStatus();
+//                if (self.requestId() !== '') {
+//                    payload += '&requestId=' + self.requestId();
+//                }
+//                console.log(payload);
+//                showPreloader();
+//                service.findUserEmails(payload).then(searchSuccessFn, FailCallBackFn);
+//                return;
+//            }
+//            if (self.requestId() !== '') {
+//                payload = 'requestId=' + self.requestId();
+//            }
             if (payload !== undefined) {
                 console.log(payload);
                 showPreloader();
@@ -78,12 +106,12 @@ define(['knockout',
                 service.findUserEmails(null).then(searchSuccessFn, FailCallBackFn);
             }
         };
-        
+
         self.FailCallBackFn = function (xhr) {
             console.log(xhr);
             hidePreloader();
         };
-        
+
         self.submitRecord = function (data, event) {
             console.log(self.selectedRecordResolvedStatus());
             if (self.selectedRecordResolvedStatus().length > 0) {
@@ -98,15 +126,15 @@ define(['knockout',
                 alert('Please select the Resolved option..');
             }
         };
-        
-        var submitRecordSuccessFn = function(data, status) {
+
+        var submitRecordSuccessFn = function (data, status) {
             if (status === 'success') {
                 console.log('Record updated');
                 self.initSearch();
             }
         };
-        
-        var searchSuccessFn = function(data, status) {
+
+        var searchSuccessFn = function (data, status) {
             if (status !== 'nocontent') {
                 console.log(data);
                 var array = [];
@@ -133,8 +161,8 @@ define(['knockout',
                 hidePreloader();
             }
         };
-        
-        self.getRecord = function(data, event) {
+
+        self.getRecord = function (data, event) {
             console.log(data);
             self.selectedRecordSrId(data.srId);
             var status = data.isResolved ? 'Y' : 'N';
@@ -143,11 +171,12 @@ define(['knockout',
             self.selectedRecordMessage(data.message);
             self.selectedRecordDescription(data.resolutionComments);
         };
-        
-        self.handleBindingsApplied = function() {
-            self.initSearch();  
+
+        self.handleBindingsApplied = function () {
+            self.initSearch();
         };
-    };
+    }
+    ;
     return manageEmailViewModel;
 
 });
