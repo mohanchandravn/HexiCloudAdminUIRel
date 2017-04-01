@@ -2,7 +2,7 @@
 <div class="oj-flex">
     <div class="manageEmailsSearchContainer oj-sm-12 oj-flex-item">
         <div class="oj-flex">
-            <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
+            <div class="oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
                 <label class="selection-label" for="userId" data-bind="text: 'User Id: '"></label>
                 <input id="userId" type="text" data-bind="ojComponent: {
                                                     component: 'ojInputText',
@@ -10,7 +10,7 @@
                                                     value: userId
                 }" />
             </div>
-            <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
+            <div class="oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
                 <label class="selection-label" for="resolvedStatusCombobox" data-bind="text: 'Is Resolved: '"></label>
                 <select id="resolvedStatusCombobox"
                         data-bind="ojComponent: {
@@ -21,13 +21,17 @@
                                             rootAttributes: {style:'max-width:20em'}}">
                 </select>
             </div>
-            <div class="oj-sm-12 oj-md-3 oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
+            <div class="oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
                 <label class="selection-label" for="requestId" data-bind="text: 'Request Id: '"></label>
                 <input id="requestId" type="text" data-bind="ojComponent: {
                                                     component: 'ojInputText',
                                                     placeholder: 'Request ID',
                                                     value: requestId
                 }" />
+            </div>
+            <div class="oj-flex-item" data-bind="css: viewportSize() !== 'SM' ? 'oj-margin-end' : ''">
+                <label id="switchLabel" for="switch">Callback Requests Only</label>
+                <input id="switch" data-bind="ojComponent: {component: 'ojSwitch', value: searchOnlyCallBacks}"/>
             </div>
         </div>
         <div class="oj-flex-bar">
