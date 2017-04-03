@@ -60,8 +60,11 @@ define(['ojs/ojcore',
                             self.lastName(self.selectedRecord.lastName);
                             self.email(self.selectedRecord.email);
                             var fullPhoneNum = self.selectedRecord.phone;
-                            self.countryCode(fullPhoneNum.substr(0, fullPhoneNum.indexOf('-')));
+                            if (fullPhoneNum) {
+                                 self.countryCode(fullPhoneNum.substr(0, fullPhoneNum.indexOf('-')));
                             self.phone(fullPhoneNum.substr(fullPhoneNum.indexOf('-') + 1));
+                            }
+                           
                             //self.userRole("DBA");
                             // var roleComp = $("#role");
 //                            $("#role").ojSelect({
