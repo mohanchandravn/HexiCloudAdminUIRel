@@ -65,7 +65,7 @@
                 </div>
             </div>
         </div>
-        <table id="jobConfigTable" 
+<!--        <table id="jobConfigTable" 
                data-bind="ojComponent: {component: 'ojTable', 
                                 data: pagingConfigDatasource, 
                                 display: 'grid',
@@ -75,14 +75,33 @@
                                 columns: [ 
                                     {headerText: 'Rule Name', 
                                            field: 'jobName'},
-                                       {headerText: 'Rule Description', 
+                                          {headerText: 'Rule Description',
                                            field: 'jobDescription'},                                      
-                                          {headerText: 'Rule Frequency', 
+                                          {headerText: 'Rule Frequency',
                                            field: 'jobFreq'}
                                    ]}">
         </table>
         <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingConfigDatasource, pageSize: 5}">
-        </div>
+        </div>-->
+        <table id="jobConfigTable2" 
+               data-bind="ojComponent: {component: 'ojTable', 
+                                data: pagingJobConfigDatasource, 
+                                display: 'grid',
+                                dnd: {reorder: {columns: 'enabled'}},
+                                columnsDefault: {sortable: 'enabled'}, 
+                                rootAttributes: {style: 'width:100%;'},
+                                columns: [{headerText: 'Rule Name',
+                                           style: 'width: 30%',
+                                           sortProperty: 'ruleName'},
+                                          {headerText: 'Rule Description',
+                                           style: 'width: 50%',
+                                           sortProperty: 'ruleDescription'},
+                                          {headerText: 'Rule Frequency',
+                                           style: 'width: 20%',
+                                           sortProperty: 'ruleFrequency'}],
+                                rowTemplate: 'jobConfiguration_row_template'}">
+        </table>
+        <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingJobConfigDatasource, pageSize: 5}"></div>
         <br/>
         <br/>
         <div class="oj-flex" >
@@ -95,6 +114,29 @@
                 </div>
             </div>
         </div>
+        <table id="jobConfigTable2" 
+               data-bind="ojComponent: {component: 'ojTable', 
+                                data: pagingJobHistoryDatasource, 
+                                display: 'grid',
+                                dnd: {reorder: {columns: 'enabled'}},
+                                columnsDefault: {sortable: 'enabled'}, 
+                                rootAttributes: {style: 'width:100%;'},
+                                columns: [{headerText: 'Start Date',
+                                           style: 'width: 30%',
+                                           sortProperty: 'startDate'},
+                                          {headerText: 'End Date',
+                                           style: 'width: 30%',
+                                           sortProperty: 'endDate'},
+                                          {headerText: 'Rule Status',
+                                           style: 'width: 20%',
+                                           sortProperty: 'ruleStatus'},
+                                          {headerText: 'Rule Failed Reason',
+                                           style: 'width: 20%',
+                                           sortProperty: 'ruleFailedReason'}],
+                                rowTemplate: 'jobHistory_row_template'}">
+        </table>
+        <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingJobHistoryDatasource, pageSize: 5}"></div>
+        
         <table id="jobHistoryTable" 
                data-bind="ojComponent: {component: 'ojTable', 
                                 data: pagingHistoryDatasource, 
@@ -114,6 +156,7 @@
                                   ]}">
         </table>
         <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingHistoryDatasource, pageSize: 5}"></div>
+        
 
         <div id="ConfirmationDialog">
             <div style="display:none" id="confirmDialog" title="" 
@@ -343,3 +386,27 @@
         </div>
     </div> 
 </div>
+
+<script type="text/html" id="jobConfiguration_row_template">
+    <tr data-bind="click: $parent.getJobHistoryByJobId">
+        <td data-bind="text: ruleName">
+        </td>
+        <td data-bind="text: ruleDescription">
+        </td>
+        <td data-bind="text: ruleFrequency">
+        </td>
+    </tr>
+</script>
+
+<script type="text/html" id="jobHistory_row_template">
+    <tr>
+        <td data-bind="text: startDate">
+        </td>
+        <td data-bind="text: endDate">
+        </td>
+        <td data-bind="text: ruleStatus">
+        </td>
+        <td data-bind="text: ruleFailedReason">
+        </td>
+    </tr>
+</script>

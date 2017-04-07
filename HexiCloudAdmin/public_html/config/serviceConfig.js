@@ -372,7 +372,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
         
         self.updatePassword = function(payload) {
             var defer = $.Deferred();
-            console.log("updatePassword:"+payload);
+            console.log("updatePassword: " + payload);
             var serverURL = self.portalRestHost()+"hexiCloudRestSecured/services/rest/updateUserPassword/";
             $.ajax({
                 type: "POST",
@@ -386,6 +386,57 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 success: function (data, xhr) {
                     console.log("Successfully retrieved details at: " + serverURL);
                     defer.resolve(data, {status: xhr.status});
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        self.findJobConfiguration = function(payload) {
+            var defer = $.Deferred();
+            console.log("Job name: " + payload);
+            if (payload === undefined) {
+                var serverURL = self.portalRestHost()+ "hexiCloudRestSecuredSS/services/rest/findJobConfigurations?";
+            } else {
+                var serverURL = self.portalRestHost()+ "hexiCloudRestSecuredSS/services/rest/findJobConfigurations?" + payload;
+            }
+            $.ajax({
+                type: "GET",
+                url: serverURL,
+                contentType: "application/json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                },
+                success: function (data, status) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        self.findJobHistory = function(jobId) {
+            var defer = $.Deferred();
+            console.log("Job Id: " + jobId);
+            var serverURL = self.portalRestHost()+ "hexiCloudRestSecuredSS/services/rest/findJobHistoryForJob/" + jobId + "/";
+            
+            $.ajax({
+                type: "GET",
+                url: serverURL,
+                contentType: "application/json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                },
+                success: function (data, status) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, status);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log("Error retrieving service details at:" + serverURL);

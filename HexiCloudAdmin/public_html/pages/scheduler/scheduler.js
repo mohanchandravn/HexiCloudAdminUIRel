@@ -2,7 +2,7 @@ define([
          'ojs/ojcore', 
          'knockout', 
          'jquery', 
-       //  'ajCalls',
+         'config/serviceConfig',
          'ojs/ojknockout',
          'promise',
          'ojs/ojtable', 
@@ -12,15 +12,14 @@ define([
          'ojs/ojcomponents', 
          'ojs/ojselectcombobox',
          'config/ajaxCalls'],
-        function (oj, ko, $, ajCalls)
+        function (oj, ko, $, service)
         {
             function schedulerContentViewModel(params)
             {
                 var self = this;
                 var jobId = "";
                 var router = params.ojRouter.parentRouter;
-                console.log('Scheduler page');
-                
+                console.log('Scheduler page');                
                 
                 self.nameDeferred = ko.observable(false);
                 self.jobDescDeferred = ko.observable(false);
@@ -38,11 +37,64 @@ define([
                 self.jobNameValue = ko.observable();
                 self.statusVal = ko.observable();
                 self.pagingConfigDatasource = ko.observable();
+                self.pagingJobConfigDatasource = ko.observable();
+                self.pagingJobHistoryDatasource = ko.observable();
                 self.pagingHistoryDatasource = ko.observable();
                 self.allHours = ko.observableArray([]);
                 self.allMinutes = ko.observableArray([]);
                 self.rulesconfigData = ko.observable([]);
                 self.placeholdersData = ko.observable([]);
+                
+                var convertJobFrequency = function(jobFrequencyType, jobFrequency, jobFrequencyHour, jobFrequencyMinute) {
+                    if(jobFrequencyType==='D') {
+                        return (jobFrequency) + ' Day ' + pad(jobFrequencyHour) + ' Hours ' + pad(jobFrequencyMinute)+' Minutes';
+                    } else if(jobFrequencyType==='H') {
+                        return pad(jobFrequency) + ' Hour ';
+                    }
+                };
+                
+                var findJobConfigurationSuccessFn = function(data, status) {
+                    console.log(status);
+                    console.log(data);
+                    var array = [];
+                    for (var idx = 0; idx < data.length; idx++) {
+                        array.push({
+                            jobId: data[idx].jobId,
+                            ruleName: data[idx].jobName,
+                            ruleDescription: data[idx].jobDescription,
+                            ruleFrequency: convertJobFrequency(data[idx].jobFrequencyType, data[idx].jobFrequency, data[idx].jobFrequencyHour, data[idx].jobFrequencyMinute)});
+                    }
+                    self.pagingJobConfigDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(array)));
+                };
+                
+                var findJobHistorySuccessFn = function(data, status) {
+                    console.log(status);
+                    console.log(data);
+                    if (status !== 'nocontent') {
+                        var array = [];
+                        for (var idx = 0; idx < data.length; idx++) {
+                            array.push({
+                                startDate: data[idx].startDate,
+                                endDate: data[idx].endDate,
+                                ruleStatus: (data[idx].jobStatus === 'C' ? 'Completed' : 'Failed'),
+                                ruleFailedReason: data[idx].jobFailedReason});
+                        }
+                        self.pagingJobHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(array)));
+                    } else {
+                        self.pagingJobHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource([])));
+                    }
+                };
+                
+                var failCbFn = function(xhr) {
+                    console.log(xhr);
+                };
+                
+                self.getJobHistoryByJobId = function(data, event) {
+                    console.log(data);
+                    jobId = data.jobId;
+                    service.findJobHistory(jobId).then(findJobHistorySuccessFn, failCbFn)
+//                    self.pagingJobHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(getJobHistoryByJobId(jobId), {idAttribute: 'jobHistoryId'})));
+                };
                 
                 self.searchClick = function (data, event) {
                     self.pagingHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource([], {idAttribute: 'jobHistoryId'})));
@@ -92,6 +144,7 @@ define([
                 //self.pagingConfigDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(getJobConfigInfo(null), {idAttribute: 'jobId'})));
                 self.handleAttached = function () {
                     $('#jobConfigTable').on('ojoptionchange', selectionListener);
+                    service.findJobConfiguration().then(findJobConfigurationSuccessFn, failCbFn)
                 };
 
                 self.backButtonClick = function(data, event){                    
@@ -642,7 +695,7 @@ define([
                     return true;
                 };
                 self.ruleConfig = function (data, event) {
-                      if (jobId !== null && jobId !== "")
+                    if (jobId !== null && jobId !== "")
                     {
                     $("#ruleDialog").ojDialog("open");
                     showRulesConfigurations(jobId);
