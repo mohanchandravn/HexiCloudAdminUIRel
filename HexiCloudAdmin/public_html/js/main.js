@@ -91,8 +91,9 @@ require(['ojs/ojcore',
             adminRouter.configure({
                 'manageEmails': {label: 'Manage Emails', value: 'pages/manageemails/manageemails', isDefault: true},
                 'manageUsers': {label: 'Manager Users', value: 'pages/manageusers/manageusers'},
-                'createUser': {label: 'Create User', value: 'pages/createuser/createuser'},
-                'scheduler': {label: 'Scheduler', value: 'pages/scheduler/scheduler'}
+                'createUser': {label: 'Create User', value: 'pages/createuser/createuser'}
+//                ,
+//                'scheduler': {label: 'Scheduler', value: 'pages/scheduler/scheduler'}
             });
             self.csmAdminRouter = adminRouter;
 
@@ -155,10 +156,7 @@ require(['ojs/ojcore',
                     }
                 }
 
-                self.logout = function () {
-                    sessionInfo.removeAllFromSession();
-                    router.go('home/');
-                };
+               
 
             }
             ;

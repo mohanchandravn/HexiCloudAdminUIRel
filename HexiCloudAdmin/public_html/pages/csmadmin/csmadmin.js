@@ -34,10 +34,15 @@ define(['knockout',
                
                  var navData = [
                      {name: 'Manage Emails',id: 'manageEmails'},
-                     {name: 'Manage Users',id: 'manageUsers'},
-                     {name: 'Scheduler', id: 'scheduler'}
+                     {name: 'Manage Users',id: 'manageUsers'}
+//                     ,
+//                     {name: 'Scheduler', id: 'scheduler'}
                  ];
                  self.navDataSource = new oj.ArrayTableDataSource(navData, {idAttribute: 'id'});
+                  self.logout = function () {
+                    sessionInfo.removeAllFromSession();
+                    router.go('home/');
+                };
                  
                 // this is the invalidComponentTracker on ojRadioset
 //                self.tracker = ko.observable();
