@@ -3,19 +3,20 @@ define([
          'knockout', 
          'jquery', 
          'config/serviceConfig',
+         'ojs/ojknockout-validation',
          'ojs/ojknockout',
          'promise',
-         'ojs/ojtable', 
+         'ojs/ojtable',
+         'ojs/ojinputtext',
+         'ojs/ojinputnumber',
          'ojs/ojarraytabledatasource', 
          'ojs/ojpagingcontrol', 
          'ojs/ojpagingtabledatasource',
          'ojs/ojcomponents', 
          'ojs/ojselectcombobox',
          'config/ajaxCalls'],
-        function (oj, ko, $, service)
-        {
-            function schedulerContentViewModel(params)
-            {
+        function (oj, ko, $, service) {
+            function schedulerContentViewModel(params) {
                 var self = this;
                 var jobId = "";
                 var router = params.ojRouter.parentRouter;
@@ -43,7 +44,19 @@ define([
                 self.allHours = ko.observableArray([]);
                 self.allMinutes = ko.observableArray([]);
                 self.rulesconfigData = ko.observable([]);
+                self.rulesconfigDataArray = ko.observable([]);
                 self.placeholdersData = ko.observable([]);
+                
+                // for invalidComponentTracker attribute
+                self.tracker = ko.observable();
+                
+                self._showComponentValidationErrors = function (trackerObj) {
+                    trackerObj.showMessages();
+                    if (trackerObj.focusOnFirstInvalid())
+                        return false;
+
+                    return true;
+                };
                 
                 var convertJobFrequency = function(jobFrequencyType, jobFrequency, jobFrequencyHour, jobFrequencyMinute) {
                     if(jobFrequencyType==='D') {
@@ -85,6 +98,43 @@ define([
                     }
                 };
                 
+                var findRulesByJobSuccessFn = function(data, status) {
+                    console.log(status);
+                    console.log(data);
+                    self.rulesconfigData([]);
+                    self.rulesconfigDataArray([]);
+                    self.placeholdersData([]);
+                    if (status !== 'nocontent') {
+                        var array = [];
+                        for (var idx = 0; idx < data.length; idx++) {
+                            array.push({
+                                inputFieldType: data[idx].inputFieldType,
+                                isUpdatable: data[idx].isUpdatable,
+                                jobId: data[idx].jobId,
+                                ruleKey: data[idx].ruleKey,
+                                ruleType: data[idx].ruleType,
+                                ruleValue: data[idx].ruleValue,
+                                uiLabel: data[idx].uiLabel,
+                                fieldId: data[idx].ruleKey + ((data[idx].inputFieldType === 'textarea') ? 'textarea' : data[idx].ruleType.toLowerCase())
+                            });
+                        }
+                        self.rulesconfigData(array);
+                        self.rulesconfigDataArray(array);
+                        
+                        var findPlaceHoldersByJobSuccessFn = function(data, status) {
+                            console.log(data);
+                            console.log(status);
+                            self.placeholdersData(data);
+                            $("#ruleDialog").ojDialog("open");
+                        };
+                        
+                        service.getPlaceholdersByJobId(data[0].jobId).then(findPlaceHoldersByJobSuccessFn, failCbFn);
+//                        self.pagingJobHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(array)));
+                    } else {
+//                        self.pagingJobHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource([])));
+                    }
+                };
+                
                 var failCbFn = function(xhr) {
                     console.log(xhr);
                 };
@@ -92,7 +142,7 @@ define([
                 self.getJobHistoryByJobId = function(data, event) {
                     console.log(data);
                     jobId = data.jobId;
-                    service.findJobHistory(jobId).then(findJobHistorySuccessFn, failCbFn)
+                    service.findJobHistory(jobId).then(findJobHistorySuccessFn, failCbFn);
 //                    self.pagingJobHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(getJobHistoryByJobId(jobId), {idAttribute: 'jobHistoryId'})));
                 };
                 
@@ -140,11 +190,11 @@ define([
                     self.statusVal(null);
                     return true;
                 };
-                refreshConfigTable();
+//                refreshConfigTable();
                 //self.pagingConfigDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(getJobConfigInfo(null), {idAttribute: 'jobId'})));
                 self.handleAttached = function () {
                     $('#jobConfigTable').on('ojoptionchange', selectionListener);
-                    service.findJobConfiguration().then(findJobConfigurationSuccessFn, failCbFn)
+                    service.findJobConfiguration().then(findJobConfigurationSuccessFn, failCbFn);
                 };
 
                 self.backButtonClick = function(data, event){                    
@@ -246,19 +296,19 @@ define([
                     return true;
                 }
                 ;
-                function refreshConfigTable()
-                {
-                    self.pagingConfigDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(concatenateJobFreqFragm(getJobConfigInfo(null)), {idAttribute: 'jobId'})));
+                function refreshConfigTable() {
+                    service.findJobConfiguration().then(findJobConfigurationSuccessFn, failCbFn);
+//                    self.pagingConfigDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(concatenateJobFreqFragm(getJobConfigInfo(null)), {idAttribute: 'jobId'})));
+                    
                 }
 
-                function refreshHistoryTable(jobId)
-                {
-                    if (jobId !== null)
-                    {
-                        self.pagingHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(getJobHistoryByJobId(jobId), {idAttribute: 'jobHistoryId'})));
-                    } else
-                    {
-                        self.pagingHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(getJobHistoryByJobId(null), {idAttribute: 'jobHistoryId'})));
+                function refreshHistoryTable(jobId) {
+                    if (jobId !== null) {
+                        service.findJobHistory(jobId).then(findJobHistorySuccessFn, failCbFn);
+//                        self.pagingHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(getJobHistoryByJobId(jobId), {idAttribute: 'jobHistoryId'})));
+                    } else {
+                        service.findJobHistory().then(findJobHistorySuccessFn, failCbFn);
+//                        self.pagingHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(getJobHistoryByJobId(null), {idAttribute: 'jobHistoryId'})));
                     }
                 }
                 self.editRow = function (data, event) {
@@ -454,133 +504,169 @@ define([
                 };
      
                 self.saveRuleConfig = function (data, event) {
-                               
-                    var changedValues = [];
-                    var retrievedConfigData = getRulesConfigInfoByJobId(jobId);
-                    var k =0;
-                    var m = 0;
-                    var ruleTypesTxt = [];
-                    var ruleTypesTxtArea = [];
-                    var validationErrors = 0;
-                    var textValues = [];
-                    var textAreaValues = [];
-                    var textUILabels = [];
-                    var textAreaUILabels = [];
-                
-                    
-                    for (i=0;i< retrievedConfigData.length;i++){
-                        if(retrievedConfigData[i].inputFieldType === 'text')
-                        {
-                            
-                            textUILabels.push(retrievedConfigData[i].uiLabel);
-                            ruleTypesTxt.push(retrievedConfigData[i].ruleType);
-                        }
-                        if(retrievedConfigData[i].inputFieldType === 'textarea')
-                        {
-                          
-                            textAreaUILabels.push(retrievedConfigData[i].uiLabel);
-                            ruleTypesTxtArea.push(retrievedConfigData[i].ruleType);
-                        }
-                                
-                    }
-                    
-                        
-                    $("#ruleDialog textarea").each(function() {
-                        //alert(this.value);
-                        textAreaValues.push(this.value);
-                    }); 
-                    $("#ruleDialog input[type=text]").each(function() {
-                       // alert(this.value);
-                        textValues.push(this.value);
-                    }); 
-                    
-                    for(j=0;j<textAreaValues.length;j++){
-                        var keyValue = textAreaValues[j];                                     
-                        var newKeyValue =  keyValue.replace(new RegExp('</', 'g'), '<%2F');
-                        newKeyValue =  keyValue.replace(new RegExp('\n', 'g'), '%5Cn');
-                        
-                        changedValues.push({ui_label : textAreaUILabels[j],key_value:newKeyValue});
-                        
-                    }
-                    for(l=0;l<textValues.length;l++){
-                        var keyTxtValue = textValues[l];                                     
-                        var newTxtKeyValue =  keyTxtValue.replace(new RegExp('</', 'g'), '<%2F');
-                        newTxtKeyValue =  keyTxtValue.replace(new RegExp('\n', 'g'), '%5Cn');
-                        
-                        changedValues.push({ui_label : textUILabels[l],key_value:newTxtKeyValue});
-                        
-                    }                 
-                    
-                  
-                    
-                     $("#ruleDialog input[type=text]").each(function() {
-                     // alert(this.value);
-                    // check for blank fields 
-                    if(!this.value)
-                        {
-                            alert("This field is required");
-                            this.focus();
-                        }
-                          
-                       if(ruleTypesTxt[k] === 'Text')
-                       {
-                           if(!isNaN(this.value))
-                           {
-                               alert("Please enter text value");
-                               validationErrors = 1;
-                               this.focus();
-                               
-                           }
-                           
-                       }else if(ruleTypesTxt[k] === 'Number'){
-                           
-                           if(isNaN(this.value))
-                           {
-                               alert("Please enter Numeric value");
-                               validationErrors = 1;
-                               this.focus();
-                               
-                           }
-                           
-                       }
- 
-                         k = k+1;
-                       
-                    });
-                    
-                    $("#ruleDialog textarea").each(function(){
-                        
-                       if(!this.value)
-                        {
-                            alert("This field is required");
-                            this.focus();
-                        }
-                        if(ruleTypesTxtArea[m] === 'Text')   
-                        {
-                        if(!isNaN(this.value))
-                           {
-                               
-                               alert("Please enter text value");
-                               validationErrors = 1;
-                               this.focus();                               
-                           }
-                       }
-                       m = m+1;
-                        });
+                    var trackerObj = ko.utils.unwrapObservable(self.tracker);
 
-                    if(validationErrors === 0)
-                    {updateRuleConfigDetails(jobId,JSON.stringify(changedValues));
-                      //location.reload(true);
-                      self.closeRulesConfigPopup();
-                      $("#confirmDialog").ojDialog("open");
-                      $("#messegeText").text("Rule configuration Saved Successully ");
-                      return true;
+                    // For checking required fields
+                    if (!this._showComponentValidationErrors(trackerObj)) {
+                        hidePreloader();
+                        return;
                     }
-                     else
-                     {
-                         return false;
-                         
-                     }
+                    
+                    console.log(self.rulesconfigData());
+                    console.log(self.rulesconfigDataArray());
+
+                    for (var idx = 0; idx < self.rulesconfigDataArray().length; idx++) {
+                        var id = $("#" + self.rulesconfigDataArray()[idx].fieldId);
+                        var fieldValue = "";
+                        if (self.rulesconfigDataArray()[idx].inputFieldType === 'text' && self.rulesconfigDataArray()[idx].ruleType === 'Number') {
+                            fieldValue = $("#" + self.rulesconfigDataArray()[idx].fieldId).ojInputNumber("option", "value");
+                            if ( fieldValue == self.rulesconfigDataArray()[idx].ruleValue ) {
+                                console.log(fieldValue + 'not updated');
+                            } else {
+                                console.log(fieldValue + 'updated');
+                            }
+                        } else if (self.rulesconfigDataArray()[idx].inputFieldType === 'text' && self.rulesconfigDataArray()[idx].ruleType === 'Text') {
+                            fieldValue = $("#" + self.rulesconfigDataArray()[idx].fieldId).ojInputText("option", "value");
+                            if ( fieldValue == self.rulesconfigDataArray()[idx].ruleValue ) {
+                                console.log(fieldValue + 'not updated');
+                            } else {
+                                console.log(fieldValue + 'updated');
+                            }
+                        } else if (self.rulesconfigDataArray()[idx].inputFieldType === 'textarea' && self.rulesconfigDataArray()[idx].ruleType === 'Text') {
+                            fieldValue = $("#" + self.rulesconfigDataArray()[idx].fieldId).ojTextArea("option", "value");
+                            if ( fieldValue == self.rulesconfigDataArray()[idx].ruleValue ) {
+                                console.log(fieldValue + 'not updated');
+                            } else {
+                                console.log(fieldValue + 'updated');
+                            }
+                        }
+                    }
+//                    var changedValues = [];
+//                    var retrievedConfigData = getRulesConfigInfoByJobId(jobId);
+//                    var k =0;
+//                    var m = 0;
+//                    var ruleTypesTxt = [];
+//                    var ruleTypesTxtArea = [];
+//                    var validationErrors = 0;
+//                    var textValues = [];
+//                    var textAreaValues = [];
+//                    var textUILabels = [];
+//                    var textAreaUILabels = [];
+//                
+//                    
+//                    for (i=0;i< retrievedConfigData.length;i++){
+//                        if(retrievedConfigData[i].inputFieldType === 'text')
+//                        {
+//                            
+//                            textUILabels.push(retrievedConfigData[i].uiLabel);
+//                            ruleTypesTxt.push(retrievedConfigData[i].ruleType);
+//                        }
+//                        if(retrievedConfigData[i].inputFieldType === 'textarea')
+//                        {
+//                          
+//                            textAreaUILabels.push(retrievedConfigData[i].uiLabel);
+//                            ruleTypesTxtArea.push(retrievedConfigData[i].ruleType);
+//                        }
+//                                
+//                    }
+//                    
+//                        
+//                    $("#ruleDialog textarea").each(function() {
+//                        //alert(this.value);
+//                        textAreaValues.push(this.value);
+//                    }); 
+//                    $("#ruleDialog input[type=text]").each(function() {
+//                       // alert(this.value);
+//                        textValues.push(this.value);
+//                    }); 
+//                    
+//                    for(j=0;j<textAreaValues.length;j++){
+//                        var keyValue = textAreaValues[j];                                     
+//                        var newKeyValue =  keyValue.replace(new RegExp('</', 'g'), '<%2F');
+//                        newKeyValue =  keyValue.replace(new RegExp('\n', 'g'), '%5Cn');
+//                        
+//                        changedValues.push({ui_label : textAreaUILabels[j],key_value:newKeyValue});
+//                        
+//                    }
+//                    for(l=0;l<textValues.length;l++){
+//                        var keyTxtValue = textValues[l];                                     
+//                        var newTxtKeyValue =  keyTxtValue.replace(new RegExp('</', 'g'), '<%2F');
+//                        newTxtKeyValue =  keyTxtValue.replace(new RegExp('\n', 'g'), '%5Cn');
+//                        
+//                        changedValues.push({ui_label : textUILabels[l],key_value:newTxtKeyValue});
+//                        
+//                    }                 
+//                    
+//                  
+//                    
+//                     $("#ruleDialog input[type=text]").each(function() {
+//                     // alert(this.value);
+//                    // check for blank fields 
+//                    if(!this.value)
+//                        {
+//                            alert("This field is required");
+//                            this.focus();
+//                        }
+//                          
+//                       if(ruleTypesTxt[k] === 'Text')
+//                       {
+//                           if(!isNaN(this.value))
+//                           {
+//                               alert("Please enter text value");
+//                               validationErrors = 1;
+//                               this.focus();
+//                               
+//                           }
+//                           
+//                       }else if(ruleTypesTxt[k] === 'Number'){
+//                           
+//                           if(isNaN(this.value))
+//                           {
+//                               alert("Please enter Numeric value");
+//                               validationErrors = 1;
+//                               this.focus();
+//                               
+//                           }
+//                           
+//                       }
+// 
+//                         k = k+1;
+//                       
+//                    });
+//                    
+//                    $("#ruleDialog textarea").each(function(){
+//                        
+//                       if(!this.value)
+//                        {
+//                            alert("This field is required");
+//                            this.focus();
+//                        }
+//                        if(ruleTypesTxtArea[m] === 'Text')   
+//                        {
+//                        if(!isNaN(this.value))
+//                           {
+//                               
+//                               alert("Please enter text value");
+//                               validationErrors = 1;
+//                               this.focus();                               
+//                           }
+//                       }
+//                       m = m+1;
+//                        });
+//
+//                    if(validationErrors === 0)
+//                    {updateRuleConfigDetails(jobId,JSON.stringify(changedValues));
+//                      //location.reload(true);
+//                      self.closeRulesConfigPopup();
+//                      $("#confirmDialog").ojDialog("open");
+//                      $("#messegeText").text("Rule configuration Saved Successully ");
+//                      return true;
+//                    }
+//                     else
+//                     {
+//                         return false;
+//                         
+//                     }
                 };
                 
                 function checkDuplicateName(jobName)
@@ -599,39 +685,39 @@ define([
                 ;
                 function showRulesConfigurations(jobIdParam){
                     
-                    console.log("showRulesConfigurations by JobId");
-                   
-                    var inputTypes = [];
-                     self.rulesconfigData([]); 
-                     self.placeholdersData([]);
-                     var rulecfgData = getRulesConfigInfoByJobId(jobIdParam);
-                     var placeholders = getPlaceholdersByJobId(jobIdParam);
-                     var k = 0;
-                     self.rulesconfigData(rulecfgData);
-                     self.placeholdersData(placeholders);   
-                     
-                     for(j=0;j<rulecfgData.length;j++){
-                         inputTypes.push(rulecfgData[j].inputFieldType);
-                         
-                     }
-                          var attrs = {};       
-                     $("#ruleDialog input[type=text]").each(function() {
-
-                         if(rulecfgData[k].inputFieldType === 'textarea')
-                         { 
-                             var style = $(this).attr('style'),
-                             textbox  = document.createElement('textarea');
-                             textbox.id = 'ruleValue';
-                             textbox.cols  = 45;
-                             textbox.rows  = 5;
-                             textbox.value = this.value; 
-                             textbox.required = true;
-                             $(this).parent().parent().replaceWith(textbox);
-                         }  
-                         k = k+1;
-                     });
-                     
-                 }
+                    console.log("showRulesConfigurations by JobId: " + jobIdParam);
+                    
+//                    var inputTypes = [];
+//                    self.rulesconfigData([]); 
+//                    self.placeholdersData([]);
+                    service.findRulesByJob(jobIdParam).then(findRulesByJobSuccessFn, failCbFn);
+//                    
+//                    var rulecfgData = getRulesConfigInfoByJobId(jobIdParam);
+//                    var placeholders = getPlaceholdersByJobId(jobIdParam);
+//                    var k = 0;
+//                    self.rulesconfigData(rulecfgData);
+//                    self.placeholdersData(placeholders);   
+//                    
+//                    for(var j=0;j<rulecfgData.length;j++){
+//                        inputTypes.push(rulecfgData[j].inputFieldType);
+//
+//                    }
+////                    var attrs = {};       
+//                    $("#ruleDialog input[type=text]").each(function() {
+//
+//                        if(rulecfgData[k].inputFieldType === 'textarea') { 
+//                            var style = $(this).attr('style'),
+//                            textbox  = document.createElement('textarea');
+//                            textbox.id = 'ruleValue';
+//                            textbox.cols  = 45;
+//                            textbox.rows  = 5;
+//                            textbox.value = this.value; 
+//                            textbox.required = true;
+//                            $(this).parent().parent().replaceWith(textbox);
+//                        }
+//                        k = k+1;
+//                    });                    
+                 };
                     
                 self.openDeletePopup = function (data, event) {
                     $("#jobDeleteDialog").ojDialog("open");
@@ -678,6 +764,7 @@ define([
                     refreshConfigTable();
                     return true;
                 };
+                
                 self.startJob = function (data, event) {
                     var startStatus = 'Running';
                     updateStatus(startStatus);
@@ -686,6 +773,7 @@ define([
                     refreshConfigTable();
                     return true;
                 };
+                
                 self.stopJob = function (data, event) {
                     var stopStatus = 'Stopped';
                     updateStatus(stopStatus);
@@ -694,24 +782,19 @@ define([
                     refreshConfigTable();
                     return true;
                 };
+                
                 self.ruleConfig = function (data, event) {
-                    if (jobId !== null && jobId !== "")
-                    {
-                    $("#ruleDialog").ojDialog("open");
-                    showRulesConfigurations(jobId);
-                    var ruleConfig = self.rulesconfigData();                  
-
-                    } else
-                    {
+                    if (jobId !== null && jobId !== "") {
+                        showRulesConfigurations(jobId);
+//                        var ruleConfig = self.rulesconfigData();
+                    } else {
                         $("#confirmDialog").ojDialog("open");
                         $("#messegeText").text("Please select a row to edit rule configuration");
                     }
                     return true;
                 };
                 
-                
-                function updateStatus(status)
-                {
+                function updateStatus(status) {
                     var jobIdGlobal = jobId;
                     var data = [];
                     data = getJobConfigInfo(null);

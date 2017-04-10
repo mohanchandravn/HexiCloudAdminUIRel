@@ -445,6 +445,56 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
+        
+        self.findRulesByJob = function(jobId) {
+            var defer = $.Deferred();
+            console.log("Fetching Rules config for Job Id: " + jobId);
+            var serverURL = self.portalRestHost()+ "hexiCloudRestSecuredSS/services/rest/findRulesByJob/" + jobId + "/";
+            
+            $.ajax({
+                type: "GET",
+                url: serverURL,
+                contentType: "application/json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                },
+                success: function (data, status) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        self.getPlaceholdersByJobId = function(JobId){
+            var defer = $.Deferred();
+//            var rulesConfigData=[];
+            var serverUrl = "https://129.152.128.105/Scheduler/webresources/oracle.com.service.placeholders/getPlaceholdersByJobId/" + JobId;
+             $.ajax({
+                url: serverUrl,
+                type: "GET",
+                async: false,
+                crossDomain: true,
+                headers: {
+                    'Accept': 'application/json'
+                },
+                success: function (data, status) {                         
+//                    rulesConfigData = data;
+                    console.log(serverUrl);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(serverUrl);
+                    console.log("Error " + xhr);
+                    defer.reject(xhr);
+            }
+            });
+            return $.when(defer);
+        };
     };
    
    return new serviceConfig();

@@ -136,7 +136,7 @@
                                 rowTemplate: 'jobHistory_row_template'}">
         </table>
         <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingJobHistoryDatasource, pageSize: 5}"></div>
-        
+<!--        
         <table id="jobHistoryTable" 
                data-bind="ojComponent: {component: 'ojTable', 
                                 data: pagingHistoryDatasource, 
@@ -155,21 +155,20 @@
                                            field: 'jobFailedReason'}
                                   ]}">
         </table>
-        <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingHistoryDatasource, pageSize: 5}"></div>
+        <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingHistoryDatasource, pageSize: 5}"></div>-->
         
 
         <div id="ConfirmationDialog">
             <div style="display:none" id="confirmDialog" title="" 
                  data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', modality: 'modeless'}">
                 <div class="oj-dialog-body" id="dialogBody">
-                    <div  id="messegeText"/>
+                    <div  id="messegeText"></div>
+                    <div class="oj-dialog-footer">
+                        <input id="okbtn" type="submit" 
+                               data-bind="click:closeConfirmDialog, 
+                          ojComponent: {component: 'ojButton', label: 'OK'}"/>
+                    </div>
                 </div>
-                <div class="oj-dialog-footer">
-                    <input id="okbtn" type="submit" 
-                           data-bind="click:closeConfirmDialog, 
-                      ojComponent: {component: 'ojButton', label: 'OK'}"/>
-                </div>
-            </div>
 
 
 
@@ -192,12 +191,12 @@
                                 <div class="oj-messaging-inline-container" aria-live="polite">
                                     <div id="nameVal" class="oj-message oj-message-error" style="display: none;">
                                         <span class="oj-component-icon oj-message-status-icon oj-message-error-icon" title="Error" role="img"></span>
-                                        <span class="oj-message-content">
+                                        <div class="oj-message-content">
                                             <div class="oj-message-summary">Error</div>
                                             <div class="oj-message-detail">
                                                 <span>Please Enter Unique Rule Name .</span>
                                             </div>
-                                        </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <span id="nameSpan" title="Deferred Error" role="img" 
@@ -208,14 +207,14 @@
 
                         </div>
                         <div class="oj-flex">
-                            <div class="oj-flex-items"> <label for="job_description">Rule Description</label></div>
+                            <div class="oj-flex-item"> <label for="job_description">Rule Description</label></div>
                             &nbsp;
                             <div class="oj-flex-item"><textarea id="job_description" 
                                                                 style="resize: both;"
                                                                 rows="5"
-                                                                data-bind="ojComponent: {component: 'ojTextArea', required: true,value:jobDescValue,
+                                                                data-bind="ojComponent: {component: 'ojTextArea', required: true, value:jobDescValue,
                       rootAttributes: {
-                                            style:'max-width:30em'}}"/>
+                          style:'max-width:30em'}}"></textarea>
                                 <span id="jobDesc" title="Deferred Error" role="img" 
                                       class="oj-fwk-icon-status-error oj-fwk-icon"
                                       data-bind="style: {display: jobDescDeferred() ? 'inline': 'none'}">
@@ -340,46 +339,85 @@
                                  rootAttributes: {
                                             style:'width:40em'}}">
                 <div class="oj-dialog-body">
-                    <div class="oj-form-layout">
-                        <div class="oj-form oj-sm-odd-cols-12 oj-md-odd-cols-4 oj-md-labels-inline
-                             oj-form-cols-labels-inline oj-form-cols-max2"    >
-                            <div class="oj-flex" data-bind="foreach: rulesconfigData">
-
-
-                                <div class="oj-flex-item">
-                                    <span class="service-instance-count oj-sm-2 oj-flex-item"  data-bind="text: uiLabel, id : 'uiLabel'+uiLabel"></span>
+                    <!-- ko foreach: rulesconfigData -->
+                    <div class="oj-flex">
+                        <div class="oj-sm-12 oj-flex-item">
+                            <div class="oj-margin-bottom oj-flex">
+                                <span class="oj-sm-4 oj-flex-item"  data-bind="attr: { id : ruleKey + 'label' }, text: uiLabel"></span>
+                                <!-- ko if: inputFieldType === 'text' && ruleType === 'Text' -->
+                                <div class="oj-sm-8 oj-flex-item">
+                                    <input type="text" data-bind="attr: { id : ruleKey + 'text' }, ojComponent: {
+                                                                                        component: 'ojInputText',
+                                                                                        disabled: isUpdatable === 'Y' ? false : true,
+                                                                                        value: ruleValue,
+                                                                                        required: true,
+                                                                                        invalidComponentTracker: $parent.tracker,
+                                                                                        translations: {'required': {
+                                                                                            messageDetail: 'Field can not be empty'}},
+                                                                                        rootAttributes: {style:'max-width: 100%'} }"/>
+                                </div>
+                                <!-- /ko -->
+                                <!-- ko if: inputFieldType === 'text' && ruleType === 'Number' -->
+                                <div class="oj-sm-8 oj-flex-item">
+                                    <input data-bind="attr: { id : ruleKey + 'number' }, ojComponent: {
+                                                                        component: 'ojInputNumber',
+                                                                        min: 0,
+                                                                        step: 1,
+                                                                        value: ruleValue,
+                                                                        required: true,
+                                                                        invalidComponentTracker: $parent.tracker,
+                                                                        disabled: isUpdatable === 'Y' ? false : true,
+                                                                        translations: {'required': {
+                                                                            messageDetail: 'Please enter a valid integer greater than or equals to 0'}},
+                                                                        rootAttributes: {style:'width: 100px'}}"/>
                                 </div>
 
-                                <div class="oj-flex-item">
-                                    <input class ="ruleValue"  type="text"
-                                           data-bind="ojComponent: {component: 'ojInputText', 
-                                 required: true,value:ruleValue,id : 'ruleValue'+ruleValue,
-                      rootAttributes: {style:'max-width:30em'} }"/>
-
+                                <!-- /ko -->
+                                <!-- ko if: inputFieldType === 'textarea' -->
+                                <div class="oj-sm-8 oj-flex-item">
+                                    <textarea rows="4" style="resize: vertical;" data-bind="attr: { id : ruleKey + 'textarea' }, ojComponent: {
+                                                                                        component: 'ojTextArea',
+                                                                                        value: ruleValue,
+                                                                                        required: true,
+                                                                                        invalidComponentTracker: $parent.tracker,
+                                                                                        translations: {'required': {
+                                                                                            messageDetail: 'Field can not be empty'}},
+                                                                                        rootAttributes: {
+                                                                                            style:'max-width: 100%'}}">
+                                    </textarea>
                                 </div>
-                            </div>                
+                                <!-- /ko -->
+                            </div>
                         </div>
-                        <div class="oj-flex" data-bind="foreach: placeholdersData">
-                            <div class="oj-flex-item"><span class="service-instance-count oj-sm-2 oj-flex-item"> Placeholders </span> </div>          
-                            <div class="oj-flex-item">
-                                <label> Code :</label> <span class="service-instance-count oj-sm-2 oj-flex-item"  data-bind="text: placeholderCode, id : 'placeholderCode'+placeholderCode"></span>
-                            </div>
-                            <div class="oj-flex-item">
-                                <label> Description :</label> <span class="service-instance-count oj-sm-2 oj-flex-item"  data-bind="text: placeholderDescription, id : 'placeholderDescription'+placeholderDescription"></span>
-                            </div>
-
-                        </div> 
                     </div>
-                    <div class="oj-dialog-footer">
-                        <input id="saveRule" type="submit" 
-                               data-bind="click:saveRuleConfig, 
-                      ojComponent: {component: 'ojButton', label: 'Save'}"/>
-                        &nbsp;
-
-                        <input id="cancel" type="submit" 
-                               data-bind="click:closeRulesConfigPopup, 
-                      ojComponent: {component: 'ojButton', label: 'Cancel'}"/>
+                    <!-- /ko -->
+                    <span class="label-text oj-padding-top oj-sm-12 oj-flex-item" data-bind="visible: placeholdersData().length > 0">Placeholders </span>
+                    <!-- ko foreach: placeholdersData -->
+                    <div class="oj-flex">
+                        <div class="oj-sm-12 oj-flex-item">
+                            <div class="oj-padding-horizontal oj-flex">
+                                <span class="oj-sm-5 oj-flex-item">
+                                    <label>Code:</label>
+                                    <span data-bind="text: placeholderCode"></span>
+                                </span>
+                                <span class="oj-sm-7 oj-flex-item">
+                                    <label>Description:</label>
+                                    <span data-bind="text: placeholderDescription"></span>
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                    <!-- /ko -->
+                </div>
+                <div class="oj-dialog-footer">
+                    <input id="saveRule" type="submit" 
+                           data-bind="click:saveRuleConfig, 
+                  ojComponent: {component: 'ojButton', label: 'Save'}"/>
+                    &nbsp;
+
+                    <input id="cancel" type="submit" 
+                           data-bind="click:closeRulesConfigPopup, 
+                  ojComponent: {component: 'ojButton', label: 'Cancel'}"/>
                 </div>
 
             </div>
