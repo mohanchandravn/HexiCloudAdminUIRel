@@ -339,8 +339,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 type: "GET",
                 url: serverURL,
                 contentType: "application/json",
-                 beforeSend: function (request)
-                {
+                beforeSend: function (request) {
                     request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
@@ -363,8 +362,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 type: "PUT",
                 url: serverURL,
                 contentType: "application/json",
-                 beforeSend: function (request)
-                {
+                beforeSend: function (request) {
                     request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 data: payload,
@@ -396,6 +394,28 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 success: function (data, xhr) {
                     console.log("Successfully retrieved details at: " + serverURL);
                     defer.resolve(data, {status: xhr.status});
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+        
+        self.getUserNavAudit = function(userId) {
+            var defer = $.Deferred();            
+            var serverURL = self.portalRestHost()+"/services/rest/getUserNavAudit/?userId=" + userId;
+            $.ajax({
+                type: "GET",
+                url: serverURL,
+                contentType: "application/json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                },
+                success: function (data, status) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, status);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log("Error retrieving service details at:" + serverURL);

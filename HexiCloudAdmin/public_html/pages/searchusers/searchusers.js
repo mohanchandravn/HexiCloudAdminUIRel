@@ -25,6 +25,7 @@ define(['ojs/ojcore',
         self.columnMetaData = ko.observableArray([]);
         self.dataSource = null;
         self.pagingDatasource = ko.observable();
+        self.pagingAuditDatasource = ko.observable();
         self.selectedRecord = null;
         
         self.tracker = ko.observable();
@@ -32,6 +33,7 @@ define(['ojs/ojcore',
         self.newPassword = ko.observable('');
         self.newPasswordRepeat = ko.observable('');
         
+        self.selectedUser = ko.observable('');
         self.selectedUserId = ko.observable('');
         self.selectedEmail = ko.observable('');
 
@@ -132,7 +134,7 @@ define(['ojs/ojcore',
                         return;
                     }
                     
-                    showPreloader();                    
+                    showPreloader();
                     $("#modalDialogUpdatePassword").ojDialog("close");
                     
                     var updatePasswordSuccessCbFn = function (data, status) {
@@ -156,6 +158,36 @@ define(['ojs/ojcore',
                 self.handleCancel = $("#cancelButton").click(function () {
                     $("#modalDialogUpdatePassword").ojDialog("close");
                 });
+            }
+        };
+        
+        self.onAuditClick = function() {
+            if (self.selectedUser() !== '') {
+                if (self.parentViewModel) {
+                    showPreloader();
+                    
+                    var getUserNavAuditSuccessCbFn = function(data, status) {
+                        if (status !== 'nocontent') {
+                            self.pagingAuditDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(data)));
+                            $("#modalDialogUserAudit").ojDialog("open");
+                        } else {
+                            self.pagingAuditDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource([])));
+                            $("#modalDialogUserAudit").ojDialog("open");
+                        }
+                        hidePreloader();
+                    };
+                    
+                    var getUserNavAuditFailCbFn = function(xhr) {
+                        console.log(xhr);
+                        hidePreloader();
+                    };
+                    
+                    service.getUserNavAudit(self.selectedUser().userId).then(getUserNavAuditSuccessCbFn, getUserNavAuditFailCbFn);
+
+                    self.handleCloseUserAudit = $("#closeUserAudit").click(function () {
+                        $("#modalDialogUserAudit").ojDialog("close");
+                    });
+                }
             }
         };
         
@@ -320,17 +352,19 @@ define(['ojs/ojcore',
                 {
                     $( "#updateUser" ).removeProp('disabled');
                     $( "#updatePassword" ).removeProp('disabled');
+                    $( "#userAudit" ).removeProp('disabled');
                     $( "#updateUser" ).ojButton( "option", "disabled", false );
                     $( "#updatePassword" ).ojButton( "option", "disabled", false );
+                    $( "#userAudit" ).ojButton( "option", "disabled", false );
                     
                     self.selectedRecord = self.searchUsersMap[selectionObj.rowKey];
+                    self.selectedUser(self.selectedRecord);
                     self.selectedUserId(self.selectedRecord.userId);
                     self.selectedEmail(self.selectedRecord.email);
                 }
             }
         };        
     }
-
 
     return searchUsersViewModel;
 

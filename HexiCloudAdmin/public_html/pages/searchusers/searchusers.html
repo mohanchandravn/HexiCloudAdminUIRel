@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="oj-flex-bar oj-margin-bottom oj-lg-4">
+        <div class="oj-flex-bar oj-margin-bottom">
             <div class="oj-flex-start">
                 <div class="oj-flex oj-flex-items-pad"> 
                     <div class="oj-flex-item">               
@@ -43,6 +43,10 @@
                     <div class="oj-flex-item oj-toolbar-separator">               
                             <button id="updatePassword" data-bind="click: onUpdatePasswordClick, ojComponent: {component: 'ojButton',
                                                                     label: 'Update Password', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
+                    </div>
+                    <div class="oj-flex-item oj-toolbar-separator">               
+                            <button id="userAudit" data-bind="click: onAuditClick, ojComponent: {component: 'ojButton',
+                                                                    label: 'Audit', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
                     </div>
                 </div>
             </div>
@@ -60,8 +64,7 @@
                                             rowTemplate: 'row_template',
                                             rootAttributes: {style: 'width: 100%;'}
                                             }"></table>
-                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: 10}">
-    </div>
+                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: 10}"></div>
             </div>
         </div>
 
@@ -99,6 +102,40 @@
             </div>
         </div>
 
+        <div style="display:none" id="modalDialogUserAudit" data-bind="ojComponent:{
+                                                                        component: 'ojDialog',
+                                                                        initialVisibility: 'hide',
+                                                                        cancelBehavior: 'escape',
+                                                                        rootAttributes: { style: 'width: 50vw; min-height: 512px;'}}">
+            <div class="oj-dialog-header dialog-header" data-bind="text: 'Audit history for ' + selectedUser().firstName + ' ' + selectedUser().lastName + ':'"></div>
+            <div class="oj-dialog-body">
+                <div class="oj-flex">  
+                    <div class="oj-sm-12 oj-flex-item">
+                        <table data-bind="ojComponent: {component: 'ojTable',
+                                            selectionMode: {row: 'single', column: 'none'},
+                                            columns: [{headerText: 'Page',
+                                                style: 'width: 33%',
+                                                sortProperty: 'stepLabel'},
+                                               {headerText: 'Action',
+                                                style: 'width: 33%',
+                                                sortProperty: 'action'},
+                                               {headerText: 'Date/Time',
+                                                style: 'width: 33%',
+                                                sortProperty: 'createdDate'}],
+                                            display: 'grid',
+                                            data: pagingAuditDatasource,
+                                            rowTemplate: 'audit_row_template',
+                                            rootAttributes: {style: 'width: 100%;'}
+                                            }"></table>
+                        <div id="pagingDialog" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingAuditDatasource, pageSize: 10}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="oj-dialog-footer" style="margin: auto">
+                <button id="closeUserAudit" style="width: 280px " data-bind="ojComponent: {component: 'ojButton', label: 'Close'}"> </button>
+            </div>
+        </div>
+
 <script type="text/html" id="row_template">
   <tr>
    <td>
@@ -126,4 +163,18 @@
     </div>
    </td>
   </tr>
+</script>
+
+<script type="text/html" id="audit_row_template">
+    <tr>
+        <td>
+            <span data-bind="text: stepLabel"></span>
+        </td>
+        <td>
+            <span data-bind="text: action"></span>
+        </td>
+        <td>
+            <span data-bind="text: createdDate"></span>
+        </td>
+    </tr>
 </script>
