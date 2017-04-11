@@ -470,12 +470,12 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             return $.when(defer);
         };
         
-        self.getPlaceholdersByJobId = function(JobId){
+        self.getPlaceholdersByJobId = function(jobId){
             var defer = $.Deferred();
 //            var rulesConfigData=[];
-            var serverUrl = "https://129.152.128.105/Scheduler/webresources/oracle.com.service.placeholders/getPlaceholdersByJobId/" + JobId;
+            var serverURL = "https://129.152.128.105/Scheduler/webresources/oracle.com.service.placeholders/getPlaceholdersByJobId/" + jobId;
              $.ajax({
-                url: serverUrl,
+                url: serverURL,
                 type: "GET",
                 async: false,
                 crossDomain: true,
@@ -483,13 +483,35 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                     'Accept': 'application/json'
                 },
                 success: function (data, status) {                         
-//                    rulesConfigData = data;
-                    console.log(serverUrl);
                     defer.resolve(data, status);
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    console.log(serverUrl);
-                    console.log("Error " + xhr);
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+            }
+            });
+            return $.when(defer);
+        };
+        
+        self.updateRuleConfigDetails = function(jobId, jsonData){
+            var defer = $.Deferred();
+//            var rulesConfigData=[];
+            var serverURL = "https://129.152.128.105/Scheduler/webresources/oracle.com.ruleconfiguration/updateRuleConfigByJobId/" + jobId + "/" + jsonData;
+             $.ajax({
+                url: serverURL,
+                type: "POST",
+                async: false,
+                crossDomain: true,
+                data: jsonData,
+                dataType: "json",
+                headers: {
+                    'Accept': 'application/json'
+                },
+                success: function (data, status) {                         
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
                     defer.reject(xhr);
             }
             });

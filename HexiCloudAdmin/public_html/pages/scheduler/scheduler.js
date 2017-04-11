@@ -43,8 +43,8 @@ define([
                 self.pagingHistoryDatasource = ko.observable();
                 self.allHours = ko.observableArray([]);
                 self.allMinutes = ko.observableArray([]);
-                self.rulesconfigData = ko.observable([]);
-                self.rulesconfigDataArray = ko.observable([]);
+                self.rulesconfigData = ko.observableArray([]);
+                var rulesconfigDataArray = [];
                 self.placeholdersData = ko.observable([]);
                 
                 // for invalidComponentTracker attribute
@@ -102,12 +102,21 @@ define([
                     console.log(status);
                     console.log(data);
                     self.rulesconfigData([]);
-                    self.rulesconfigDataArray([]);
+                    rulesconfigDataArray = [];
                     self.placeholdersData([]);
                     if (status !== 'nocontent') {
-                        var array = [];
                         for (var idx = 0; idx < data.length; idx++) {
-                            array.push({
+                            self.rulesconfigData.push({
+                                inputFieldType: data[idx].inputFieldType,
+                                isUpdatable: data[idx].isUpdatable,
+                                jobId: data[idx].jobId,
+                                ruleKey: data[idx].ruleKey,
+                                ruleType: data[idx].ruleType,
+                                ruleValue: data[idx].ruleValue,
+                                uiLabel: data[idx].uiLabel,
+                                fieldId: data[idx].ruleKey + ((data[idx].inputFieldType === 'textarea') ? 'textarea' : data[idx].ruleType.toLowerCase())
+                            });
+                            rulesconfigDataArray.push({
                                 inputFieldType: data[idx].inputFieldType,
                                 isUpdatable: data[idx].isUpdatable,
                                 jobId: data[idx].jobId,
@@ -118,8 +127,6 @@ define([
                                 fieldId: data[idx].ruleKey + ((data[idx].inputFieldType === 'textarea') ? 'textarea' : data[idx].ruleType.toLowerCase())
                             });
                         }
-                        self.rulesconfigData(array);
-                        self.rulesconfigDataArray(array);
                         
                         var findPlaceHoldersByJobSuccessFn = function(data, status) {
                             console.log(data);
@@ -129,9 +136,6 @@ define([
                         };
                         
                         service.getPlaceholdersByJobId(data[0].jobId).then(findPlaceHoldersByJobSuccessFn, failCbFn);
-//                        self.pagingJobHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource(array)));
-                    } else {
-//                        self.pagingJobHistoryDatasource(new oj.PagingTableDataSource(new oj.ArrayTableDataSource([])));
                     }
                 };
                 
@@ -511,35 +515,35 @@ define([
                         hidePreloader();
                         return;
                     }
-                    
-                    console.log(self.rulesconfigData());
-                    console.log(self.rulesconfigDataArray());
-
-                    for (var idx = 0; idx < self.rulesconfigDataArray().length; idx++) {
-                        var id = $("#" + self.rulesconfigDataArray()[idx].fieldId);
+                                        
+                    var payload = [];
+                    for (var idx = 0; idx < rulesconfigDataArray.length; idx++) {
+                        var id = $("#" + rulesconfigDataArray[idx].fieldId);
                         var fieldValue = "";
-                        if (self.rulesconfigDataArray()[idx].inputFieldType === 'text' && self.rulesconfigDataArray()[idx].ruleType === 'Number') {
-                            fieldValue = $("#" + self.rulesconfigDataArray()[idx].fieldId).ojInputNumber("option", "value");
-                            if ( fieldValue == self.rulesconfigDataArray()[idx].ruleValue ) {
-                                console.log(fieldValue + 'not updated');
+                        if (rulesconfigDataArray[idx].inputFieldType === 'text' && rulesconfigDataArray[idx].ruleType === 'Number') {
+                            fieldValue = $("#" + rulesconfigDataArray[idx].fieldId).ojInputNumber("option", "value");
+                            if ( fieldValue == rulesconfigDataArray[idx].ruleValue ) {
                             } else {
-                                console.log(fieldValue + 'updated');
+                                payload.push({"ruleKey": rulesconfigDataArray[idx].ruleKey, "ruleValue": fieldValue.toString()});
                             }
-                        } else if (self.rulesconfigDataArray()[idx].inputFieldType === 'text' && self.rulesconfigDataArray()[idx].ruleType === 'Text') {
-                            fieldValue = $("#" + self.rulesconfigDataArray()[idx].fieldId).ojInputText("option", "value");
-                            if ( fieldValue == self.rulesconfigDataArray()[idx].ruleValue ) {
-                                console.log(fieldValue + 'not updated');
+                        } else if (rulesconfigDataArray[idx].inputFieldType === 'text' && rulesconfigDataArray[idx].ruleType === 'Text') {
+                            fieldValue = $("#" + rulesconfigDataArray[idx].fieldId).ojInputText("option", "value");
+                            if ( fieldValue == rulesconfigDataArray[idx].ruleValue ) {
                             } else {
-                                console.log(fieldValue + 'updated');
+                                payload.push({"ruleKey": rulesconfigDataArray[idx].ruleKey, "ruleValue": fieldValue});
                             }
-                        } else if (self.rulesconfigDataArray()[idx].inputFieldType === 'textarea' && self.rulesconfigDataArray()[idx].ruleType === 'Text') {
-                            fieldValue = $("#" + self.rulesconfigDataArray()[idx].fieldId).ojTextArea("option", "value");
-                            if ( fieldValue == self.rulesconfigDataArray()[idx].ruleValue ) {
-                                console.log(fieldValue + 'not updated');
+                        } else if (rulesconfigDataArray[idx].inputFieldType === 'textarea' && rulesconfigDataArray[idx].ruleType === 'Text') {
+                            fieldValue = $("#" + rulesconfigDataArray[idx].fieldId).ojTextArea("option", "value");
+                            if ( fieldValue == rulesconfigDataArray[idx].ruleValue ) {
                             } else {
-                                console.log(fieldValue + 'updated');
+                                payload.push({"ruleKey": rulesconfigDataArray[idx].ruleKey, "ruleValue": fieldValue});
                             }
                         }
+                    }
+                    if (payload.length > 0) {
+                        console.log("Updated values:\n" + JSON.stringify(payload));
+                    } else {
+                        console.log("Nothing to update.");
                     }
 //                    var changedValues = [];
 //                    var retrievedConfigData = getRulesConfigInfoByJobId(jobId);
