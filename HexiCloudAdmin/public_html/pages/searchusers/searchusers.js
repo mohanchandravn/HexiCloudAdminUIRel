@@ -3,6 +3,7 @@ define(['ojs/ojcore',
     'jquery',
     'knockout',
     'config/serviceConfig',
+    'js/util/commonhelper',
     'promise',
     'ojs/ojinputtext',
     'ojs/ojbutton',
@@ -13,7 +14,7 @@ define(['ojs/ojcore',
     'ojs/ojcollectiontabledatasource',
     'ojs/ojknockout-validation',
     'ojs/ojdialog'
-], function (oj, $, ko, service) {
+], function (oj, $, ko, service, commonHelper) {
 
     function searchUsersViewModel(params)
     {
@@ -189,6 +190,20 @@ define(['ojs/ojcore',
                     });
                 }
             }
+        };
+        
+        self.exportAllUsersDataToXLS = function() {
+            var exportAuditSuccessCbFn = function(data, status) {
+                console.log(status);
+                console.log(data);
+                commonHelper.JSONToXLSConverter(data, "All User's Audit Data");
+            };
+            
+            var exportAuditFailCbFn = function(xhr) {
+                console.log(xhr);
+            };
+            
+            service.exportAudit().then(exportAuditSuccessCbFn, exportAuditFailCbFn);
         };
         
         self.resetUpdatePasswordForm = function() {

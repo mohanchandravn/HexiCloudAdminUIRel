@@ -424,6 +424,28 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
+        
+        self.exportAudit = function() {
+            var defer = $.Deferred();            
+            var serverURL = self.portalRestHost()+"/services/rest/exportAudit";
+            $.ajax({
+                type: "GET",
+                url: serverURL,
+                contentType: "application/json",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                },
+                success: function (data, status) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
     };
    
    return new serviceConfig();
