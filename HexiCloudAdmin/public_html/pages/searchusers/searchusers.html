@@ -40,10 +40,12 @@
                             <button id="updateUser" data-bind="click: onUpdateUserClick, ojComponent: {component: 'ojButton',
                                                                     label: 'Update', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
                     </div>
+                    <!-- ko if: isAdmin() -->
                     <div class="oj-flex-item oj-toolbar-separator">               
                             <button id="updatePassword" data-bind="click: onUpdatePasswordClick, ojComponent: {component: 'ojButton',
                                                                     label: 'Update Password', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
                     </div>
+                     <!-- /ko -->
                     <div class="oj-flex-item oj-toolbar-separator">               
                             <button id="userAudit" data-bind="click: onAuditClick, ojComponent: {component: 'ojButton',
                                                                     label: 'Audit', rootAttributes: {class: 'oj-disabled'}}" disabled></button>

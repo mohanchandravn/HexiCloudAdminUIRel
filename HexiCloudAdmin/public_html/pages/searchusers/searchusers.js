@@ -4,6 +4,7 @@ define(['ojs/ojcore',
     'knockout',
     'config/serviceConfig',
     'js/util/commonhelper',
+    'config/sessionInfo',
     'promise',
     'ojs/ojinputtext',
     'ojs/ojbutton',
@@ -14,7 +15,7 @@ define(['ojs/ojcore',
     'ojs/ojcollectiontabledatasource',
     'ojs/ojknockout-validation',
     'ojs/ojdialog'
-], function (oj, $, ko, service, commonHelper) {
+], function (oj, $, ko, service, commonHelper, session) {
 
     function searchUsersViewModel(params)
     {
@@ -37,6 +38,7 @@ define(['ojs/ojcore',
         self.selectedUser = ko.observable('');
         self.selectedUserId = ko.observable('');
         self.selectedEmail = ko.observable('');
+        self.isAdmin = ko.observable(session.getFromSession(session.portalRole) === 'admin' ? true : false);
 
         self.searchUsersMap = {};
         

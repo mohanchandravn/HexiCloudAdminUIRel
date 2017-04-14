@@ -27,6 +27,7 @@ define(['knockout', 'jquery'
         self.loggedInUserRole = 'loggedInUserRole';
         self.userFirstLastName = 'userFirstLastName';
         self.userClmRegistryId = 'userClmRegistryId';
+        self.portalRole = 'portalRole';
 
         self.getFromSession = function (key) {
             if (typeof (Storage) !== "undefined") {

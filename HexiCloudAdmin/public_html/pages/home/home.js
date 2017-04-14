@@ -60,6 +60,7 @@ define(['ojs/ojcore', 'jquery', 'knockout', 'config/serviceConfig', 'config/sess
                     sessionInfo.setToSession(sessionInfo.expiresIn, data.expires_in);
                     sessionInfo.setToSession(sessionInfo.isLoggedInUser, true);
                     sessionInfo.setToSession(sessionInfo.loggedInUser, data.userId);
+                    sessionInfo.setToSession(sessionInfo.portalRole, data.portalRole);
                    self.isLoggedinTrue();
                 }
 

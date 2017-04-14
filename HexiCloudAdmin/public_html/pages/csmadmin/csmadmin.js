@@ -41,6 +41,7 @@ define(['knockout',
                  self.navDataSource = new oj.ArrayTableDataSource(navData, {idAttribute: 'id'});
                   self.logout = function () {
                     sessionInfo.removeAllFromSession();
+                    hidePreloader();
                     router.go('home/');
                 };
                  
