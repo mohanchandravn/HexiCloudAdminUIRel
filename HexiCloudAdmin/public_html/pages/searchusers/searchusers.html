@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="oj-flex-bar oj-margin-bottom">
-            <div class="oj-flex-start">
+            <div class="oj-flex-bar-start">
                 <div class="oj-flex oj-flex-items-pad"> 
                     <div class="oj-flex-item">               
                             <button id="createUser" data-bind="click: onCreateUserClick, ojComponent: {component: 'ojButton',
@@ -52,8 +52,14 @@
                     </div>
                 </div>
             </div>
-
-                        
+            <div class="oj-flex-bar-end">
+                <div class="oj-sm-justify-content-flex-end oj-flex">
+                    <input type="button" class="oj-button-confirm" data-bind="click: exportAllUsersDataToXLS, ojComponent: {
+                                            component: 'ojButton',
+                                            label: 'Export All User\'s Audit data'
+                                        }" />
+                </div>
+            </div>
         </div>
         <div class="oj-flex">
             <div class="oj-flex-item">
@@ -67,12 +73,6 @@
                                             rootAttributes: {style: 'width: 100%;'}
                                             }"></table>
                 <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: 10}"></div>
-                <div class="oj-sm-justify-content-flex-end oj-flex">
-                    <input type="button" class="oj-button-confirm" data-bind="click: exportAllUsersDataToXLS, ojComponent: {
-                                            component: 'ojButton',
-                                            label: 'Export All User\'s Audit data'
-                                        }" />
-                </div>
             </div>
         </div>
 
