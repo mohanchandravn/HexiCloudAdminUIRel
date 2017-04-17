@@ -26,7 +26,7 @@ define(['ojs/ojcore',
                 self.isCreateMode = ko.observable(true);
 
                 self.pageTitle = ko.observable('Create User');
-                
+
                 // Create user form fields
                 self.userName = ko.observable('');
                 self.password = ko.observable('');
@@ -39,7 +39,7 @@ define(['ojs/ojcore',
                 self.phone = ko.observable('');
                 self.customerList = ko.observableArray([]);
                 self.customerId = ko.observable();
-                
+
                 if (params)
                 {
                     self.parentViewModel = params.parent;
@@ -53,7 +53,7 @@ define(['ojs/ojcore',
                         self.isCreateMode(false);
                         if (self.selectedRecord)
                         {
-                            
+
                             self.userName(self.selectedRecord.userId);
                             $("#userName").ojInputText({"disabled": true});
                             self.firstName(self.selectedRecord.firstName);
@@ -61,10 +61,10 @@ define(['ojs/ojcore',
                             self.email(self.selectedRecord.email);
                             var fullPhoneNum = self.selectedRecord.phone;
                             if (fullPhoneNum) {
-                                 self.countryCode(fullPhoneNum.substr(0, fullPhoneNum.indexOf('-')));
-                            self.phone(fullPhoneNum.substr(fullPhoneNum.indexOf('-') + 1));
+                                self.countryCode(fullPhoneNum.substr(0, fullPhoneNum.indexOf('-')));
+                                self.phone(fullPhoneNum.substr(fullPhoneNum.indexOf('-') + 1));
                             }
-                           
+
                             //self.userRole("DBA");
                             // var roleComp = $("#role");
 //                            $("#role").ojSelect({
@@ -238,8 +238,9 @@ define(['ojs/ojcore',
                     self.lastName('');
                     self.phone('');
                     self.email('');
+                    self.countryCode('');
                     self.customerId([]);
-                    $("#customer").ojSelect("option", "value", ['']);
+//                    $("#customer").ojSelect("option", "value", [""]);
 //                var copy = self.customerList();
 //                self.customerList([]);
 //                self.customerList(copy);
@@ -247,31 +248,30 @@ define(['ojs/ojcore',
 
 
                 self.getCustomers = function () {
-                    if(self.commonService)
+                    if (self.commonService)
                     {
-                     self.commonService.getCustomerList().then(function (data) {
-                        if (data)
-                        {
-                            data.forEach(function (item) {
-                                self.customerList().push({
-                                    label: item.label,
-                                    value: item.value
-                                });
-                            });
-
-                            if (self.selectedRecord)
+                        self.commonService.getCustomerList().then(function (data) {
+                            if (data)
                             {
-                                $("#customer").ojSelect("option","value",[self.selectedRecord.customer]);
-                                self.customerId([self.selectedRecord.customer]);
+                                data.forEach(function (item) {
+                                    self.customerList().push({
+                                        label: item.label,
+                                        value: item.value
+                                    });
+                                });
+
+                                if (self.selectedRecord) {
+                                    $("#customer").ojSelect("option", "value", [self.selectedRecord.customer]);
+                                    self.customerId([self.selectedRecord.customer]);
+                                }
+
                             }
 
-                        }
-
-                    }, function (reason) {
-                        console.log("getCustomerList failed:" + reason);
-                    });   
+                        }, function (reason) {
+                            console.log("getCustomerList failed:" + reason);
+                        });
                     }
-                    
+
 
                 };
 
