@@ -236,6 +236,7 @@ define(['ojs/ojcore',
                     self.userRole([]);
                     self.firstName('');
                     self.lastName('');
+                    self.countryCode('');
                     self.phone('');
                     self.email('');
                     self.customerId([]);
