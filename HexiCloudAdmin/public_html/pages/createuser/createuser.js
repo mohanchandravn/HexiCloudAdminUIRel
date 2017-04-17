@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-define(['ojs/ojcore',
-    'jquery',
+define(['jquery',
     'knockout',
     'config/serviceConfig',
     'js/util/commonhelper',
+    'ojs/ojcore',
     'service/CommonService',
     'ojs/ojknockout',
     'ojs/ojknockout-validation',
@@ -16,7 +16,7 @@ define(['ojs/ojcore',
     'ojs/ojselectcombobox',
     'ojs/ojbutton',
     'ojs/ojdialog'],
-        function (oj, $, ko, service, commonHelper) {
+        function ($, ko, service, commonHelper) {
 
             function createuserViewModel(params) {
 
@@ -239,7 +239,6 @@ define(['ojs/ojcore',
                     self.countryCode('');
                     self.phone('');
                     self.email('');
-                    self.countryCode('');
                     self.customerId([]);
 //                    $("#customer").ojSelect("option", "value", [""]);
 //                var copy = self.customerList();
