@@ -1,6 +1,7 @@
 "use strict";
 define(['knockout',
     'config/serviceConfig',
+    'config/sessionInfo',
     'ojs/ojcore',
     'jquery',
     'ojs/ojpagingcontrol',
@@ -8,7 +9,7 @@ define(['knockout',
     'ojs/ojpagingtabledatasource',
     'ojs/ojcollectiontabledatasource',
     'ojs/ojswitch'
-], function (ko, service, oj) {
+], function (ko, service, session, oj) {
     function manageEmailViewModel()
     {
         var self = this;
@@ -173,7 +174,9 @@ define(['knockout',
         };
 
         self.handleBindingsApplied = function () {
-            self.initSearch();
+            if(session.getFromSession(session.accessToken)) {
+                self.initSearch();
+            }
         };
     }
     ;
