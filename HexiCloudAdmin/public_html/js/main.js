@@ -3,22 +3,26 @@
  * The Universal Permissive License (UPL), Version 1.0
  */
 requirejs.config({
-    baseUrl: '.',
+    baseUrl: 'js',
     // Path mappings for the logical module names
     paths:
             //injector:mainReleasePaths
                     {
-                        'knockout': 'js/libs/knockout/knockout-3.4.0',
-                        'jquery': 'js/libs/jquery/jquery-3.1.0.min',
-                        'jqueryui-amd': 'js/libs/jquery/jqueryui-amd-1.12.0.min',
-                        'ojs': 'js/libs/oj/v2.2.0/debug',
-                        'ojL10n': 'js/libs/oj/v2.2.0/ojL10n',
-                        'ojtranslations': 'js/libs/oj/v2.2.0/resources',
-                        'signals': 'js/libs/js-signals/signals.min',
-                        'text': 'js/libs/require/text',
-                        'promise': 'js/libs/es6-promise/es6-promise.min',
-                        'hammerjs': 'js/libs/hammer/hammer-2.0.8.min',
-                        'ojdnd': 'js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min'
+                        'knockout': 'libs/knockout/knockout-3.4.0',
+                        'jquery': 'libs/jquery/jquery-3.1.1.min',
+                        'jqueryui-amd': 'libs/jquery/jqueryui-amd-1.12.0.min',
+                        'promise': 'libs/es6-promise/es6-promise.min',
+                        'hammerjs': 'libs/hammer/hammer-2.0.8.min',
+                        'ojdnd': 'libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
+                        'ojs': 'libs/oj/v3.0.0/min',
+                        'ojL10n': 'libs/oj/v3.0.0/ojL10n',
+                        'ojtranslations': 'libs/oj/v3.0.0/resources',
+                        'text': 'libs/require/text',
+                        'signals': 'libs/js-signals/signals.min',
+                        'customElements': 'libs/webcomponents/CustomElements.min'
+//                        ,
+//                        'proj4': 'libs/proj4js/dist/proj4-src',
+//                        'css': 'libs/require-css/css.min'
                     }
             //endinjector
             ,
@@ -156,7 +160,7 @@ require(['ojs/ojcore',
                     }
                 }
 
-               
+
 
             }
             ;

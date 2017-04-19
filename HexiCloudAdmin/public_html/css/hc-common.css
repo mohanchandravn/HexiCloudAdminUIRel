@@ -26,7 +26,7 @@ html, body, #routingContainer, .responsive-height {
 }
 
 .mainBackGroundImage {
-    background-image:url('../img/Main_background.jpg');
+    background-image:url('img/Main_background.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
