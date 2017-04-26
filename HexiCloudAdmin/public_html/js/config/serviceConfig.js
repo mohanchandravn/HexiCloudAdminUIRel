@@ -11,13 +11,10 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
      */
     function serviceConfig() {
         var self = this;
-        
-//         if (location.protocol === 'http:') {
-//            self.portalRestHost = ko.observable("http://129.152.128.105:8080/");
-//        } else {
-//            self.portalRestHost = ko.observable("https://129.152.128.105/");
-//        }
+        // Context root for prod and test
         var ctx = '/hexiCloudRestSecured';
+        // Context root for dev
+//        var ctx = '/hexiCloudRestSecuredDev';
         if (location.origin.indexOf('localhost') > 0) {
             if (location.protocol === 'http:') {
                 self.portalRestHost = ko.observable("http://129.152.128.105:8080".concat(ctx));
