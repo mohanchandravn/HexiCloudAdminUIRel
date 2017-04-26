@@ -4,20 +4,17 @@
  * and open the template in the editor.
  */
 
-define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
+define(['knockout', 'jquery', 'config/sessionInfo', 'ojs/ojrouter'
 ], function (ko, $, sessionInfo) {
     /**
      * The view model for the managing service calls
      */
     function serviceConfig() {
         var self = this;
-        
-//         if (location.protocol === 'http:') {
-//            self.portalRestHost = ko.observable("http://129.152.128.105:8080/");
-//        } else {
-//            self.portalRestHost = ko.observable("https://129.152.128.105/");
-//        }
-        var ctx = '/hexiCloudRestSecured';
+        // Context root for prod and test
+//        var ctx = '/hexiCloudRestSecured';
+        // Context root for dev
+           var ctx = '/hexiCloudRestSecuredDev';
         if (location.origin.indexOf('localhost') > 0) {
             if (location.protocol === 'http:') {
                 self.portalRestHost = ko.observable("http://129.152.128.105:8080".concat(ctx));
@@ -29,7 +26,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             self.portalRestHost = ko.observable(location.origin.concat(ctx));
         }
         // for uploading a file to DOCS Cloud
-        self.uploadFile = function(payload) {
+        self.uploadFile = function (payload) {
             var defer = $.Deferred();
             var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/files/data";
 //            var serverURL = "https://129.152.128.105/hexiCloudUpload/services/rest/uploadStepDocument";
@@ -41,7 +38,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 mimeType: "multipart/form-data",
                 data: payload,
                 dataType: "json",
-                beforeSend: function (xhr){
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl");
                     xhr.setRequestHeader("cache-control", "no-cache");
                 },
@@ -57,18 +54,18 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
+
         // for fetching all stepCodes
-        self.getApplicationSteps = function() {
+        self.getApplicationSteps = function () {
             var defer = $.Deferred();
-            var serverURL = self.portalRestHost()+"/services/rest/getApplicationSteps";
+            var serverURL = self.portalRestHost() + "/services/rest/getApplicationSteps";
 //            var serverURL = "jsonData/stepsData.json";
             $.ajax({
                 type: "GET",
                 url: serverURL,
-                 beforeSend: function (request)
+                beforeSend: function (request)
                 {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -81,23 +78,23 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
+
         // for fetching file details by stepId/stepCode
-        self.getFileDetails = function(stepDetail, subStepCode) {
+        self.getFileDetails = function (stepDetail, subStepCode) {
             var defer = $.Deferred();
             if (typeof stepDetail === 'number' && subStepCode == null) {
-                var serverURL = self.portalRestHost()+"/services/rest/findStepDocsByStepId/" + stepDetail;
+                var serverURL = self.portalRestHost() + "/services/rest/findStepDocsByStepId/" + stepDetail;
             } else if (subStepCode == null) {
-                var serverURL = self.portalRestHost()+"/services/rest/findStepDocsByCode/" + stepDetail;
+                var serverURL = self.portalRestHost() + "/services/rest/findStepDocsByCode/" + stepDetail;
             } else {
-                var serverURL = self.portalRestHost()+"/services/rest/findStepDocsByCode/" + stepDetail + "/" + subStepCode;
+                var serverURL = self.portalRestHost() + "/services/rest/findStepDocsByCode/" + stepDetail + "/" + subStepCode;
             }
             $.ajax({
                 type: "GET",
                 url: serverURL,
-                 beforeSend: function (request)
+                beforeSend: function (request)
                 {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -110,9 +107,9 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
+
         // for creating public link
-        self.createPublicLink = function(fileId, fileName) {
+        self.createPublicLink = function (fileId, fileName) {
             var defer = $.Deferred();
             var serverURL = "https://documents-usoracleam82569.documents.us2.oraclecloud.com/documents/api/1.1/publiclinks/file/" + fileId;
             console.log("creating public link..");
@@ -121,7 +118,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 url: serverURL,
                 contentType: "application/json",
                 processData: false,
-                data : "{\r\n\t\"assignedUsers\": \"@everybody\",\r\n\t\"role\": \"contributor\"\r\n}",
+                data: "{\r\n\t\"assignedUsers\": \"@everybody\",\r\n\t\"role\": \"contributor\"\r\n}",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader("Authorization", "Basic Y2xvdWQuYWRtaW46d09SdGh5QDVQaXBl");
                     xhr.setRequestHeader("cache-control", "no-cache");
@@ -140,12 +137,12 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-                
+
         // for adding step documents
-        self.addStepDocument = function(payload) {
+        self.addStepDocument = function (payload) {
             var defer = $.Deferred();
             console.log(payload);
-            var serverURL = self.portalRestHost()+"/services/rest/addStepDocument/";
+            var serverURL = self.portalRestHost() + "/services/rest/addStepDocument/";
             $.ajax({
                 type: "POST",
                 url: serverURL,
@@ -154,7 +151,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 data: payload,
                 beforeSend: function (request)
                 {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -167,14 +164,14 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
-        self.findUserEmails = function(payload) {
+
+        self.findUserEmails = function (payload) {
             var defer = $.Deferred();
             console.log(payload);
             if (payload === null) {
-                var serverURL = self.portalRestHost()+"/services/rest/findUserEmails?";
+                var serverURL = self.portalRestHost() + "/services/rest/findUserEmails?";
             } else {
-                var serverURL = self.portalRestHost()+"/services/rest/findUserEmails?" + payload;
+                var serverURL = self.portalRestHost() + "/services/rest/findUserEmails?" + payload;
             }
             $.ajax({
                 type: "GET",
@@ -182,7 +179,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 contentType: "application/json",
                 beforeSend: function (request)
                 {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -195,20 +192,20 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
-        self.submitRecord = function(payload) {
+
+        self.submitRecord = function (payload) {
             var defer = $.Deferred();
             console.log(payload);
-            var serverURL = self.portalRestHost()+"/services/rest/updateEmailResolution/";
+            var serverURL = self.portalRestHost() + "/services/rest/updateEmailResolution/";
             $.ajax({
                 type: "POST",
                 url: serverURL,
                 contentType: "application/json",
                 processData: false,
                 data: payload,
-                 beforeSend: function (request)
+                beforeSend: function (request)
                 {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully created record at: " + serverURL);
@@ -221,21 +218,21 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
+
         // To create a portal user
-        self.createUser = function(payload) {
+        self.createUser = function (payload) {
             console.log('payload: ' + payload);
             var defer = $.Deferred();
-            var serverURL = self.portalRestHost()+"/services/rest/createPortalUser/";
+            var serverURL = self.portalRestHost() + "/services/rest/createPortalUser/";
             $.ajax({
                 type: "POST",
                 url: serverURL,
                 contentType: "application/json",
                 processData: false,
                 data: payload,
-                beforeSend: function(request)
+                beforeSend: function (request)
                 {
-                    request.setRequestHeader("Authorization", "Bearer "+sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -248,19 +245,19 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
+
         // Check whether a given user id is available or not
-        self.isUserIdAvailable = function(payload) {
-            console.log('payload: ' + payload);            
+        self.isUserIdAvailable = function (payload) {
+            console.log('payload: ' + payload);
             var defer = $.Deferred();
-            var serverURL = self.portalRestHost()+"/services/rest/checkUserIdAvailable/" + payload + '/';
+            var serverURL = self.portalRestHost() + "/services/rest/checkUserIdAvailable/" + payload + '/';
             $.ajax({
                 type: "GET",
                 url: serverURL,
                 contentType: "application/json",
-                beforeSend: function(request)
+                beforeSend: function (request)
                 {
-                    request.setRequestHeader("Authorization","Bearer "+sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -273,7 +270,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
+
         self.authenticate = function (payload) {
             var defer = $.Deferred();
             var serverURL = self.portalRestHost() + "/login";
@@ -281,7 +278,7 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
                 type: "POST",
                 url: serverURL,
                 dataType: "json",
-                beforeSend: function(request) {
+                beforeSend: function (request) {
                     request.setRequestHeader("Portal-Type", "admin");
                 },
                 transformRequest: function (obj) {
@@ -305,17 +302,17 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
+
         self.getCustomers = function ()
         {
             var defer = $.Deferred();
-            var serverURL = self.portalRestHost()+"/services/rest/getCustRegistries/";
+            var serverURL = self.portalRestHost() + "/services/rest/getCustRegistries/";
             $.ajax({
                 type: "GET",
                 url: serverURL,
                 contentType: "application/json",
                 processData: false,
-                 beforeSend: function(request)
+                beforeSend: function (request)
                 {
                     request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
@@ -330,17 +327,17 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
-        self.searchUsers = function(payload) {
+
+        self.searchUsers = function (payload) {
             var defer = $.Deferred();
-            console.log("searchUsers:"+payload);
-            var serverURL = self.portalRestHost()+"/services/rest/searchUsers/?" + payload;
+            console.log("searchUsers:" + payload);
+            var serverURL = self.portalRestHost() + "/services/rest/searchUsers/?" + payload;
             $.ajax({
                 type: "GET",
                 url: serverURL,
                 contentType: "application/json",
                 beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -353,17 +350,17 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
-        self.updateUser = function(payload) {
+
+        self.updateUser = function (payload) {
             var defer = $.Deferred();
-            console.log("updateUser:"+payload);
-            var serverURL = self.portalRestHost()+"/services/rest/updateUser/";
+            console.log("updateUser:" + payload);
+            var serverURL = self.portalRestHost() + "/services/rest/updateUser/";
             $.ajax({
                 type: "PUT",
                 url: serverURL,
                 contentType: "application/json",
                 beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 data: payload,
                 success: function (data, xhr) {
@@ -377,18 +374,18 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
-        self.updatePassword = function(payload) {
+
+        self.updatePassword = function (payload) {
             var defer = $.Deferred();
-            console.log("updatePassword:"+payload);
-            var serverURL = self.portalRestHost()+"/services/rest/updateUserPassword/";
+            console.log("updatePassword:" + payload);
+            var serverURL = self.portalRestHost() + "/services/rest/updateUserPassword/";
             $.ajax({
                 type: "POST",
                 url: serverURL,
                 contentType: "application/json",
-                 beforeSend: function (request)
+                beforeSend: function (request)
                 {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 data: payload,
                 success: function (data, xhr) {
@@ -402,16 +399,16 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
-        self.getUserNavAudit = function(userId) {
-            var defer = $.Deferred();            
-            var serverURL = self.portalRestHost()+"/services/rest/getUserNavAudit/?userId=" + userId;
+
+        self.getUserNavAudit = function (userId) {
+            var defer = $.Deferred();
+            var serverURL = self.portalRestHost() + "/services/rest/getUserNavAudit/?userId=" + userId;
             $.ajax({
                 type: "GET",
                 url: serverURL,
                 contentType: "application/json",
                 beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -424,16 +421,16 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-        
-        self.exportAudit = function() {
-            var defer = $.Deferred();            
-            var serverURL = self.portalRestHost()+"/services/rest/exportAudit";
+
+        self.exportAudit = function () {
+            var defer = $.Deferred();
+            var serverURL = self.portalRestHost() + "/services/rest/exportAudit";
             $.ajax({
                 type: "GET",
                 url: serverURL,
                 contentType: "application/json",
                 beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " +sessionInfo.getFromSession(sessionInfo.accessToken));
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
                 },
                 success: function (data, status) {
                     console.log("Successfully retrieved details at: " + serverURL);
@@ -446,7 +443,8 @@ define(['knockout', 'jquery','config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
-    };
-   
-   return new serviceConfig();
+    }
+    ;
+
+    return new serviceConfig();
 });
