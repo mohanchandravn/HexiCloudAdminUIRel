@@ -194,6 +194,23 @@ define(['ojs/ojcore',
             }
         };
         
+        self.onClearUserDetailsClick = function() {
+            if (self.selectedUser() !== '') {
+                if (self.parentViewModel) {
+                      $("#clearUsersNavDialog").ojDialog("open"); 
+                }
+            }
+        }
+        self.clearUsersDetails = function() {
+            if (self.selectedUser() !== '') {
+                if (self.parentViewModel) {
+                    service.clearUsersNav(self.selectedUser().userId);
+                    $("#clearUsersNavDialog").ojDialog("close"); 
+                }
+            }
+        }
+
+        
         self.exportAllUsersDataToXLS = function() {
             var exportAuditSuccessCbFn = function(data, status) {
                 console.log(status);
@@ -370,9 +387,11 @@ define(['ojs/ojcore',
                     $( "#updateUser" ).removeProp('disabled');
                     $( "#updatePassword" ).removeProp('disabled');
                     $( "#userAudit" ).removeProp('disabled');
+                    $( "#clearUsersNav" ).removeProp('disabled');
                     $( "#updateUser" ).ojButton( "option", "disabled", false );
                     $( "#updatePassword" ).ojButton( "option", "disabled", false );
                     $( "#userAudit" ).ojButton( "option", "disabled", false );
+                    $( "#clearUsersNav" ).ojButton( "option", "disabled", false );
                     
                     self.selectedRecord = self.searchUsersMap[selectionObj.rowKey];
                     self.selectedUser(self.selectedRecord);

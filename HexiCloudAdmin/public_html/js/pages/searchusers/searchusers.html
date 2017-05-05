@@ -1,69 +1,73 @@
-        <div class="oj-form manageUsersSearchContainer">
-            <div class="oj-flex">
-                <div class="oj-flex-item">
-                    <label for="searchuserid">User ID</label>
-                    <input id="searchuserid" data-bind="ojComponent: {component: 'ojInputText',
+<div class="oj-form manageUsersSearchContainer">
+    <div class="oj-flex">
+        <div class="oj-flex-item">
+            <label for="searchuserid">User ID</label>
+            <input id="searchuserid" data-bind="ojComponent: {component: 'ojInputText',
                                                                       value: searchUserId,
                                                                       placeholder: 'User ID'}"/>
-                </div>
-                <div class="oj-flex-item">
-                    <label for="searchemailid">Email</label>
-                    <input id="searchemailid" data-bind="ojComponent: {component: 'ojInputText',
+        </div>
+        <div class="oj-flex-item">
+            <label for="searchemailid">Email</label>
+            <input id="searchemailid" data-bind="ojComponent: {component: 'ojInputText',
                                                                        value: searchEmailId,
                                                                        placeholder: 'Email'}"/>
-                </div>
-                <div class="oj-flex-item">
-                    <label for="searchcustomerid">Customer Registry ID</label>
-                    <input id="searchcustomerid" data-bind="ojComponent: {component: 'ojSelect',
+        </div>
+        <div class="oj-flex-item">
+            <label for="searchcustomerid">Customer Registry ID</label>
+            <input id="searchcustomerid" data-bind="ojComponent: {component: 'ojSelect',
                                                                       value: searchCustomerId,
                                                                       placeholder: 'Customer Registry ID',
                                                                       options: customerListArr,
                                                                       rootAttributes: {style: 'max-width:100%'}
                                                                       }"/>
-                </div>
-            </div>
-            <div class="oj-flex oj-sm-align-items-center">
-                <div class="oj-flex-item">
-                    <button data-bind="click: onClickSearch, ojComponent: {component: 'ojButton',
+        </div>
+    </div>
+    <div class="oj-flex oj-sm-align-items-center">
+        <div class="oj-flex-item">
+            <button data-bind="click: onClickSearch, ojComponent: {component: 'ojButton',
                                                      label: 'Search'}"></button>
-                </div>
+        </div>
+    </div>
+</div>
+<div class="oj-flex-bar oj-margin-bottom">
+    <div class="oj-flex-bar-start">
+        <div class="oj-flex oj-flex-items-pad"> 
+            <div class="oj-flex-item">               
+                <button id="createUser" data-bind="click: onCreateUserClick, ojComponent: {component: 'ojButton',
+                                                        label: 'Create'}"></button>
+            </div>
+            <div class="oj-flex-item oj-toolbar-separator margin-right-0px">               
+                <button id="updateUser" data-bind="click: onUpdateUserClick, ojComponent: {component: 'ojButton',
+                                                                    label: 'Update', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
+            </div>
+            <!-- ko if: isAdmin() -->
+            <div class="oj-flex-item oj-toolbar-separator">               
+                <button id="updatePassword" data-bind="click: onUpdatePasswordClick, ojComponent: {component: 'ojButton',
+                                                                    label: 'Update Password', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
+            </div>
+            <!-- /ko -->
+            <div class="oj-flex-item oj-toolbar-separator">               
+                <button id="userAudit" data-bind="click: onAuditClick, ojComponent: {component: 'ojButton',
+                                                                    label: 'Audit', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
+            </div>
+            <div class="oj-flex-item oj-toolbar-separator">               
+                <button id="clearUsersNav" data-bind="click: onClearUserDetailsClick, ojComponent: {component: 'ojButton',
+                                                                    label: 'Clear User\'s Details', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
             </div>
         </div>
-        <div class="oj-flex-bar oj-margin-bottom">
-            <div class="oj-flex-bar-start">
-                <div class="oj-flex oj-flex-items-pad"> 
-                    <div class="oj-flex-item">               
-                            <button id="createUser" data-bind="click: onCreateUserClick, ojComponent: {component: 'ojButton',
-                                                        label: 'Create'}"></button>
-                    </div>
-                    <div class="oj-flex-item oj-toolbar-separator margin-right-0px">               
-                            <button id="updateUser" data-bind="click: onUpdateUserClick, ojComponent: {component: 'ojButton',
-                                                                    label: 'Update', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
-                    </div>
-                    <!-- ko if: isAdmin() -->
-                    <div class="oj-flex-item oj-toolbar-separator">               
-                            <button id="updatePassword" data-bind="click: onUpdatePasswordClick, ojComponent: {component: 'ojButton',
-                                                                    label: 'Update Password', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
-                    </div>
-                     <!-- /ko -->
-                    <div class="oj-flex-item oj-toolbar-separator">               
-                            <button id="userAudit" data-bind="click: onAuditClick, ojComponent: {component: 'ojButton',
-                                                                    label: 'Audit', rootAttributes: {class: 'oj-disabled'}}" disabled></button>
-                    </div>
-                </div>
-            </div>
-            <div class="oj-flex-bar-end">
-                <div class="oj-sm-justify-content-flex-end oj-flex">
-                    <input type="button" class="oj-button-confirm" data-bind="click: exportAllUsersDataToXLS, ojComponent: {
+    </div>
+    <div class="oj-flex-bar-end">
+        <div class="oj-sm-justify-content-flex-end oj-flex">
+            <input type="button" class="oj-button-confirm" data-bind="click: exportAllUsersDataToXLS, ojComponent: {
                                             component: 'ojButton',
                                             label: 'Export All User\'s Audit data'
                                         }" />
-                </div>
-            </div>
         </div>
-        <div class="oj-flex">
-            <div class="oj-flex-item">
-                <table data-bind="ojComponent: {component: 'ojTable',
+    </div>
+</div>
+<div class="oj-flex">
+    <div class="oj-flex-item">
+        <table data-bind="ojComponent: {component: 'ojTable',
                                             selectionMode: {row: 'single', column: 'multiple'},
                                             columns: columnMetaData,
                                             display: 'grid',
@@ -72,54 +76,54 @@
                                             rowTemplate: 'row_template',
                                             rootAttributes: {style: 'width: 100%;'}
                                             }"></table>
-                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: 10}"></div>
+        <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: 10}"></div>
+    </div>
+</div>
+
+<div style="display:none" id="modalDialogUpdatePassword" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', cancelBehavior: 'escape'}">
+    <div class="oj-dialog-header dialog-header" data-bind="text: 'Update Password'"></div>
+    <div class="oj-dialog-body">
+        <div class="oj-flex">  
+            <div class="oj-flex-item">
+                <label for="userId">User ID</label>
+                <input id="userId" maxlength="20" data-bind="ojComponent: { component: 'ojInputText', value: selectedUserId, readOnly: true}">
             </div>
         </div>
-
-        <div style="display:none" id="modalDialogUpdatePassword" data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', cancelBehavior: 'escape'}">
-            <div class="oj-dialog-header dialog-header" data-bind="text: 'Update Password'"></div>
-            <div class="oj-dialog-body">
-                <div class="oj-flex">  
-                    <div class="oj-flex-item">
-                        <label for="userId">User ID</label>
-                        <input id="userId" maxlength="20" data-bind="ojComponent: { component: 'ojInputText', value: selectedUserId, readOnly: true}">
-                    </div>
-                </div>
-                <div class="oj-flex">  
-                    <div class="oj-flex-item">
-                        <label for="email">Email</label>
-                        <input id="email" maxlength="20" data-bind="ojComponent: { component: 'ojInputText', value: selectedEmail, readOnly: true}">
-                    </div>
-                </div>
-                <div class="oj-flex">  
-                    <div class="oj-flex-item">
-                        <label for="newPassword">New Password</label>
-                        <input id="newPassword" maxlength="20" type="password" data-bind="ojComponent: { component: 'ojInputPassword', value: newPassword, required: true, validators: [minLength], invalidComponentTracker: tracker }">
-                    </div>
-                </div>
-                <div class="oj-flex">  
-                    <div class="oj-flex-item">
-                        <label for="newPasswordRepeat">Re-enter Password</label>
-                        <input id="newPasswordRepeat" maxlength="20" type="password" data-bind="ojComponent: { component: 'ojInputPassword', value: newPasswordRepeat, required: true, validators: [equalToPassword], invalidComponentTracker: tracker}">
-                    </div>
-                </div>
-            </div>
-            <div class="oj-dialog-footer" style="margin: auto">
-                <button id="submitButton" style="width: 280px " data-bind="ojComponent: {component: 'ojButton', label: 'Submit', disabled: shouldDisableSubmit()}"> </button>
-                <button id="cancelButton" style="width: 280px " data-bind="ojComponent: {component: 'ojButton', label: 'Cancel'}"> </button>
+        <div class="oj-flex">  
+            <div class="oj-flex-item">
+                <label for="email">Email</label>
+                <input id="email" maxlength="20" data-bind="ojComponent: { component: 'ojInputText', value: selectedEmail, readOnly: true}">
             </div>
         </div>
+        <div class="oj-flex">  
+            <div class="oj-flex-item">
+                <label for="newPassword">New Password</label>
+                <input id="newPassword" maxlength="20" type="password" data-bind="ojComponent: { component: 'ojInputPassword', value: newPassword, required: true, validators: [minLength], invalidComponentTracker: tracker }">
+            </div>
+        </div>
+        <div class="oj-flex">  
+            <div class="oj-flex-item">
+                <label for="newPasswordRepeat">Re-enter Password</label>
+                <input id="newPasswordRepeat" maxlength="20" type="password" data-bind="ojComponent: { component: 'ojInputPassword', value: newPasswordRepeat, required: true, validators: [equalToPassword], invalidComponentTracker: tracker}">
+            </div>
+        </div>
+    </div>
+    <div class="oj-dialog-footer" style="margin: auto">
+        <button id="submitButton" style="width: 280px " data-bind="ojComponent: {component: 'ojButton', label: 'Submit', disabled: shouldDisableSubmit()}"> </button>
+        <button id="cancelButton" style="width: 280px " data-bind="ojComponent: {component: 'ojButton', label: 'Cancel'}"> </button>
+    </div>
+</div>
 
-        <div style="display:none" id="modalDialogUserAudit" data-bind="ojComponent:{
+<div style="display:none" id="modalDialogUserAudit" data-bind="ojComponent:{
                                                                         component: 'ojDialog',
                                                                         initialVisibility: 'hide',
                                                                         cancelBehavior: 'escape',
                                                                         rootAttributes: { style: 'width: 50vw; min-height: 512px;'}}">
-            <div class="oj-dialog-header dialog-header" data-bind="text: 'Audit history for ' + selectedUser().firstName + ' ' + selectedUser().lastName + ':'"></div>
-            <div class="oj-dialog-body">
-                <div class="oj-flex">  
-                    <div class="oj-sm-12 oj-flex-item">
-                        <table data-bind="ojComponent: {component: 'ojTable',
+    <div class="oj-dialog-header dialog-header" data-bind="text: 'Audit history for ' + selectedUser().firstName + ' ' + selectedUser().lastName + ':'"></div>
+    <div class="oj-dialog-body">
+        <div class="oj-flex">  
+            <div class="oj-sm-12 oj-flex-item">
+                <table data-bind="ojComponent: {component: 'ojTable',
                                             selectionMode: {row: 'single', column: 'none'},
                                             columns: [{headerText: 'Page',
                                                 style: 'width: 33%',
@@ -135,55 +139,67 @@
                                             rowTemplate: 'audit_row_template',
                                             rootAttributes: {style: 'width: 100%;'}
                                 }">
-                        </table>
-                        <div id="pagingDialog" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingAuditDatasource, pageSize: 10}"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="oj-dialog-footer" style="margin: auto">
-                <button id="closeUserAudit" style="width: 280px " data-bind="ojComponent: {component: 'ojButton', label: 'Close'}"> </button>
+                </table>
+                <div id="pagingDialog" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingAuditDatasource, pageSize: 10}"></div>
             </div>
         </div>
+    </div>
+    <div class="oj-dialog-footer" style="margin: auto">
+        <button id="closeUserAudit" style="width: 280px " data-bind="ojComponent: {component: 'ojButton', label: 'Close'}"> </button>
+    </div>
+</div>
 
-<script type="text/html" id="row_template">
-  <tr>
-   <td>
-    <div data-bind="text: userId">
-    </div>
-   </td>
-   <td>
-    <div data-bind="text: email">
-    </div>
-   </td>
-   <td>
-    <div data-bind="text: phone">
-    </div>
-   </td>
-   <td>
-    <div data-bind="text: firstName">
-    </div>
-   </td>
-   <td>
-    <div data-bind="text: lastName">
-    </div>
-   </td>
-   <td>
-    <div data-bind="text: customer">
-    </div>
-   </td>
-  </tr>
-</script>
+<div id="clearUsersNavWrapper">
+    <div style="display:none" id="clearUsersNavDialog" title="Are you sure ?" 
+         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
+        <div class="oj-dialog-body">
+            Clicking Ok will delete all emails sent by user, user's audit, phase completion details, user's saved data.
 
-<script type="text/html" id="audit_row_template">
-    <tr>
-        <td>
-            <span data-bind="text: stepLabel"></span>
-        </td>
-        <td>
-            <span data-bind="text: action"></span>
-        </td>
-        <td>
-            <span data-bind="text: createdDate"></span>
-        </td>
-    </tr>
-</script>
+            <p> <strong>Strictly not to be used in production.</strong></p>
+        </div>
+        <div class="oj-dialog-footer">
+            <button id="okButton" data-bind="click: clearUsersDetails, ojComponent: {component: 'ojButton', label: 'Yes, Clear'}"> </button>
+        </div>
+
+        <script type="text/html" id="row_template">
+            <tr>
+                <td>
+                    <div data-bind="text: userId">
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="text: email">
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="text: phone">
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="text: firstName">
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="text: lastName">
+                    </div>
+                </td>
+                <td>
+                    <div data-bind="text: customer">
+                    </div>
+                </td>
+            </tr>
+            </script>
+
+            <script type="text/html" id="audit_row_template">
+                <tr>
+                    <td>
+                        <span data-bind="text: stepLabel"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: action"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: createdDate"></span>
+                    </td>
+                </tr>
+                </script>
