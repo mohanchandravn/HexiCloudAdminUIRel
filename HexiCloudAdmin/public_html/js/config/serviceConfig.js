@@ -16,7 +16,7 @@ define(['knockout', 'jquery', 'config/sessionInfo', 'ojs/ojrouter'
         // Context root for dev
 //           var ctx = '/hexiCloudRestSecuredDev';
         // Context root for use caseresearch Dev
-           var ctx = '/HCRestDevUseCase';
+        var ctx = '/HCRestDevUseCase';
         if (location.origin.indexOf('localhost') > 0) {
             if (location.protocol === 'http:') {
                 self.portalRestHost = ko.observable("http://129.152.128.105:8080".concat(ctx));
@@ -441,6 +441,30 @@ define(['knockout', 'jquery', 'config/sessionInfo', 'ojs/ojrouter'
                 error: function (xhr, ajaxOptions, thrownError) {
                     console.log("Error retrieving service details at:" + serverURL);
                     defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
+
+        self.clearUsersNav = function (userId) {
+            var defer = $.Deferred();
+            console.log("Clearing nav for :" + userId);
+            var serverURL = self.portalRestHost() + "/services/rest/deleteUserNavEmails?userId=" + userId;
+            $.ajax({
+                type: "POST",
+                url: serverURL,
+                contentType: "application/json",
+                beforeSend: function (request)
+                {
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
+                },
+                success: function (data, xhr) {
+                    console.log("Successfully retrieved details at: " + serverURL);
+//                    defer.resolve(data, {status: xhr.status});
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details at:" + serverURL);
+//                    defer.reject(xhr);
                 }
             });
             return $.when(defer);
