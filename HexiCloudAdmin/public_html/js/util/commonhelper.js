@@ -13,7 +13,7 @@ define(['knockout'
 
         var self = this;
 
-        self.emailRegExpPattern = '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}$';
+        self.emailRegExpPattern = '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$';
         self.phoneRegExpPattern = '^[0-9]+$';
         
         var testTypes = {};
