@@ -167,7 +167,7 @@ define(['jquery',
                     };
 
                     var payload = {
-                        "userId": self.userName(),
+                        "userId": self.userName().toLowerCase(),
                         "email": self.email(),
                         "phone": self.countryCode() + '-' + self.phone(),
                         "userRole": self.userRole()[0],
@@ -192,7 +192,7 @@ define(['jquery',
                     };
 
                     var payload = {
-                        "userId": self.userName(),
+                        "userId": self.userName().toLowerCase(),
                         "password": self.password(),
                         "email": self.email(),
                         "phone": (self.countryCode() && self.phone()) ? self.countryCode() + '-' + self.phone() : "",
