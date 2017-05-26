@@ -152,7 +152,7 @@ define(['jquery',
                         openModalDialogCreateUserStatus('Failed to create user.');
                     };
 
-                    service.isUserIdAvailable(self.userName()).then(isUserIdAvailableSuccessCbFn, isUserIdAvailableFailCbFn);
+                    service.isUserIdAvailable(self.userName().toLowerCase()).then(isUserIdAvailableSuccessCbFn, isUserIdAvailableFailCbFn);
                 };
 
                 var updateUser = function () {
