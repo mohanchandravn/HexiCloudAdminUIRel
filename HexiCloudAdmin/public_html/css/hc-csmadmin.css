@@ -16,3 +16,58 @@ and open the template in the editor.
     font-size: 24px;
     margin: 15px 0px;
 }
+
+.otherUseCases-page .other-use-cases-heading {
+    font-size: 22px;
+    line-height: 28px;
+    color: #4e5052;
+    margin-bottom: 5px;
+}
+
+.otherUseCases-page .use-cases-body-content {
+    
+}
+
+.otherUseCases-page .oj-masonrylayout-tile-1x1 {
+    width: 220px;
+    height: 200px;
+    margin: 15px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    transition: all 0.3s ease-in-out;
+}
+
+.otherUseCases-page .oj-masonrylayout-tile-1x1:hover {
+    transform: scale(1.2, 1.2);
+}
+
+.otherUseCases-page .oj-masonrylayout-tile-1x1 .use-case-image {
+    width: 220px;
+    height: 140px;
+}
+
+/*.otherUseCases-page .oj-masonrylayout-tile-1x1 .bread-crumbs-icon {
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}*/
+
+.otherUseCases-page .oj-masonrylayout-tile-1x1 .use-case-content {
+    height: 50px;
+}
+
+/*.otherUseCases-page .otherUseCases-page .inverted-btn {
+        color: #F80000;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px 0px;
+    margin: 0px 10px;
+    border: 1.2px solid #F80000;
+    border-radius: 27px;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.otherUseCases-page .otherUseCases-page .inverted-btn:hover {
+    transform: scale(1.2, 1.2);
+}*/

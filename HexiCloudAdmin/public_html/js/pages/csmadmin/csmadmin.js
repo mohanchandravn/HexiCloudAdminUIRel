@@ -34,7 +34,8 @@ define(['knockout',
                
                  var navData = [
                      {name: 'Manage Emails',id: 'manageEmails'},
-                     {name: 'Manage Users',id: 'manageUsers'}
+                     {name: 'Manage Users',id: 'manageUsers'},
+                     {name: 'Manage Other Use Cases',id: 'manageOtherUseCases'}
 //                     ,
 //                     {name: 'Scheduler', id: 'scheduler'}
                  ];

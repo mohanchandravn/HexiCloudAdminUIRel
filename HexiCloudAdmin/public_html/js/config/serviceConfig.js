@@ -469,6 +469,29 @@ define(['knockout', 'jquery', 'config/sessionInfo', 'ojs/ojrouter'
             });
             return $.when(defer);
         };
+
+        self.getAllOtherUseCases = function () {
+            var defer = $.Deferred();
+//             var serverURL = "js/pages/useCaseSelection/use_cases.json";
+            var serverURL = self.portalRestHost() + "/services/rest/getAllOtherUseCases";
+            $.ajax({
+                type: 'GET',
+                url: serverURL,
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " + sessionInfo.getFromSession(sessionInfo.accessToken));
+                },
+                dataType: "json",
+                success: function (data, status) {
+                    console.log('Successfully retrieved details at: ' + serverURL);
+                    defer.resolve(data, status);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Error retrieving service details.");
+                    defer.reject(xhr);
+                }
+            });
+            return $.when(defer);
+        };
     }
     ;
 
