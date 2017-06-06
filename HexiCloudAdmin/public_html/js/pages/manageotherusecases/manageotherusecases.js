@@ -1,25 +1,19 @@
 "use strict";
-define(['knockout', 'config/serviceConfig', 'config/sessionInfo', 'ojs/ojcore', 'jquery', 'config/serviceConfig', 'ojs/ojknockout', 'ojs/ojmasonrylayout'
-], function (ko, service, session) {
-    function manageOtherUseCasesViewModel()
-    {
+
+define(['ojs/ojcore', 'knockout', 'jquery', 'config/serviceConfig', 'config/sessionInfo', 'config/serviceConfig', 'ojs/ojknockout', 'ojs/ojtable', 'ojs/ojpagingcontrol', 'ojs/ojpagingtabledatasource', 'ojs/ojarraytabledatasource'
+], function (oj, ko, $, service, session) {
+    
+    function manageOtherUseCasesViewModel() {
+        
         var self = this;
+        
         self.areAllOtherUseCasesLoaded = ko.observable(false);
-        self.allOtherUseCases = [];
         
         var getAllOtherUseCasesSuccessCbFn = function (data, status) {
-            if (data.useCases) {
-                var useCases = data.useCases;
-                for (var idx = 0; idx < useCases.length; idx++) {
-                    if (useCases[idx].title.length > 35) {
-                        var trimTitle = useCases[idx].title.slice(0, 35);
-                        useCases[idx].trimmedTitle = trimTitle + "...";
-                    }
-                }
+            if (data.otherUseCases) {
+                self.pagingDatasource = new oj.PagingTableDataSource(new oj.ArrayTableDataSource(data.otherUseCases, {idAttribute: 'userId'}));
+                self.areAllOtherUseCasesLoaded(true);                
             }
-            self.allOtherUseCases = useCases;
-            self.areAllOtherUseCasesLoaded(true);
-            $("#otherUseCases").ojMasonryLayout("refresh");
             hidePreloader();
         };
 
@@ -28,8 +22,8 @@ define(['knockout', 'config/serviceConfig', 'config/sessionInfo', 'ojs/ojcore', 
             console.log(xhr);
         };
         
-        self.handleBindingsApplied = function () {
-            if(session.getFromSession(session.accessToken)) {
+        self.handleAttached = function () {
+            if (session.getFromSession(session.accessToken)) {
                 showPreloader();
                 service.getAllOtherUseCases().then(getAllOtherUseCasesSuccessCbFn, getAllOtherUseCasesFailCbFn);
             }
